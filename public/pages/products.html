@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Chủ</title>
+    <link rel="stylesheet" href="products.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Sidebar</h2>
+        <ul>
+            <li><a href="/">Homepage</a></li>
+            <li><a href="#">Orders</a></li>
+            <li><a href="/products">Products</a></li>
+            <li><a href="#">Customers</a></li>
+            <li><a href="#">Staff and Roles</a></li>
+            <li><a href="#">Reports</a></li>
+            <li><a href="#">Setting</a></li>
+            </ul>
+    </div>
+    <div class="container">
+        <div class="search-bar">
+            <input type="text" placeholder="Tìm kiếm sản phẩm...">
+            <button>Tìm</button>
+        </div>
+        <div id="productContainer">
+            <table id="productTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Prices</th>
+                        <th>Benefits</th>
+                        <th>Image</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rows will be inserted here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        <button id="addProductBtn" class="add-product-button">Thêm Sản Phẩm</button>
+    </div>
+
+    <div id="addProductModal" class="add-product-modal">
+        <div class="add-product-modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Thêm Sản Phẩm Mới</h2>
+            <label for="productName">Tên Sản Phẩm:</label>
+            <input type="text" id="productName" name="productName">
+
+            <label for="productPrice">Giá:</label>
+            <input type="number" id="productPrice" name="productPrice">
+
+            <label for="productQuantity">Số Lượng:</label>
+            <input type="number" id="productQuantity" name="productQuantity">
+
+            <button onclick="closeModal()">Hủy</button>
+            <button onclick="saveProductInfo()">Lưu</button>
+        </div>
+    </div>
+
+    <script>
+        const addProductBtn = document.getElementById('addProductBtn');
+        const addProductModal = document.getElementById('addProductModal');
+        const closeModalBtn = document.querySelector('.add-product-modal-content .close-button');
+        const productContainer = document.getElementById('productContainer'); // Lấy tham chiếu đến container
+
+        addProductBtn.addEventListener('click', () => {
+            addProductModal.style.display = 'flex';
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            addProductModal.style.display = 'none';
+        });
+
+        function closeModal() {
+            addProductModal.style.display = 'none';
+        }
+
+        function saveProductInfo() {
+            const productName = document.getElementById('productName').value;
+            const productPrice = document.getElementById('productPrice').value;
+            const productQuantity = document.getElementById('productQuantity').value;
+
+            console.log('Thông tin sản phẩm mới:', { productName, productPrice, productQuantity });
+
+            closeModal();
+        }
+
+        window.addEventListener('click', (event) => {
+            if (event.target == addProductModal) {
+                addProductModal.style.display = 'none';
+            }
+        });
+
+        function layDanhSachSanPham() {
+            fetch('/api/products-data')
+            .then(response => response.json())
+            .then(dsTPCN => {
+            const tableBody = document.getElementById('productTable').getElementsByTagName('tbody')[0];
+            dsTPCN.forEach(tpcn => {
+                const row = tableBody.insertRow();
+                const cellName = row.insertCell(0);
+                const cellPrice = row.insertCell(1);
+                const cellBenefits = row.insertCell(2);
+                const cellImages = row.insertCell(3);
+
+                cellName.textContent = tpcn.name;
+                cellPrice.textContent = tpcn.price;
+                cellBenefits.textContent = tpcn.benefits;
+
+                const img = document.createElement('img');
+                img.src = `/${tpcn.image_url}`;
+                cellImages.appendChild(img);
+            });
+        })
+        .catch(error => console.error('Error fetching products: ', error));
+        }
+
+        document.addEventListener('DOMContentLoaded', layDanhSachSanPham);
+    </script>
+</body>
+</html>
