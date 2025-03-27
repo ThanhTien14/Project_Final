@@ -11,7 +11,7 @@ const dsTPCN = [
     "benefits": ["Cải thiện tiêu hóa", "Giảm đầy bụng", "Hỗ trợ hệ vi sinh đường ruột"],
     "usage_instructions": "Uống 1 viên/lần, 2 lần/ngày sau bữa ăn.",
     "warnings": ["Tham khảo ý kiến bác sĩ nếu bạn đang mang thai hoặc cho con bú.", "Không sử dụng cho người mẫn cảm với bất kỳ thành phần nào của sản phẩm."],
-    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát, tránh ánh nắng trực tiếp.",
+    "storage_instructions":  "Bảo quản nơi khô ráo, thoáng mát, tránh ánh nắng trực tiếp.",
     "target_audience": ["Người lớn tuổi"],
     "certifications": ["GMP", "HACCP"],
     "quantity_in_stock": 150,
@@ -31,10 +31,6 @@ const dsTPCN = [
         "created_at": "2023-10-27T10:00:00Z"
       }
     ],
-    "created_at": "2023-10-27T10:00:00Z",
-    "updated_at": "2023-10-27T10:00:00Z",
-    "is_active": true,
-    "slug": "vien-uong-ho-tro-tieu-hoa-enzyme-a"
   },
   {
     "id": "TPCN0002",
@@ -56,10 +52,6 @@ const dsTPCN = [
     "currency": "VND",
     "qna": "",
     "ratings": "",
-    "created_at": "2023-10-28T09:15:00Z",
-    "updated_at": "2023-11-15T14:30:00Z",
-    "is_active": true,
-    "slug": "vitamin-tong-hop-cho-nguoi-lon-b"
   },
   {
     "id": "TPCN0003",
@@ -99,10 +91,6 @@ const dsTPCN = [
         "created_at": "2023-11-10T11:20:00Z"
       }
     ],
-    "created_at": "2023-10-29T20:30:00Z",
-    "updated_at": "2023-11-20T08:00:00Z",
-    "is_active": true,
-    "slug": "omega-3-tu-dau-ca-tu-nhien-c"
   },
   {
     "id": "TPCN0004",

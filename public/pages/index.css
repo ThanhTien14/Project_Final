@@ -1,100 +1,196 @@
 /* index.css */
-
 body {
-    font-family: sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: #f8f9fa; /* Màu nền trang (placeholder - cần thay đổi theo Figma) */
+    color: #333; /* Màu chữ mặc định (placeholder - cần thay đổi theo Figma) */
+    position: relative; /* Cần thiết để định vị tuyệt đối cho nút "Thêm sản phẩm" */
+}
+
+.top-bar {
+    background-color: #e9ecef; /* Màu nền top bar (placeholder - cần thay đổi theo Figma) */
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #dee2e6; /* Màu border bottom top bar (placeholder - cần thay đổi theo Figma) */
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    margin-right: 15px;
+}
+
+.search-container input[type="text"] {
+    padding: 12px;
+    border: 1px solid #ced4da; /* Màu border input (placeholder - cần thay đổi theo Figma) */
+    border-radius: 4px 0 0 4px;
+    margin-right: -1px;
+    font-size: 1.1em;
+    width: 100%;
+}
+
+.search-container button {
+    background-color: #007bff; /* Màu nền button tìm kiếm (placeholder - cần thay đổi theo Figma) */
+    color: white; /* Màu chữ button tìm kiếm (placeholder - cần thay đổi theo Figma) */
+    border: none;
+    padding: 12px 15px;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    font-size: 1.1em;
+}
+
+.search-container button:hover {
+    background-color: #0056b3; /* Màu nền hover button tìm kiếm (placeholder - cần thay đổi theo Figma) */
+}
+
+.filter-button {
+    background-color: transparent;
+    color: #495057; /* Màu icon filter (placeholder - cần thay đổi theo Figma) */
+    border: none;
+    font-size: 1.8em;
+    cursor: pointer;
+    padding: 8px;
+}
+
+.filter-button:hover {
+    color: #007bff; /* Màu hover icon filter (placeholder - cần thay đổi theo Figma) */
 }
 
 .container {
-    display: flex;
-    min-height: 100vh;
-}
-
-/* Sidebar Styles */
-.sidebar {
-    width: 200px;
-    background-color: #333;
-    color: #fff;
+    min-height: calc(100vh - 61px);
     padding: 20px;
 }
 
-.sidebar h2 {
-    margin-top: 0;
-    margin-bottom: 20px;
-    text-align: center;
+.main-content {
+    flex-grow: 1;
 }
 
-.sidebar ul {
+.product-list {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
-.sidebar li {
+.product-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
     margin-bottom: 15px;
+    background-color: #fff; /* Màu nền sản phẩm (placeholder - cần thay đổi theo Figma) */
+    border: 1px solid #dee2e6; /* Màu border sản phẩm (placeholder - cần thay đổi theo Figma) */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Hiệu ứng bóng đổ (có thể tùy chỉnh) */
+    transition: box-shadow 0.3s ease; /* Thêm transition cho hiệu ứng mượt mà */
 }
 
-.sidebar a {
-    display: block;
-    color: #fff;
-    text-decoration: none;
-    padding: 10px;
-    border-radius: 5px;
+.product-item:hover {
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Hiệu ứng bóng đổ đậm hơn khi hover */
+    cursor: pointer; /* Thay đổi con trỏ chuột khi hover */
+}
+
+.product-image-placeholder {
+    width: 80px;
+    height: 80px;
+    background-color: #f0f0f0; /* Màu nền placeholder ảnh (placeholder - cần thay đổi theo Figma) */
+    border-radius: 4px;
+    margin-right: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #6c757d; /* Màu icon placeholder (placeholder - cần thay đổi theo Figma) */
+    font-size: 1.5em;
+    flex-shrink: 0;
+}
+
+.product-image-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.product-details {
+    flex-grow: 1;
+    margin-right: 20px;
+}
+
+.product-details h3 {
+    font-size: 1.2em;
+    margin-top: 0;
+    margin-bottom: 5px;
+    color: #343a40; /* Màu chữ tên sản phẩm (placeholder - cần thay đổi theo Figma) */
+    font-weight: bold;
+}
+
+.product-details .price {
+    color: #198754; /* Màu chữ giá sản phẩm (placeholder - cần thay đổi theo Figma) */
+    font-size: 1em;
+    margin-bottom: 3px;
+    font-weight: bold;
+}
+
+.product-details .category {
+    color: #6c757d; /* Màu chữ category (placeholder - cần thay đổi theo Figma) */
+    font-size: 0.9em;
+    margin-bottom: 0;
+}
+
+.product-actions {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.product-actions .action-icon {
+    background-color: #007bff; /* Màu nền icon hành động (placeholder - cần thay đổi theo Figma) */
+    color: white; /* Màu chữ icon hành động (placeholder - cần thay đổi theo Figma) */
+    border-radius: 4px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1em;
+    cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
-.sidebar a:hover {
-    background-color: #555;
+.product-actions .action-icon:hover {
+    background-color: #0056b3; /* Màu nền hover icon hành động (placeholder - cần thay đổi theo Figma) */
 }
 
-/* Main Content Styles */
-.main-content {
-    flex-grow: 1;
-    padding: 20px;
+.product-actions .action-icon:last-child {
+    background-color: #dc3545; /* Màu nền icon xóa (placeholder - cần thay đổi theo Figma) */
 }
 
-.product-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Tạo lưới sản phẩm responsive */
-    gap: 20px;
-    padding: 20px;
-    background-color: #fff;
+.product-actions .action-icon:last-child:hover {
+    background-color: #c82333; /* Màu nền hover icon xóa (placeholder - cần thay đổi theo Figma) */
+}
+
+/* Nút "Thêm sản phẩm" cố định */
+.add-product-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #28a745; /* Màu xanh lá cây (placeholder - cần thay đổi theo Figma) */
+    color: white;
+    border: none;
+    padding: 15px 20px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    font-size: 1em;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
 }
 
-/* Product Card Styles */
-.product-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: #fff;
-    transition: transform 0.2s ease-in-out;
+.add-product-button:hover {
+    background-color: #218838; /* Màu xanh lá cây đậm hơn khi hover (placeholder - cần thay đổi theo Figma) */
 }
 
-.product-card:hover {
-    transform: scale(1.02);
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
-}
-
-.product-card img {
-    width: 100%;
-    display: block;
-    border-bottom: 1px solid #eee;
-    height: 100px; /* Điều chỉnh chiều cao ảnh */
-    object-fit: cover; /* Đảm bảo ảnh không bị méo */
-}
-
-.product-card h3 {
-    margin: 15px;
-    font-size: 1.2em;
-    text-align: center;
-}
-
-.product-card .price {
-    color: #83A638; /* Màu giá nổi bật */
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 15px;
+.add-product-button i {
+    margin-right: 8px;
 }

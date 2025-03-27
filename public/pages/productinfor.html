@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông Tin Sản Phẩm</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="productinfor.css">
+</head>
+<body>
+    <div class="product-infor-page">
+        <div class="product-infor-header">
+            <h1>PRODUCT INFORMATION</h1>
+        </div>
+        <button class="back-to-home-button">
+            <i class="fas fa-arrow-left"></i> Trở về trang chính
+        </button>
+        <div class="product-infor-container">
+            <div class="product-image">
+                <div class="image-placeholder">
+                    <i class="fas fa-image"></i>
+                    </div>
+            </div>
+            <div class="product-details">
+                <h2 id="product-name">TÊN SẢN PHẨM</h2>
+                <p class="price" id="product-price"></p>
+                <p id="product-description"></p>
+                <div class="rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                    <i class="far fa-star"></i>
+                    <span id="product-rating">4.5 (187)</span>
+                </div>
+                <button class="edit-product-button">
+                    <i class="fas fa-edit"></i> Sửa thông tin sản phẩm
+                </button>
+            </div>
+        </div>
+
+        <div class="product-information-section">
+            <h2>Information</h2>
+            <div class="information-grid">
+                <div class="info-item">
+                    <span class="info-label">Category:</span>
+                    <span id="product-category"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Dosage Form:</span>
+                    <span id="product-dosage-form"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Ingredients:</span>
+                    <span id="product-ingredients"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Benefits:</span>
+                    <span id="product-benefits"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Usage Instructions:</span>
+                    <span id="product-usage"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Warnings:</span>
+                    <span id="product-warnings"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Storage Instructions:</span>
+                    <span id="product-storage"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Other Information:</span>
+                    <span id="product-other-info"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Quantity in Stock:</span>
+                    <span id="product-quantity-stock"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="reviews-questions-section">
+            <div class="reviews-section">
+                <h2>Add a review</h2>
+                <textarea id="review-text" placeholder="Share your thoughts"></textarea>
+                <button class="submit-review-button">Submit Review</button>
+
+                <h3>Comments</h3>
+                <div class="review-comments-container">
+                    <p class="no-comments" style="display: none;">Chưa có comment nào.</p>
+                    <div class="review-comment">
+                        <div class="user-info">
+                            <div class="avatar-placeholder"></div>
+                            <span>Username</span>
+                            <div class="comment-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                        <p class="comment-text"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="questions-section">
+                <h2>Add a question</h2>
+                <textarea id="question-text" placeholder="Ask anything"></textarea>
+                <button class="submit-question-button">Submit Question</button>
+
+                <h3>Q&A</h3>
+                <div class="qna-container">
+                    <p class="no-qna" style="display: none;">Chưa có câu hỏi nào.</p>
+                    <div class="question-answer">
+                        <p><strong class="question-user">Username:</strong></p>
+                        <p class="answer"><strong class="answer-admin">Admin:</strong></p>
+                        <button class="reply-to-question-button">Reply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+
+            const backToHomeButton = document.querySelector('.back-to-home-button');
+            backToHomeButton.addEventListener('click', function() {
+                window.location.href = '/'; // Chuyển về trang index.html
+            });
+
+            if (productId) {
+                fetch(`/api/products-data/${productId}`)
+                    .then(response => response.json())
+                    .then(product => {
+                        document.getElementById('product-name').textContent = product.name;
+                        document.getElementById('product-price').textContent = product.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });                        document.getElementById('product-description').textContent = product.description || 'No description available.';
+                        // Hiển thị rating (cần xử lý logic để hiển thị đúng số sao)
+                        // document.getElementById('product-rating').textContent = `${product.rating} (${product.reviewCount})`;
+                        document.getElementById('product-category').textContent = product.category || 'N/A';
+                        document.getElementById('product-dosage-form').textContent = product.dosage_form || 'N/A';
+                        document.getElementById('product-ingredients').textContent = product.ingredients ? product.ingredients.join(', ') : 'N/A';
+                        document.getElementById('product-benefits').textContent = product.benefits ? product.benefits.join(', ') : 'N/A';
+                        document.getElementById('product-usage').textContent = product.usage_instructions || 'N/A';
+                        document.getElementById('product-warnings').textContent = product.warnings || 'N/A';
+                        document.getElementById('product-storage').textContent = product.storage_instructions || 'N/A';
+                        document.getElementById('product-other-info').textContent = product.other_info || 'N/A';
+                        document.getElementById('product-quantity-stock').textContent = product.quantity_in_stock || 'N/A';
+
+                        const imagePlaceholder = document.querySelector('.product-image .image-placeholder');
+                        if (product.image_url) {
+                            imagePlaceholder.innerHTML = `<img src="/${product.image_url}" alt="${product.name}">`;
+                        }
+
+                        const reviewsSection = document.querySelector('.reviews-section');
+                        const reviewCommentsContainer = reviewsSection.querySelector('.review-comments-container');
+                        const noCommentsMessage = reviewsSection.querySelector('.no-comments');
+
+                        if (product.ratings && product.ratings.length > 0) {
+                            noCommentsMessage.style.display = 'none';
+                            const commentsHeading = reviewsSection.querySelector('h3');
+                            if (!commentsHeading) {
+                                const newCommentsHeading = document.createElement('h3');
+                                newCommentsHeading.textContent = 'Reviews';
+                                reviewsSection.insertBefore(newCommentsHeading, reviewCommentsContainer);
+                            } else {
+                                commentsHeading.textContent = 'Reviews';
+                            }
+                            reviewCommentsContainer.querySelectorAll('.review-comment').forEach(comment => comment.remove());
+
+                            product.ratings.forEach(rating => {
+                                const commentDiv = document.createElement('div');
+                                commentDiv.classList.add('review-comment');
+                                commentDiv.innerHTML = `
+                                    <div class="user-info">
+                                        <div class="avatar-placeholder"></div>
+                                        <span>${rating.user_id || 'User'}</span>
+                                        <div class="comment-rating">
+                                            ${'<i class="fas fa-star"></i>'.repeat(rating.rating_value)}${'<i class="far fa-star"></i>'.repeat(5 - rating.rating_value)}
+                                        </div>
+                                    </div>
+                                    <p class="comment-text">${rating.comment || ''}</p>
+                                `;
+                                reviewCommentsContainer.appendChild(commentDiv);
+                            });
+
+                        } else {
+                            noCommentsMessage.style.display = 'block';
+                            const commentsHeading = reviewsSection.querySelector('h3');
+                            if (commentsHeading) {
+                                commentsHeading.textContent = 'Reviews';
+                            }
+                            reviewCommentsContainer.querySelectorAll('.review-comment').forEach(comment => comment.remove());
+                        }
+
+                        const questionsSection = document.querySelector('.questions-section');
+                        const qnaContainer = questionsSection.querySelector('.qna-container');
+                        const noQnaMessage = questionsSection.querySelector('.no-qna');
+
+                        if (product.qna && product.qna.length > 0) {
+                            noQnaMessage.style.display = 'none';
+                            const qnaHeading = questionsSection.querySelector('h3');
+                            if (!qnaHeading) {
+                                const newQnaHeading = document.createElement('h3');
+                                newQnaHeading.textContent = 'Q&A';
+                                questionsSection.insertBefore(newQnaHeading, qnaContainer);
+                            } else {
+                                qnaHeading.textContent = 'Q&A';
+                            }
+                            qnaContainer.querySelectorAll('.question-answer').forEach(qa => qa.remove());
+
+                            product.qna.forEach(qaItem => {
+                                const qaDiv = document.createElement('div');
+                                qaDiv.classList.add('question-answer');
+                                qaDiv.innerHTML = `
+                                    <p><strong class="question-user">User:</strong> ${qaItem.question || ''}</p>
+                                    <p class="answer"><strong class="answer-admin">Admin:</strong> ${qaItem.answer || ''}</p>
+                                    <button class="reply-to-question-button">Reply</button>
+                                `;
+                                qnaContainer.appendChild(qaDiv);
+                            });
+                        } else {
+                            noQnaMessage.style.display = 'block';
+                            const qnaHeading = questionsSection.querySelector('h3');
+                            if (qnaHeading) {
+                                qnaHeading.textContent = 'Q&A';
+                            }
+                            qnaContainer.querySelectorAll('.question-answer').forEach(qa => qa.remove());
+                        }
+
+                    })
+                    .catch(error => console.error('Lỗi khi tải thông tin sản phẩm:', error));
+            } else {
+                console.error('Không tìm thấy ID sản phẩm trong URL.');
+            }
+        });
+    </script>
+</body>
+</html>
