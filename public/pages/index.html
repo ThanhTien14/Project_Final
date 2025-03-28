@@ -24,13 +24,15 @@
         </main>
     </div>
 
-    <button class="add-product-button" id="add-product-btn">
-        <i class="fas fa-plus"></i> Thêm sản phẩm
-    </button>
+    <a href="/add-product">
+        <button class="add-product-button" id="add-product-btn">
+            <i class="fas fa-plus"></i> Thêm sản phẩm
+        </button>
+    </a>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            fetch('/api/products-data')
+            fetch('/products-data')
             .then(response => response.json())
             .then(products => {
                 const productList = document.querySelector('.product-list');
@@ -103,14 +105,6 @@
                 });
             })
             .catch(error => console.error('Lỗi khi tải sản phẩm:', error));
-
-            // Lấy tham chiếu đến nút "Thêm sản phẩm"
-            const addProductButton = document.getElementById('add-product-btn');
-            // Thêm event listener cho nút "Thêm sản phẩm"
-            addProductButton.addEventListener('click', function() {
-                // Chuyển hướng đến trang add.html
-                window.location.href = '/add-product';
-            });
         });
     </script>
 </body>

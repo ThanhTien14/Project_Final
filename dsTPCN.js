@@ -10,7 +10,7 @@ const dsTPCN = [
     "ingredients": ["Enzyme tiêu hóa", "Men vi sinh"],
     "benefits": ["Cải thiện tiêu hóa", "Giảm đầy bụng", "Hỗ trợ hệ vi sinh đường ruột"],
     "usage_instructions": "Uống 1 viên/lần, 2 lần/ngày sau bữa ăn.",
-    "warnings": ["Tham khảo ý kiến bác sĩ nếu bạn đang mang thai hoặc cho con bú.", "Không sử dụng cho người mẫn cảm với bất kỳ thành phần nào của sản phẩm."],
+    "warnings": ["Tham khảo ý kiến bác sĩ nếu bạn đang mang thai hoặc cho con bú", "Không sử dụng cho người mẫn cảm với bất kỳ thành phần nào của sản phẩm."],
     "storage_instructions":  "Bảo quản nơi khô ráo, thoáng mát, tránh ánh nắng trực tiếp.",
     "target_audience": ["Người lớn tuổi"],
     "certifications": ["GMP", "HACCP"],
@@ -21,6 +21,9 @@ const dsTPCN = [
       {
         "question": "Sản phẩm này có dùng được cho trẻ em không?",
         "answer": "Sản phẩm này phù hợp cho người lớn tuổi. Trẻ em nên tham khảo ý kiến bác sĩ trước khi sử dụng."
+      },
+      {
+        "question": "Sản phẩm này có dùng được cho người có bệnh nền không?",
       }
     ],
     "ratings": [
