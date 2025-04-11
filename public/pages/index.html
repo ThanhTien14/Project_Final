@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trang Sản Phẩm</title>
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
@@ -32,10 +32,13 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Tải dữ liệu sản phẩm từ server
             fetch('/products-data')
             .then(response => response.json())
             .then(products => {
                 const productList = document.querySelector('.product-list');
+                productList.innerHTML = ''; // Xóa nội dung cũ (nếu có)
+
                 products.forEach(product => {
                     const listItem = document.createElement('li');
                     listItem.classList.add('product-item');
@@ -72,14 +75,15 @@
                     const actions = document.createElement('div');
                     actions.classList.add('product-actions');
 
-                    const quickViewIcon = document.createElement('span');
+                    const quickViewIcon = document.createElement('a');
                     quickViewIcon.classList.add('action-icon', 'quick-view-button'); // Thêm class 'quick-view-button'
+                    quickViewIcon.href = `/product-detail/${product.id}`; // Đường dẫn đến server với ID sản phẩm
                     quickViewIcon.innerHTML = '<i class="fas fa-eye"></i>'; // Biểu tượng xem nhanh
-                    quickViewIcon.dataset.productId = product.id; // Lưu ID sản phẩm vào thuộc tính data
 
                     const deleteIcon = document.createElement('span');
-                    deleteIcon.classList.add('action-icon');
+                    deleteIcon.classList.add('action-icon', 'delete-button');
                     deleteIcon.innerHTML = '<i class="fas fa-trash-alt"></i>'; // Biểu tượng xóa
+                    deleteIcon.dataset.productId = product.id;
 
                     actions.appendChild(quickViewIcon);
                     actions.appendChild(deleteIcon);
@@ -89,19 +93,6 @@
                     listItem.appendChild(actions);
 
                     productList.appendChild(listItem);
-
-                    const quickViewButtons = document.querySelectorAll('.quick-view-button');
-                    quickViewButtons.forEach(button => {
-                        button.addEventListener('click', function() {
-                            const productId = this.dataset.productId;
-                            if (productId) {
-                                // **Bước 1: Điều hướng đến trang productinfor.html**
-                                window.location.href = `productinfor.html?id=${productId}`;
-                            } else {
-                                console.error('Không tìm thấy ID sản phẩm cho nút xem nhanh.');
-                            }
-                        });
-                    });
                 });
             })
             .catch(error => console.error('Lỗi khi tải sản phẩm:', error));

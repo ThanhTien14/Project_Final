@@ -3,24 +3,23 @@ const app = express()
 const port = 3000
 const path = require('path');
 const bodyParser = require('body-parser');
-const dsTPCN = require('./dsTPCN'); // Đọc file dữ liệu ở đầu trang
+const mongodbModule = require('./public/javascript/mongodb'); // Đọc file mongodbModule.js
 
 app.use(express.static(path.join(__dirname, 'public/pages')));
 app.use(express.static(path.join(__dirname, 'public/images/')));
+app.use(express.static(path.join(__dirname, 'public/stylesheets/')));
 app.use(bodyParser.json());
 
 // index page
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/pages/index.html');
 });
-
-app.get('/products', (req, res) => {
-  res.sendFile(__dirname + '/public/pages/products.html');
-});
   
-app.get('/products-data', (req, res) => {
+// API để lấy danh sách sản phẩm
+app.get('/products-data', async (req, res) => {
   try {
-    res.json(dsTPCN); // Sử dụng biến đã được require ở đầu trang
+    const dsTPCN = await mongodbModule.findDocuments();
+    res.json(dsTPCN);
   } 
   catch (error) {
     console.error('Lỗi khi lấy file dsTPCN.js:', error);
@@ -28,21 +27,24 @@ app.get('/products-data', (req, res) => {
   }
 });
 
-// API endpoint để lấy thông tin chi tiết của một sản phẩm theo ID
-app.get('/products-data/:id', (req, res) => {
-  // **Bước 2: Server lấy được ID sản phẩm từ request**
+// Route để trả về file HTML productInfor.html
+app.get('/product-data/:id', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/pages/productInfor.html'));
+});
+
+// API để lấy thông tin chi tiết của một sản phẩm theo ID
+app.get('/products-data/:id', async (req, res) => {
   const productId = req.params.id;
-  // **Bước 3: Server dùng ID để tìm thông tin sản phẩm trong mảng dsTPCN**
-  const product = dsTPCN.find(p => p.id === productId);
+  const product = await mongodbModule.findDocumentsById(productId);
 
   if (product) {
-      // **Bước 4: Server gửi thông tin sản phẩm dưới dạng JSON**
       res.json(product);
   } else {
       res.status(404).json({ message: 'Không tìm thấy sản phẩm với ID: ' + productId });
   }
 });
-// Route để phục vụ trang add.html
+
+//API để mở trang add.html
 app.get('/add-product', (req, res) => {
   res.sendFile(__dirname + '/public/pages/add.html');
 });
@@ -67,4 +69,18 @@ app.get('*', (req, res) => {
   res.status(404).send('Xin lỗi, trang không tồn tại!');
 });
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+const server = app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+
+mongodbModule.connectToMongoDB()
+  .then(() => {
+    console.log('Kết nối MongoDB thành công!');
+  })
+  .catch(err => {
+    console.error('Lỗi kết nối MongoDB:', err);
+    server.close();
+  });
+
+// Đóng kết nối MongoDB khi server dừng lại
+process.on('SIGINT', () => {
+  mongodbModule.closeMongoDBConnection()
+});
