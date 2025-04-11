@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thông Tin Sản Phẩm</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="productinfor.css">
+    <link rel="stylesheet" href="/productinfor.css">
 </head>
 <body>
     <div class="product-infor-page">
@@ -27,14 +27,6 @@
                 <h2 id="product-name">TÊN SẢN PHẨM</h2>
                 <p class="price" id="product-price"></p>
                 <p id="product-description"></p>
-                <div class="rating">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star-half-alt"></i>
-                    <i class="far fa-star"></i>
-                    <span id="product-rating">4.5 (187)</span>
-                </div>
                 <button class="edit-product-button" id="edit-product-btn">
                     <i class="fas fa-edit"></i> Sửa thông tin sản phẩm
                 </button>
@@ -79,49 +71,6 @@
                 <div class="info-item">
                     <span class="info-label">Quantity in Stock:</span>
                     <span id="product-quantity-stock"></span>
-                </div>
-            </div>
-        </div>
-
-        <div class="reviews-questions-section">
-            <div class="reviews-section">
-                <h2>Add a review</h2>
-                <textarea id="review-text" placeholder="Share your thoughts"></textarea>
-                <button class="submit-review-button">Submit Review</button>
-
-                <h3>Comments</h3>
-                <div class="review-comments-container">
-                    <p class="no-comments" style="display: none;">Chưa có comment nào.</p>
-                    <div class="review-comment">
-                        <div class="user-info">
-                            <div class="avatar-placeholder"></div>
-                            <span>Username</span>
-                            <div class="comment-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                        </div>
-                        <p class="comment-text"></p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="questions-section">
-                <h2>Add a question</h2>
-                <textarea id="question-text" placeholder="Ask anything"></textarea>
-                <button class="submit-question-button">Submit Question</button>
-
-                <h3>Q&A</h3>
-                <div class="qna-container">
-                    <p class="no-qna" style="display: none;">Chưa có câu hỏi nào.</p>
-                    <div class="question-answer">
-                        <p><strong class="question-user">Username:</strong></p>
-                        <p class="answer"><strong class="answer-admin">Admin:</strong></p>
-                        <button class="reply-to-question-button">Reply</button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -194,8 +143,9 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const productId = urlParams.get('id');
+            const queryString = window.location.search; // Lấy chuỗi truy vấn từ URL
+            const urlParams = new URLSearchParams(queryString);
+            const productId = urlParams.get('id'); // Lấy giá trị của tham số 'id'
 
             const editProductButton = document.getElementById('edit-product-btn');
             const editProductForm = document.getElementById('edit-product-form');
@@ -218,111 +168,45 @@
                 document.getElementById('edit_warnings').value = product.warnings || '';
                 document.getElementById('edit_storage_instructions').value = product.storage_instructions || '';
                 document.getElementById('edit_target_audience').value = product.target_audience ? product.target_audience.join(', ') : '';
-                // You might also want to handle pre-filling the image if needed
+                // Sẽ cần xử lý upload hình ảnh
             }
 
+            // Hàm điền dữ liệu vào giao diện
+            function populateProductDetails(product) {
+                document.getElementById('product-name').textContent = product.name || 'N/A';
+                document.getElementById('product-price').textContent = product.price
+                    ? product.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
+                    : 'N/A';
+                document.getElementById('product-description').textContent = product.description || 'No description available.';
+                document.getElementById('product-category').textContent = product.category || 'N/A';
+                document.getElementById('product-dosage-form').textContent = product.dosage_form || 'N/A';
+                document.getElementById('product-ingredients').textContent = product.ingredients
+                    ? product.ingredients.join(', ')
+                    : 'N/A';
+                document.getElementById('product-benefits').textContent = product.benefits
+                    ? product.benefits.join(', ')
+                    : 'N/A';
+                document.getElementById('product-usage').textContent = product.usage_instructions || 'N/A';
+                document.getElementById('product-warnings').textContent = product.warnings || 'N/A';
+                document.getElementById('product-storage').textContent = product.storage_instructions || 'N/A';
+                document.getElementById('product-other-info').textContent = product.other_info || 'N/A';
+                document.getElementById('product-quantity-stock').textContent = product.quantity_in_stock || 'N/A';
+
+                const imagePlaceholder = document.querySelector('.product-image .image-placeholder');
+                if (product.image_url) {
+                    imagePlaceholder.innerHTML = `<img src="/${product.image_url}" alt="${product.name}">`;
+                } else {
+                    imagePlaceholder.innerHTML = '<i class="fas fa-image"></i>'; // Placeholder icon
+                }
+            }
+
+            // Gọi API để lấy thông tin sản phẩm
             if (productId) {
                 fetch(`/products-data/${productId}`)
                     .then(response => response.json())
                     .then(product => {
                         currentProduct = product; // Lưu trữ dữ liệu sản phẩm
-
-                        document.getElementById('product-name').textContent = product.name;
-                        document.getElementById('product-price').textContent = product.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
-                        document.getElementById('product-description').textContent = product.description || 'No description available.';
-                            // Hiển thị rating (cần xử lý logic để hiển thị đúng số sao)
-                            //document.getElementById('product-rating').textContent = `${product.rating} (${product.reviewCount})`;
-                        document.getElementById('product-category').textContent = product.category || 'N/A';
-                        document.getElementById('product-dosage-form').textContent = product.dosage_form || 'N/A';
-                        document.getElementById('product-ingredients').textContent = product.ingredients ? product.ingredients.join(', ') : 'N/A';
-                        document.getElementById('product-benefits').textContent = product.benefits ? product.benefits.join(', ') : 'N/A';
-                        document.getElementById('product-usage').textContent = product.usage_instructions || 'N/A';
-                        document.getElementById('product-warnings').textContent = product.warnings || 'N/A';
-                        document.getElementById('product-storage').textContent = product.storage_instructions || 'N/A';
-                        document.getElementById('product-other-info').textContent = product.other_info || 'N/A';
-                        document.getElementById('product-quantity-stock').textContent = product.quantity_in_stock || 'N/A';
-
-                        const imagePlaceholder = document.querySelector('.product-image .image-placeholder');
-                        if (product.image_url) {
-                            imagePlaceholder.innerHTML = `<img src="/${product.image_url}" alt="${product.name}">`;
-                        }
-
-                        const reviewsSection = document.querySelector('.reviews-section');
-                        const reviewCommentsContainer = reviewsSection.querySelector('.review-comments-container');
-                        const noCommentsMessage = reviewsSection.querySelector('.no-comments');
-
-                        if (product.ratings && product.ratings.length > 0) {
-                            noCommentsMessage.style.display = 'none';
-                            const commentsHeading = reviewsSection.querySelector('h3');
-                            if (!commentsHeading) {
-                                const newCommentsHeading = document.createElement('h3');
-                                newCommentsHeading.textContent = 'Reviews';
-                                reviewsSection.insertBefore(newCommentsHeading, reviewCommentsContainer);
-                            } else {
-                                commentsHeading.textContent = 'Reviews';
-                            }
-                            reviewCommentsContainer.querySelectorAll('.review-comment').forEach(comment => comment.remove());
-
-                            product.ratings.forEach(rating => {
-                                const commentDiv = document.createElement('div');
-                                commentDiv.classList.add('review-comment');
-                                commentDiv.innerHTML = `
-                                    <div class="user-info">
-                                        <div class="avatar-placeholder"></div>
-                                        <span>${rating.user_id || 'User'}</span>
-                                        <div class="comment-rating">
-                                            ${'<i class="fas fa-star"></i>'.repeat(rating.rating_value)}${'<i class="far fa-star"></i>'.repeat(5 - rating.rating_value)}
-                                        </div>
-                                    </div>
-                                    <p class="comment-text">${rating.comment || ''}</p>
-                                `;
-                                reviewCommentsContainer.appendChild(commentDiv);
-                            });
-
-                        } else {
-                            noCommentsMessage.style.display = 'block';
-                            const commentsHeading = reviewsSection.querySelector('h3');
-                            if (commentsHeading) {
-                                commentsHeading.textContent = 'Reviews';
-                            }
-                            reviewCommentsContainer.querySelectorAll('.review-comment').forEach(comment => comment.remove());
-                        }
-
-                        const questionsSection = document.querySelector('.questions-section');
-                        const qnaContainer = questionsSection.querySelector('.qna-container');
-                        const noQnaMessage = questionsSection.querySelector('.no-qna');
-
-                        if (product.qna && product.qna.length > 0) {
-                            noQnaMessage.style.display = 'none';
-                            const qnaHeading = questionsSection.querySelector('h3');
-                            if (!qnaHeading) {
-                                const newQnaHeading = document.createElement('h3');
-                                newQnaHeading.textContent = 'Q&A';
-                                questionsSection.insertBefore(newQnaHeading, qnaContainer);
-                            } else {
-                                qnaHeading.textContent = 'Q&A';
-                            }
-                            qnaContainer.querySelectorAll('.question-answer').forEach(qa => qa.remove());
-
-                            product.qna.forEach(qaItem => {
-                                const qaDiv = document.createElement('div');
-                                qaDiv.classList.add('question-answer');
-                                qaDiv.innerHTML = `
-                                    <p><strong class="question-user">User:</strong> ${qaItem.question || ''}</p>
-                                    <p class="answer"><strong class="answer-admin">Admin:</strong> ${qaItem.answer || ''}</p>
-                                    <button class="reply-to-question-button">Reply</button>
-                                `;
-                                qnaContainer.appendChild(qaDiv);
-                            });
-                        } else {
-                            noQnaMessage.style.display = 'block';
-                            const qnaHeading = questionsSection.querySelector('h3');
-                            if (qnaHeading) {
-                                qnaHeading.textContent = 'Q&A';
-                            }
-                            qnaContainer.querySelectorAll('.question-answer').forEach(qa => qa.remove());
-                        }
-
+                        populateProductDetails(product); // Điền dữ liệu vào giao diện
                     })
                     .catch(error => console.error('Lỗi khi tải thông tin sản phẩm:', error));
             } else {
@@ -335,10 +219,9 @@
                     if (currentProduct) {
                         populateEditForm(currentProduct); // Điền dữ liệu vào form
                         editProductForm.style.display = 'block'; // Hiển thị form chỉnh sửa
-                        // Ẩn thông tin sản phẩm hiện tại (tùy chọn)
+                        // Ẩn thông tin sản phẩm hiện tại
                         document.querySelector('.product-infor-container').style.display = 'none';
                         document.querySelector('.product-information-section').style.display = 'none';
-                        document.querySelector('.reviews-questions-section').style.display = 'none';
                     } else {
                         console.error('Không có dữ liệu sản phẩm để điền vào form chỉnh sửa.');
                     }
@@ -349,13 +232,13 @@
             if (cancelEditButton) {
                 cancelEditButton.addEventListener('click', function() {
                     editProductForm.style.display = 'none'; // Ẩn form chỉnh sửa
-                    // Hiển thị lại thông tin sản phẩm hiện tại (tùy chọn)
+                    // Hiển thị lại thông tin sản phẩm hiện tại
                     document.querySelector('.product-infor-container').style.display = 'flex';
                     document.querySelector('.product-information-section').style.display = 'block';
                 });
             }
 
-            // Xử lý sự kiện click nút "Save Changes" (chưa hoàn chỉnh)
+            // Xử lý sự kiện click nút "Lưu thay đổi"
             if (saveChangesButton) {
                 saveChangesButton.addEventListener('click', function() {
                     // Thu thập dữ liệu từ form chỉnh sửa
@@ -373,7 +256,7 @@
                         warnings: document.getElementById('edit_warnings').value,
                         storage_instructions: document.getElementById('edit_storage_instructions').value,
                         target_audience: document.getElementById('edit_target_audience').value.split(',').map(item => item.trim()),
-                        // Handle image update if needed
+                        // Sẽ cần xử lý upload hình ảnh
                     };
 
                     // Kiểm tra dữ liệu đã được cập nhật chưa
