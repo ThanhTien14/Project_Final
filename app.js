@@ -10,7 +10,7 @@ app.use(express.static(path.join(__dirname, 'public/images/')));
 app.use(express.static(path.join(__dirname, 'public/stylesheets/')));
 app.use(bodyParser.json());
 
-// index page
+// Trang chính
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/pages/index.html');
 });
