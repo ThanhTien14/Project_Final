@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm Sản Phẩm Mới</title>
+    <link rel="stylesheet" href="/create-product.css">
+
+</head>
+<body>
+    <h1>Thêm Sản Phẩm Mới</h1>
+    <form id="createForm" action="/api/products" method="POST">
+        <div class="form-group">
+            <label for="id">ID (tự động):</label>
+            <input type="text" id="id" name="id" value="Đang tạo..." readonly>
+        </div>
+        <div class="form-group">
+            <label for="name">Tên sản phẩm:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Mô tả:</label>
+            <input type="text" id="description" name="description">
+        </div>
+        <div class="form-group">
+            <label for="category">Phân loại:</label>
+            <input type="text" id="category" name="category">
+            <small>Ví dụ: HTSK</small>
+        </div>
+        <div class="form-group">
+            <label for="brand">Thương hiệu:</label>
+            <input type="text" id="brand" name="brand">
+        </div>
+        <div class="form-group">
+            <label for="dosage_form">Dạng bào chế:</label>
+            <input type="text" id="dosage_form" name="dosage_form">
+            <small>Ví dụ: Viên uống, Dạng lỏng</small>
+        </div>
+        <div class="form-group">
+            <label for="image_url">URL hình ảnh:</label>
+            <input type="text" id="image_url" name="image_url">
+            <small>Ví dụ: enzyme_tieu_hoa.jpg</small>
+        </div>
+        <div class="form-group">
+            <label for="ingredients">Thành phần:</label>
+            <input type="text" id="ingredients" name="ingredients">
+        </div>
+        <div class="form-group">
+            <label for="benefits">Lợi ích:</label>
+            <input type="text" id="benefits" name="benefits">
+        </div>
+        <div class="form-group">
+            <label for="usage_instructions">Hướng dẫn sử dụng:</label>
+            <input type="text" id="usage_instructions" name="usage_instructions">
+        </div>
+        <div class="form-group">
+            <label for="warnings">Cảnh báo:</label>
+            <input type="text" id="warnings" name="warnings">
+        </div>
+        <div class="form-group">
+            <label for="storage_instructions">Hướng dẫn bảo quản:</label>
+            <input type="text" id="storage_instructions" name="storage_instructions">
+        </div>
+        <div class="form-group">
+            <label for="target_audience">Đối tượng sử dụng:</label>
+            <input type="text" id="target_audience" name="target_audience">
+            <small>Ví dụ: Người lớn tuổi, Trẻ em</small>
+        </div>
+        <div class="form-group">
+            <label for="certifications">Chứng nhận:</label>
+            <input type="text" id="certifications" name="certifications">
+            <small>Ví dụ: GMP, HACCP</small>
+        </div>
+        <div class="form-group">
+            <label for="quantity_in_stock">Số lượng trong kho:</label>
+            <input type="number" id="quantity_in_stock" name="quantity_in_stock" value="0">
+        </div>
+        <div class="form-group">
+            <label for="price">Giá:</label>
+            <input type="number" id="price" name="price" value="0">
+        </div>
+        <div class="form-group">
+            <label for="currency">Đơn vị tiền tệ:</label>
+            <input type="text" id="currency" name="currency" value="VND">
+        </div>
+        <button type="submit">Lưu Sản Phẩm</button>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/api/get-latest-product-id')
+                .then(response => response.json())
+                .then(data => {
+                    const latestId = data.latestId;
+                    let nextId;
+
+                    if (latestId) {
+                        const lastNumber = parseInt(latestId.substring(4), 10);
+                        const nextNumber = lastNumber + 1;
+                        const formattedNumber = String(nextNumber).padStart(4, '0');
+                        nextId = 'TPCN' + formattedNumber;
+                    } else {
+                        nextId = 'TPCN0001'; // Nếu chưa có sản phẩm nào
+                    }
+                    document.getElementById('id').value = nextId;
+                })
+                .catch(error => {
+                    console.error('Lỗi khi lấy ID cao nhất:', error);
+                    document.getElementById('id').value = 'Lỗi tạo ID';
+                });
+        });
+    </script>
+</body>
+</html>

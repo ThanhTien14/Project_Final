@@ -202,7 +202,7 @@
 
             // Gọi API để lấy thông tin sản phẩm
             if (productId) {
-                fetch(`/products-data/${productId}`)
+                fetch(`/api/products/${productId}`)
                     .then(response => response.json())
                     .then(product => {
                         currentProduct = product; // Lưu trữ dữ liệu sản phẩm
@@ -263,7 +263,7 @@
                     console.log('Sản phẩm đã được cập nhật:', JSON.stringify(updatedProductData));
 
                     // Gửi dữ liệu đã cập nhật đến server
-                    fetch(`/update-product/${productId}`, {
+                    fetch(`/api/products/${productId}`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',

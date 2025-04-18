@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trang Sản Phẩm</title>
-    <link rel="stylesheet" href="/read.css">
+    <link rel="stylesheet" href="../stylesheets/list-products.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
@@ -24,16 +24,10 @@
         </main>
     </div>
 
-    <a href="/add-product">
-        <button class="add-product-button" id="add-product-btn">
-            <i class="fas fa-plus"></i> Thêm sản phẩm
-        </button>
-    </a>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Tải dữ liệu sản phẩm từ server
-            fetch('/products-data')
+            fetch('/api/products')
             .then(response => response.json())
             .then(products => {
                 const productList = document.querySelector('.product-list');
@@ -76,8 +70,8 @@
                     actions.classList.add('product-actions');
 
                     const quickViewIcon = document.createElement('a');
-                    quickViewIcon.classList.add('action-icon', 'quick-view-button'); // Thêm class 'quick-view-button'
-                    quickViewIcon.href = `/product-detail/${product.id}`; // Đường dẫn đến server với ID sản phẩm
+                    quickViewIcon.classList.add('action-icon', 'quick-view-button');
+                    quickViewIcon.href = `/pages/update-product.html?id=${product.id}`; // Đường dẫn đến server với ID sản phẩm
                     quickViewIcon.innerHTML = '<i class="fas fa-eye"></i>'; // Biểu tượng xem nhanh
 
                     const deleteIcon = document.createElement('span');
