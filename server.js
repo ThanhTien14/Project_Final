@@ -1,14 +1,48 @@
-// server.js
 const express = require('express');
+const multer = require('multer');
+const fs = require('fs');
 const path = require('path');
 const mongodbModule = require('./public/javascripts/mongodb');
 
 const app = express();
 const port = 3000;
 
+// Thiết lập multer để xử lý upload file
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const uploadDir = path.join(__dirname, 'public/images/uploads');
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+        const productId = req.params.id; // Lấy productId từ URL
+        const timestamp = Date.now();
+        const extension = path.extname(file.originalname);
+        cb(null, `${productId}-${timestamp}${extension}`); // Đặt tên: <product_id>-<timestamp>.<extension>
+    }
+});
+
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 50 * 1024 * 1024 }, // Giới hạn 5MB
+    fileFilter: (req, file, cb) => {
+        const filetypes = /jpeg|jpg|png|gif/;
+        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+        const mimetype = filetypes.test(file.mimetype);
+        if (extname && mimetype) {
+            return cb(null, true);
+        } else {
+            cb(new Error('Chỉ hỗ trợ file hình ảnh (jpeg, jpg, png, gif)'));
+        }
+    }
+});
+
 // Middleware
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json({ limit: '10kb' }));
+app.use('/uploads', express.static(path.join(__dirname, 'public/images/uploads')));
 
 // Hàm validate dữ liệu sản phẩm
 function validateProductData(data, isUpdate = false) {
@@ -65,17 +99,6 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'pages', 'index.html'));
 });
 
-// Kết nối MongoDB
-mongodbModule.connectToMongoDB()
-    .then(() => {
-        console.log('Kết nối MongoDB thành công!');
-        app.listen(port, () => console.log(`Server chạy trên port ${port}!`));
-    })
-    .catch(err => {
-        console.error('Lỗi kết nối MongoDB:', err);
-        process.exit(1);
-    });
-
 // API: Lấy ID sản phẩm cao nhất
 app.get('/api/products/latest-id', async (req, res) => {
     try {
@@ -125,35 +148,62 @@ app.get('/api/products', async (req, res) => {
 // API: Lấy chi tiết một sản phẩm
 app.get('/api/products/:id', async (req, res) => {
     try {
-        const { id } = req.params;
-        const products = await mongodbModule.findDocumentsById(id);
-        if (products.length === 0) {
-            return res.status(404).json({ error: 'Product not found' });
+        const product = await mongodbModule.dbCollection.findOne({ id: req.params.id });
+        if (!product) {
+            return res.status(404).json({ error: 'Không tìm thấy sản phẩm' });
         }
-        res.json(products[0]);
+        res.json(product);
     } catch (error) {
         throw error;
     }
 });
 
 // API: Cập nhật một sản phẩm
-app.put('/api/products/:id', async (req, res) => {
+app.put('/api/products/:id', upload.single('image'), async (req, res) => {
     try {
-        const { id } = req.params;
-        const errors = validateProductData(req.body, true);
+        const updateData = req.body;
+        const errors = validateProductData(updateData, true);
         if (errors.length > 0) {
             return res.status(400).json({ error: 'Invalid data', details: errors });
         }
-        const productData = normalizeProductData(req.body);
-        const modifiedCount = await mongodbModule.updateDocumentById(id, productData);
-        if (modifiedCount === 0) {
-            return res.status(404).json({ error: 'Product not found' });
+
+        // Xử lý hình ảnh nếu có file upload
+        if (req.file) {
+            // Lấy thông tin sản phẩm hiện tại để xóa file cũ (nếu có)
+            const existingProduct = await mongodbModule.dbCollection.findOne({ id: req.params.id });
+            if (existingProduct && existingProduct.image_url) {
+                const oldImagePath = path.join(__dirname, 'public', existingProduct.image_url);
+                if (fs.existsSync(oldImagePath)) {
+                    fs.unlinkSync(oldImagePath); // Xóa file cũ
+                }
+            }
+            updateData.image_url = `/images/uploads/${req.file.filename}`; // Lưu đường dẫn file mới
         }
-        res.json({ message: `Product ${id} updated successfully` });
+
+        const normalizedData = normalizeProductData(updateData);
+        const result = await mongodbModule.dbCollection.updateOne(
+            { id: req.params.id },
+            { $set: normalizedData }
+        );
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ error: 'Không tìm thấy sản phẩm' });
+        }
+        res.json({ message: 'Cập nhật sản phẩm thành công' });
     } catch (error) {
         throw error;
     }
 });
+
+// Kết nối MongoDB
+mongodbModule.connectToMongoDB()
+    .then(() => {
+        console.log('Kết nối MongoDB thành công!');
+        app.listen(port, () => console.log(`Server chạy trên port ${port}!`));
+    })
+    .catch(err => {
+        console.error('Lỗi kết nối MongoDB:', err);
+        process.exit(1);
+    });
 
 // Xử lý đóng kết nối MongoDB
 process.on('SIGINT', async () => {

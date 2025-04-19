@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trang Sản Phẩm</title>
-    <link rel="stylesheet" href="../stylesheets/list-products.css">
+    <link rel="stylesheet" href="/stylesheets/list-products.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
@@ -41,8 +41,13 @@
                     imagePlaceholder.classList.add('product-image-placeholder');
                     if (product.image_url) {
                         const image = document.createElement('img');
-                        image.src = `/${product.image_url}`;
+                        // Thêm tiền tố /images/ nếu cần
+                        const imageUrl = product.image_url.startsWith('/images/') ? product.image_url : `/images/${product.image_url}`;
+                        image.src = imageUrl;
                         image.alt = product.name;
+                        image.onerror = () => {
+                            imagePlaceholder.innerHTML = '<i class="fas fa-image"></i>';
+                        };
                         imagePlaceholder.appendChild(image);
                     } else {
                         imagePlaceholder.innerHTML = '<i class="fas fa-image"></i>'; // Placeholder icon
