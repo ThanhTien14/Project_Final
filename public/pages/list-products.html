@@ -42,7 +42,8 @@
                     if (product.image_url) {
                         const image = document.createElement('img');
                         // Thêm tiền tố /images/ nếu cần
-                        const imageUrl = product.image_url.startsWith('/images/') ? product.image_url : `/images/${product.image_url}`;
+                        const imageUrl = `http://localhost:3000${product.image_url}?t=${new Date().getTime()}`; // Thêm tham số thời gian để tránh cache
+                        // const imageUrl = product.image_url.startsWith('/images/') ? product.image_url : `/images/${product.image_url}`;
                         image.src = imageUrl;
                         image.alt = product.name;
                         image.onerror = () => {
