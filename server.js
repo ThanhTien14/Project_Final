@@ -61,9 +61,6 @@ function validateProductData(data, isUpdate = false) {
             errors.push('Giá phải là số dương');
         }
     } else {
-        // if (data.id) {
-        //     errors.push('Không được thay đổi ID sản phẩm');
-        // }
         if (data.name && (typeof data.name !== 'string' || data.name.trim() === '')) {
             errors.push('Tên sản phẩm không hợp lệ');
         }
@@ -148,7 +145,8 @@ app.get('/api/products', async (req, res) => {
         const { name, priceFrom, priceTo, category, brand, logic } = req.query;
         const criteria = { name, priceFrom, priceTo, category, brand, logic };
         const products = await mongodbModule.findDocuments(criteria);
-        console.log('Products fetched:', products);
+        console.log('Products fetched:', products.length); // Log số lượng
+        console.log('Sample product:', products[0]); // Log mẫu dữ liệu
         res.json(products);
     } catch (error) {
         throw error;
@@ -231,6 +229,7 @@ app.put('/api/products/:id', upload.single('image'), async (req, res) => {
             { $set: normalizedData }
         );
 
+        
         if (result.matchedCount === 0) {
             return res.status(404).json({ error: 'Không tìm thấy sản phẩm' });
         }
@@ -242,6 +241,52 @@ app.put('/api/products/:id', upload.single('image'), async (req, res) => {
         if (error.message.includes('file')) {
             return res.status(400).json({ error: 'Lỗi khi xử lý file ảnh', details: error.message });
         }
+        res.status(500).json({ error: 'Lỗi server nội bộ', details: error.message });
+    }
+});
+
+// API: Cập nhật nhiều sản phẩm
+app.put('/api/products/bulk', async (req, res) => {
+    try {
+        console.log('PUT /api/products/bulk - Request body:', req.body);
+        const { productIds, updateData } = req.body;
+
+        if (!productIds || !Array.isArray(productIds) || productIds.length === 0) {
+            return res.status(400).json({ error: 'Vui lòng cung cấp danh sách ID sản phẩm' });
+        }
+
+        if (!updateData || Object.keys(updateData).length === 0) {
+            return res.status(400).json({ error: 'Vui lòng cung cấp ít nhất một thông tin để cập nhật' });
+        }
+
+        // Kiểm tra dữ liệu hợp lệ
+        const errors = validateProductData(updateData, true);
+        if (errors.length > 0) {
+            return res.status(400).json({ error: 'Invalid data', details: errors });
+        }
+
+        // Chuẩn hóa dữ liệu
+        const normalizedData = normalizeProductData(updateData);
+
+        // Log để kiểm tra productIds trước khi query
+        console.log('Product IDs to update:', productIds);
+
+        // Cập nhật nhiều sản phẩm
+        const result = await mongodbModule.dbCollection.updateMany(
+            { id: { $in: productIds } },
+            { $set: normalizedData }
+        );
+
+        console.log('Update result:', result); // Log chi tiết kết quả
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ error: 'Không tìm thấy sản phẩm nào để cập nhật' });
+        }
+
+        console.log('PUT /api/products/bulk - Updated:', result.matchedCount, 'products');
+        res.json({ message: `Cập nhật ${result.matchedCount} sản phẩm thành công` });
+    } catch (error) {
+        console.error('PUT /api/products/bulk - Error:', error);
         res.status(500).json({ error: 'Lỗi server nội bộ', details: error.message });
     }
 });
