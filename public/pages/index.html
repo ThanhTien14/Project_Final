@@ -3,100 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trang Sản Phẩm</title>
-    <link rel="stylesheet" href="/index.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Trang Chủ - Quản Lý Sản Phẩm</title>
+    <link rel="stylesheet" href="/stylesheets/index.css">
 </head>
 <body>
-    <div class="top-bar">
-        <div class="search-container">
-            <input type="text" placeholder="Tìm kiếm sản phẩm...">
-            <button><i class="fas fa-search"></i></button>
-        </div>
-        <button class="filter-button">
-            <i class="fas fa-filter"></i>
-        </button>
-    </div>
-    <div class="container">
-        <main class="main-content">
-            <ul class="product-list">
-                </ul>
-        </main>
-    </div>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Trang chủ</a></li>
+                <li>
+                    <a href="#">Thêm sản phẩm</a>
+                    <ul>
+                        <li><a href="/pages/create-product.html">Thêm một sản phẩm</a></li>
+                        <li><a href="/pages/import-products.html">Import JSON</a></li>
+                    </ul>
+                </li>
+                <li><a href="/pages/list-products.html">Danh sách sản phẩm</a></li>
+                <li><a href="/pages/list-products.html">Tìm kiếm sản phẩm</a></li>
+                <li>
+                    <a href="#">Chỉnh sửa sản phẩm</a>
+                    <ul>
+                        <li><a href="/pages/update-product.html">Chỉnh sửa một sản phẩm</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Xóa sản phẩm</a>
+                    <ul>
+                        <li><a href="/pages/delete-product.html">Xóa sản phẩm</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
 
-    <a href="/add-product">
-        <button class="add-product-button" id="add-product-btn">
-            <i class="fas fa-plus"></i> Thêm sản phẩm
-        </button>
-    </a>
+    <main class="hero">
+        <div class="hero-content">
+            <h1>Chào mừng đến với Website Bán Thực Phẩm Chức Năng</h1>
+            <p>Nơi cung cấp các sản phẩm chăm sóc sức khỏe tốt nhất cho bạn và gia đình.</p>
+            <p>Khám phá ngay!</p>
+        </div>
+    </main>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Tải dữ liệu sản phẩm từ server
-            fetch('/products-data')
-            .then(response => response.json())
-            .then(products => {
-                const productList = document.querySelector('.product-list');
-                productList.innerHTML = ''; // Xóa nội dung cũ (nếu có)
-
-                products.forEach(product => {
-                    const listItem = document.createElement('li');
-                    listItem.classList.add('product-item');
-
-                    const imagePlaceholder = document.createElement('div');
-                    imagePlaceholder.classList.add('product-image-placeholder');
-                    if (product.image_url) {
-                        const image = document.createElement('img');
-                        image.src = `/${product.image_url}`;
-                        image.alt = product.name;
-                        imagePlaceholder.appendChild(image);
-                    } else {
-                        imagePlaceholder.innerHTML = '<i class="fas fa-image"></i>'; // Placeholder icon
-                    }
-
-                    const details = document.createElement('div');
-                    details.classList.add('product-details');
-
-                    const title = document.createElement('h3');
-                    title.textContent = product.name;
-
-                    const price = document.createElement('p');
-                    price.classList.add('price');
-                    price.textContent = `${product.price.toLocaleString('vi-VN')} VND`; // Format giá tiền Việt Nam
-
-                    const category = document.createElement('p');
-                    category.classList.add('category');
-                    category.textContent = product.category || 'Category'; // Hiển thị category hoặc giá trị mặc định
-
-                    details.appendChild(title);
-                    details.appendChild(price);
-                    details.appendChild(category);
-
-                    const actions = document.createElement('div');
-                    actions.classList.add('product-actions');
-
-                    const quickViewIcon = document.createElement('a');
-                    quickViewIcon.classList.add('action-icon', 'quick-view-button'); // Thêm class 'quick-view-button'
-                    quickViewIcon.href = `/product-detail/${product.id}`; // Đường dẫn đến server với ID sản phẩm
-                    quickViewIcon.innerHTML = '<i class="fas fa-eye"></i>'; // Biểu tượng xem nhanh
-
-                    const deleteIcon = document.createElement('span');
-                    deleteIcon.classList.add('action-icon', 'delete-button');
-                    deleteIcon.innerHTML = '<i class="fas fa-trash-alt"></i>'; // Biểu tượng xóa
-                    deleteIcon.dataset.productId = product.id;
-
-                    actions.appendChild(quickViewIcon);
-                    actions.appendChild(deleteIcon);
-
-                    listItem.appendChild(imagePlaceholder);
-                    listItem.appendChild(details);
-                    listItem.appendChild(actions);
-
-                    productList.appendChild(listItem);
-                });
-            })
-            .catch(error => console.error('Lỗi khi tải sản phẩm:', error));
-        });
+        // JavaScript nếu cần (hiện tại chưa cần)
     </script>
 </body>
 </html>

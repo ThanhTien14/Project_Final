@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm Sản Phẩm Mới</title>
+    <link rel="stylesheet" href="/stylesheets/create-product.css">
+    <style>
+        #image-preview {
+            max-width: 200px;
+            max-height: 200px;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Thêm Sản Phẩm Mới</h1>
+    <form id="createForm">
+        <div class="form-group">
+            <label for="id">ID (tự động):</label>
+            <input type="text" id="id" name="id" value="Đang tạo..." readonly>
+        </div>
+        <div class="form-group">
+            <label for="name">Tên sản phẩm:</label>
+            <input type="text" id="name" name="name">
+        </div>
+        <div class="form-group">
+            <label for="description">Mô tả:</label>
+            <input type="text" id="description" name="description">
+        </div>
+        <div class="form-group">
+            <label for="category">Danh Mục:</label>
+            <select id="category" name="category">
+                <option value="">Chọn Danh Mục</option>
+                <option value="HTSK">HTSK</option>
+                <option value="BDN">BDN</option>
+                <option value="LĐ">LĐ</option>
+                <option value="KhoangChat">KhoangChat</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="brand">Thương hiệu:</label>
+            <input type="text" id="brand" name="brand">
+        </div>
+        <div class="form-group">
+            <label for="dosage_form">Dạng bào chế:</label>
+            <input type="text" id="dosage_form" name="dosage_form">
+            <small>Ví dụ: Viên uống, Dạng lỏng</small>
+        </div>
+        <div class="form-group">
+            <label for="image_file">Hình ảnh sản phẩm:</label>
+            <input type="file" id="image_file" name="image_file" accept="image/*">
+            <img id="image-preview" src="#" alt="Preview hình ảnh">
+            <small>Chọn file hình ảnh (jpg, png, gif)</small>
+        </div>
+        <div class="form-group">
+            <label for="ingredients">Thành phần:</label>
+            <input type="text" id="ingredients" name="ingredients">
+        </div>
+        <div class="form-group">
+            <label for="benefits">Lợi ích:</label>
+            <input type="text" id="benefits" name="benefits">
+        </div>
+        <div class="form-group">
+            <label for="usage_instructions">Hướng dẫn sử dụng:</label>
+            <input type="text" id="usage_instructions" name="usage_instructions">
+        </div>
+        <div class="form-group">
+            <label for="warnings">Cảnh báo:</label>
+            <input type="text" id="warnings" name="warnings">
+        </div>
+        <div class="form-group">
+            <label for="storage_instructions">Hướng dẫn bảo quản:</label>
+            <input type="text" id="storage_instructions" name="storage_instructions">
+        </div>
+        <div class="form-group">
+            <label for="target_audience">Đối tượng sử dụng:</label>
+            <input type="text" id="target_audience" name="target_audience">
+            <small>Ví dụ: Người lớn tuổi, Trẻ em</small>
+        </div>
+        <div class="form-group">
+            <label for="certifications">Chứng nhận:</label>
+            <input type="text" id="certifications" name="certifications">
+            <small>Ví dụ: GMP, HACCP</small>
+        </div>
+        <div class="form-group">
+            <label for="quantity_in_stock">Số lượng trong kho:</label>
+            <input type="number" id="quantity_in_stock" name="quantity_in_stock" value="0">
+        </div>
+        <div class="form-group">
+            <label for="price">Giá:</label>
+            <input type="number" id="price" name="price" value="0">
+        </div>
+        <div class="form-group">
+            <label for="currency">Đơn vị tiền tệ:</label>
+            <input type="text" id="currency" name="currency" value="VND">
+        </div>
+        <button type="submit">Lưu Sản Phẩm</button>
+    </form>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tạo ID tự động
+            fetch('/api/products/latest-id')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (!data || typeof data.latestId === 'undefined') {
+                        throw new Error('Phản hồi từ API không đúng định dạng');
+                    }
+                    const latestId = data.latestId;
+                    let nextId;
+                    if (latestId) {
+                        const lastNumber = parseInt(latestId.substring(4), 10);
+                        const nextNumber = lastNumber + 1;
+                        const formattedNumber = String(nextNumber).padStart(4, '0');
+                        nextId = 'TPCN' + formattedNumber;
+                    } else {
+                        nextId = 'TPCN0001';
+                    }
+                    document.getElementById('id').value = nextId;
+                })
+                .catch(error => {
+                    console.error('Lỗi khi lấy ID cao nhất:', error);
+                    document.getElementById('id').value = 'Lỗi tạo ID';
+                });
+
+            // Preview hình ảnh
+            const imageFileInput = document.getElementById('image_file');
+            const imagePreview = document.getElementById('image-preview');
+            imageFileInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        imagePreview.src = e.target.result;
+                        imagePreview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    imagePreview.style.display = 'none';
+                }
+            });
+
+            // Xử lý submit form
+            const form = document.getElementById('createForm');
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault();
+
+                // Lấy giá trị từ các trường
+                const name = document.getElementById('name').value.trim();
+                const description = document.getElementById('description').value.trim();
+                const category = document.getElementById('category').value.trim();
+                const brand = document.getElementById('brand').value.trim();
+                const dosageForm = document.getElementById('dosage_form').value.trim();
+                const imageFile = document.getElementById('image_file').files[0];
+                const ingredients = document.getElementById('ingredients').value.trim();
+                const benefits = document.getElementById('benefits').value.trim();
+                const usageInstructions = document.getElementById('usage_instructions').value.trim();
+                const warnings = document.getElementById('warnings').value.trim();
+                const storageInstructions = document.getElementById('storage_instructions').value.trim();
+                const targetAudience = document.getElementById('target_audience').value.trim();
+                const certifications = document.getElementById('certifications').value.trim();
+                const quantityInStock = document.getElementById('quantity_in_stock').value;
+                const price = document.getElementById('price').value;
+                const currency = document.getElementById('currency').value.trim();
+
+                // Kiểm tra tất cả các trường
+                const isFormValid =
+                    name &&
+                    description &&
+                    category &&
+                    brand &&
+                    dosageForm &&
+                    // imageFile && // Có thể bỏ qua nếu không bắt buộc
+                    ingredients &&
+                    benefits &&
+                    usageInstructions &&
+                    warnings &&
+                    storageInstructions &&
+                    targetAudience &&
+                    certifications &&
+                    quantityInStock !== '' &&
+                    price !== '' &&
+                    currency;
+
+                if (!isFormValid) {
+                    alert('Vui lòng điền đủ thông tin.');
+                    return;
+                }
+
+                // Gửi dữ liệu bằng FormData
+                const formData = new FormData();
+                formData.append('id', document.getElementById('id').value);
+                formData.append('name', name);
+                formData.append('description', description);
+                formData.append('category', category);
+                formData.append('brand', brand);
+                formData.append('dosage_form', dosageForm);
+                if (imageFile) {
+                    formData.append('image_file', imageFile);
+                }
+                formData.append('ingredients', ingredients);
+                formData.append('benefits', benefits);
+                formData.append('usage_instructions', usageInstructions);
+                formData.append('warnings', warnings);
+                formData.append('storage_instructions', storageInstructions);
+                formData.append('target_audience', targetAudience);
+                formData.append('certifications', certifications);
+                formData.append('quantity_in_stock', quantityInStock);
+                formData.append('price', price);
+                formData.append('currency', currency);
+
+                try {
+                    const response = await fetch('/api/products', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+                    if (response.ok) {
+                        alert('Thêm thành công!');
+                        form.reset();
+                        imagePreview.style.display = 'none';
+                        document.getElementById('id').value = 'Đang tạo...';
+                        // Gọi lại API để lấy ID mới
+                        fetch('/api/products/latest-id')
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error(`HTTP error! Status: ${response.status}`);
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                if (!data || typeof data.latestId === 'undefined') {
+                                    throw new Error('Phản hồi từ API không đúng định dạng');
+                                }
+                                const latestId = data.latestId;
+                                let nextId;
+                                if (latestId) {
+                                    const lastNumber = parseInt(latestId.substring(4), 10);
+                                    const nextNumber = lastNumber + 1;
+                                    const formattedNumber = String(nextNumber).padStart(4, '0');
+                                    nextId = 'TPCN' + formattedNumber;
+                                } else {
+                                    nextId = 'TPCN0001';
+                                }
+                                document.getElementById('id').value = nextId;
+                            })
+                            .catch(error => {
+                                console.error('Lỗi khi lấy ID cao nhất:', error);
+                                document.getElementById('id').value = 'Lỗi tạo ID';
+                            });
+                    } else {
+                        const errorMessage = result.message || 'Lỗi khi thêm sản phẩm';
+                        const errorDetails = result.details ? result.details.join('\n') : '';
+                        alert(`${errorMessage}${errorDetails ? '\nChi tiết:\n' + errorDetails : ''}`);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Đã xảy ra lỗi khi gửi dữ liệu: ' + error.message);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
