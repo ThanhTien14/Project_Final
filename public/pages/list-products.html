@@ -7,15 +7,43 @@
     <link rel="stylesheet" href="../stylesheets/list-products.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
+
 <body>
     <div class="top-bar">
         <div class="search-container">
             <input type="text" id="search-input" placeholder="Tìm kiếm sản phẩm...">
             <button id="search-button"><i class="fas fa-search"></i></button>
         </div>
-        <button class="filter-button">
+        <button class="filter-button" id="sort-button" data-sort-order="desc">
             <i class="fas fa-filter"></i>
         </button>
+       <!-- Sắp xếp sản phẩm theo giá -->
+        <script>
+            document.getElementById('sort-button').addEventListener('click', function() {
+            const sortButton = this;
+            const productList = document.querySelector('.product-list');
+            const productItems = Array.from(productList.children);
+
+            // Lấy trạng thái sắp xếp hiện tại
+            const currentOrder = sortButton.dataset.sortOrder;
+
+            // Đảo trạng thái sắp xếp
+            const newOrder = currentOrder === 'desc' ? 'asc' : 'desc';
+            sortButton.dataset.sortOrder = newOrder;
+
+            // Sắp xếp danh sách sản phẩm
+            productItems.sort((a, b) => {
+                const priceA = parseInt(a.querySelector('.price').textContent.replace(/\D/g, ''), 10);
+                const priceB = parseInt(b.querySelector('.price').textContent.replace(/\D/g, ''), 10);
+
+                return newOrder === 'desc' ? priceB - priceA : priceA - priceB;
+            });
+
+            // Cập nhật danh sách sản phẩm
+            productList.innerHTML = '';
+            productItems.forEach(item => productList.appendChild(item));
+            });
+        </script>
     </div>
     
     <div class="container">
@@ -24,22 +52,7 @@
                 </ul>
         </main>
     </div>
-<script>
-    document.getElementById('search-button').addEventListener('click', function() {
-            const searchInput = document.getElementById('search-input').value.toLowerCase();
-            const productItems = document.querySelectorAll('.product-item');
 
-            productItems.forEach(item => {
-                const productNameElement = item.querySelector('h3');
-                const productName = productNameElement ? productNameElement.textContent.toLowerCase() : '';
-                if (productName.includes(searchInput)) {
-                    item.style.display = ''; // Hiển thị sản phẩm
-                } else {
-                    item.style.display = 'none'; // Ẩn sản phẩm
-                }
-            });
-        });
-</script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Tải dữ liệu sản phẩm từ server
@@ -106,8 +119,21 @@
                 });
             })
             .catch(error => console.error('Lỗi khi tải sản phẩm:', error));
+            
+        });
+        document.getElementById('search-button').addEventListener('click', function() {
+            const searchInput = document.getElementById('search-input').value.toLowerCase();
+            const productItems = document.querySelectorAll('.product-item');
 
-
+            productItems.forEach(item => {
+                const productNameElement = item.querySelector('h3');
+                const productName = productNameElement ? productNameElement.textContent.toLowerCase() : '';
+                if (productName.includes(searchInput)) {
+                    item.style.display = ''; // Hiển thị sản phẩm
+                } else {
+                    item.style.display = 'none'; // Ẩn sản phẩm
+                }
+            });
         });
     </script>
 </body>

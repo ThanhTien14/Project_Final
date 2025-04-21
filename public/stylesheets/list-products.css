@@ -56,6 +56,20 @@ body {
     padding: 8px;
 }
 
+.filter-button[data-sort-order="desc"] i {
+    color: #333; 
+    transform: rotate(0deg); /* Biểu tượng không xoay */
+    }
+
+    .filter-button[data-sort-order="asc"] i {
+    color: #333; 
+    transform: rotate(180deg); /* Biểu tượng xoay 180 độ */
+    }
+
+    .filter-button i {
+    transition: transform 0.3s ease, color 0.3s ease; /* Hiệu ứng chuyển đổi */
+    }
+
 .filter-button:hover {
     color: #007bff; /* Màu hover icon filter (placeholder - cần thay đổi theo Figma) */
 }

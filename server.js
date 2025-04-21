@@ -159,14 +159,20 @@ app.put('/api/products/:id', async (req, res) => {
 
 app.get('/api/products/search', async (req, res) => {
     try {
-        const searchInput = req.query.name ? req.query.name.toLowerCase() : '';
+        const searchInput = req.query.name ? req.query.name.trim().toLowerCase() : '';
+
+        if (!searchInput) {
+            return res.status(400).json({ error: 'Search query is required' });
+        }
+
         const products = await mongodbModule.dbCollection.find({
-            name: { $regex: searchInput, $options: 'i' }
+            name: { $regex: searchInput, $options: 'i' } // i: không phân biệt hoa thường
         }).toArray();
 
-        res.json(products);
+        res.json(products); // Trả kết quả về client dưới dạng JSON
     } catch (error) {
-        throw error;
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 
