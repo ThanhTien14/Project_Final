@@ -154,6 +154,61 @@ app.put('/api/products/:id', async (req, res) => {
         throw error;
     }
 });
+//API tìm kiếm thông tin sản phẩm
+// API route for frontend JavaScript to get data
+app.get('/products-data', async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const skip = (page - 1) * limit;
+    const sortField = req.query.sortField || 'name';
+    const sortOrder = req.query.sortOrder === 'desc' ? -1 : 1;
+  
+    const filter = {};
+  
+    if (req.query.category) {
+      filter.category = req.query.category;
+    }
+  
+    if (req.query.name) {
+      filter.name = { $regex: req.query.name, $options: 'i' };
+    }
+  
+    if (req.query.minPrice || req.query.maxPrice) {
+      filter.price = {};
+      if (req.query.minPrice) filter.price.$gte = Number(req.query.minPrice);
+      if (req.query.maxPrice) filter.price.$lte = Number(req.query.maxPrice);
+    }
+  
+    if (req.query.searchMode === 'or' && req.query.name && req.query.category) {
+      filter.$or = [
+        { name: { $regex: req.query.name, $options: 'i' } },
+        { category: req.query.category },
+      ];
+      delete filter.name;
+      delete filter.category;
+    }
+  
+    const products = await Product.find(filter)
+      .sort({ [sortField]: sortOrder })
+      .skip(skip)
+      .limit(limit);
+  
+    const total = await Product.countDocuments(filter);
+  
+    res.json({
+      products,
+      pagination: {
+        currentPage: page,
+        totalPages: Math.ceil(total / limit)
+      }
+    });
+  });
+  
+  // Route: View product detail
+  app.get('/product-detail/:id', async (req, res) => {
+    const product = await Product.findById(req.params.id);
+    res.json(product);
+  });
 
 // Xử lý đóng kết nối MongoDB
 process.on('SIGINT', async () => {
