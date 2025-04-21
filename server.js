@@ -2,15 +2,17 @@
 const express = require('express');
 const path = require('path');
 const mongodbModule = require('./public/javascripts/mongodb');
-
 const router = express.Router();
 const app = express();
 const port = 3000;
 
+
+
 // Middleware
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json({ limit: '10kb' }));
-
+app.set('views', path.join(__dirname, 'public', 'pages'));
+app.set('view engine', 'ejs');
 // Hàm validate dữ liệu sản phẩm
 function validateProductData(data, isUpdate = false) {
     const errors = [];
@@ -40,6 +42,9 @@ function validateProductData(data, isUpdate = false) {
     }
     return errors;
 }
+
+
+
 
 // Hàm chuẩn hóa dữ liệu
 function normalizeProductData(data) {
@@ -172,6 +177,34 @@ app.get('/api/products/search', async (req, res) => {
         res.json(products); // Trả kết quả về client dưới dạng JSON
     } catch (error) {
         console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// API: Lấy danh sách sản phẩm có phân trang
+app.get('/api/products', async (req, res) => {
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = 10; // mỗi trang 5 sản phẩm
+        const skip = (page - 1) * limit;
+
+        const [products, totalProducts] = await Promise.all([
+            mongodbModule.dbCollection.find().skip(skip).limit(limit).toArray(),
+            mongodbModule.dbCollection.countDocuments()
+        ]);
+
+        const totalPages = Math.ceil(totalProducts / limit);
+
+        res.json({
+            products,
+            pagination: {
+                currentPage: page,
+                totalPages,
+                totalProducts
+            }
+        });
+    } catch (error) {
+        console.error('Lỗi API phân trang:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
