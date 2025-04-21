@@ -8,30 +8,62 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Trang chủ</a></li>
+                <li><a href="/pages/list-products.html">Danh sách sản phẩm</a></li>
+            </ul>
+        </nav>
+    </header>
+
     <div class="top-bar">
         <div class="search-container">
-            <input type="text" placeholder="Tìm kiếm sản phẩm...">
-            <button><i class="fas fa-search"></i></button>
+            <input type="text" id="search-input" placeholder="Tìm kiếm sản phẩm...">
+            <button id="search-button"><i class="fas fa-search"></i></button>
         </div>
         <button class="filter-button">
             <i class="fas fa-filter"></i>
         </button>
     </div>
     <div class="container">
+        <div id="error-message" class="message error" style="display: none;"></div>
         <main class="main-content">
-            <ul class="product-list">
-                </ul>
+            <ul class="product-list"></ul>
         </main>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // biến to lưu trữ tất cả sản phẩm
+            let allProducts = [];
+
             // Tải dữ liệu sản phẩm từ server
-            fetch('/api/products')
-            .then(response => response.json())
-            .then(products => {
+            async function loadProducts() {
+                try {
+                    const response = await fetch('/api/products');
+                    if (!response.ok) {
+                        throw new Error('Không thể tải danh sách sản phẩm');
+                    }
+                    allProducts = await response.json();
+                    console.log('Products loaded: ', allProducts.length);
+                    console.log('Sample product: ', allProducts[0]); // In sản phẩm đầu tiên để kiểm tra
+                    displayProducts(allProducts); // Hiển thị sản phẩm sau khi tải xong
+                } catch (error) {
+                    console.error('Lỗi khi tải sản phẩm:', error);
+                    showError(error.message);
+                }
+            }
+
+            // Hamh hiển thị danh sach sản phẩm
+            function displayProducts(products){
                 const productList = document.querySelector('.product-list');
                 productList.innerHTML = ''; // Xóa nội dung cũ (nếu có)
+
+                if (products.length === 0) {
+                    productList.innerHTML = '<li class="no-products">Không có sản phẩm nào.</li>';
+                    return;
+                }
 
                 products.forEach(product => {
                     const listItem = document.createElement('li');
@@ -41,12 +73,14 @@
                     imagePlaceholder.classList.add('product-image-placeholder');
                     if (product.image_url) {
                         const image = document.createElement('img');
-                        // Thêm tiền tố /images/ nếu cần
-                        const imageUrl = `http://localhost:3000${product.image_url}?t=${new Date().getTime()}`; // Thêm tham số thời gian để tránh cache
-                        // const imageUrl = product.image_url.startsWith('/images/') ? product.image_url : `/images/${product.image_url}`;
+                        // Hỗ trợ cả URL bên ngoài và URL upload
+                        const imageUrl = product.image_url.startsWith('/images/uploads/') 
+                            ? `http://localhost:3000${product.image_url}?t=${new Date().getTime()}` 
+                            : product.image_url;
                         image.src = imageUrl;
                         image.alt = product.name;
                         image.onerror = () => {
+                            console.error('Failed to load image:', imageUrl);
                             imagePlaceholder.innerHTML = '<i class="fas fa-image"></i>';
                         };
                         imagePlaceholder.appendChild(image);
@@ -62,11 +96,11 @@
 
                     const price = document.createElement('p');
                     price.classList.add('price');
-                    price.textContent = `${product.price.toLocaleString('vi-VN')} VND`; // Format giá tiền Việt Nam
+                    price.textContent = `${product.price.toLocaleString('vi-VN')} ${product.currency || 'VND'}`; // Format giá tiền Việt Nam
 
                     const category = document.createElement('p');
                     category.classList.add('category');
-                    category.textContent = product.category || 'Category'; // Hiển thị category hoặc giá trị mặc định
+                    category.textContent = product.category || 'Chưa có'; // Hiển thị category hoặc giá trị mặc định
 
                     details.appendChild(title);
                     details.appendChild(price);
@@ -94,8 +128,39 @@
 
                     productList.appendChild(listItem);
                 });
-            })
-            .catch(error => console.error('Lỗi khi tải sản phẩm:', error));
+
+            }
+
+            // Xử lý tìm kiếm
+            document.getElementById('search-button').addEventListener('click', function() {
+                const searchTerm = document.getElementById('search-input').value.toLowerCase();
+                const filteredProducts = allProducts.filter(product => 
+                    product.name.toLowerCase().includes(searchTerm) ||
+                    product.id.toLowerCase().includes(searchTerm) ||
+                    (product.category && product.category.toLowerCase().includes(searchTerm))
+                );
+                displayProducts(filteredProducts);
+            });
+
+            // Xử lý tìm kiếm khi nhấn Enter
+            document.getElementById('search-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('search-button').click();
+                }
+            });
+
+            // Hàm hiển thị thông báo lỗi
+            function showError(message) {
+                const errorDiv = document.getElementById('error-message');
+                if (errorDiv) {
+                    errorDiv.textContent = message;
+                    errorDiv.style.display = 'block';
+                    setTimeout(() => errorDiv.style.display = 'none', 3000);
+                }
+            }
+
+            // Tải sản phẩm khi trang được load
+            loadProducts();
         });
     </script>
 </body>

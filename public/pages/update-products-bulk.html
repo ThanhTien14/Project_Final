@@ -19,8 +19,8 @@
 
     <main>
         <h1>Cập Nhật Nhiều Sản Phẩm</h1>
-        <div id="error-message" class="error" style="display: none;"></div>
-        <div id="success-message" class="success" style="display: none;"></div>
+        <div id="error-message" class="message error" style="display: none;"></div>
+        <div id="success-message" class="message success" style="display: none;"></div>
 
         <form id="bulk-update-form">
             <div class="form-group">
@@ -32,7 +32,10 @@
                             <th>ID</th>
                             <th>Tên</th>
                             <th>Giá</th>
+                            <th>Số lượng tồn kho</th>
                             <th>Danh mục</th>
+                            <th>Thương hiệu</th>
+                            <th>Dạng bào chế</th>
                         </tr>
                     </thead>
                     <tbody id="product-list"></tbody>
@@ -40,22 +43,44 @@
             </div>
             <div class="form-group">
                 <h3>Thông tin cập nhật</h3>
-                <label for="price">Giá mới (để trống nếu không thay đổi):</label>
-                <input type="number" id="price" name="price" min="0" step="0.01">
-            </div>
-            <div class="form-group">
-                <label for="quantity_in_stock">Số lượng tồn kho mới (để trống nếu không thay đổi):</label>
-                <input type="number" id="quantity_in_stock" name="quantity_in_stock" min="0">
-            </div>
-            <div class="form-group">
-                <label for="category">Danh mục mới (để trống nếu không thay đổi):</label>
-                <select id="category" name="category">
-                    <option value="">Không thay đổi</option>
-                    <option value="HTSK">HTSK</option>
-                    <option value="BDN">BDN</option>
-                    <option value="LĐ">LĐ</option>
-                    <option value="KHOANGCHAT">KHOANGCHAT</option>
-                </select>
+                <div class="update-field">
+                    <label for="price">Giá mới (để trống nếu không thay đổi):</label>
+                    <input type="number" id="price" name="price" min="0" step="0.01">
+                </div>
+                <div class="update-field">
+                    <label for="quantity_in_stock">Số lượng tồn kho mới (để trống nếu không thay đổi):</label>
+                    <input type="number" id="quantity_in_stock" name="quantity_in_stock" min="0">
+                </div>
+                <div class="update-field">
+                    <label for="category">Danh mục mới (để trống nếu không thay đổi):</label>
+                    <select id="category" name="category">
+                        <option value="">Không thay đổi</option>
+                        <option value="HTSK">HTSK</option>
+                        <option value="BDN">BDN</option>
+                        <option value="LĐ">LĐ</option>
+                        <option value="KHOANGCHAT">KHOANGCHAT</option>
+                    </select>
+                </div>
+                <div class="update-field">
+                    <label for="description">Mô tả mới (để trống nếu không thay đổi):</label>
+                    <textarea id="description" name="description"></textarea>
+                </div>
+                <div class="update-field">
+                    <label for="brand">Thương hiệu mới (để trống nếu không thay đổi):</label>
+                    <input type="text" id="brand" name="brand">
+                </div>
+                <div class="update-field">
+                    <label for="dosage_form">Dạng bào chế mới (để trống nếu không thay đổi):</label>
+                    <input type="text" id="dosage_form" name="dosage_form">
+                </div>
+                <div class="update-field">
+                    <label for="ingredients">Thành phần mới (phân tách bằng dấu phẩy, để trống nếu không thay đổi):</label>
+                    <input type="text" id="ingredients" name="ingredients" placeholder="Ví dụ: Vitamin C, Kẽm">
+                </div>
+                <div class="update-field">
+                    <label for="benefits">Lợi ích mới (phân tách bằng dấu phẩy, để trống nếu không thay đổi):</label>
+                    <input type="text" id="benefits" name="benefits" placeholder="Ví dụ: Tăng đề kháng, Hỗ trợ tiêu hóa">
+                </div>
             </div>
             <div class="form-actions">
                 <button type="submit">Cập nhật</button>
@@ -79,11 +104,14 @@
                     products.forEach(product => {
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                            <td><input type="checkbox" name="product_ids" value="${product.id}"></td>
+                             <td><input type="checkbox" name="product_ids" value="${product.id}"></td>
                             <td>${product.id}</td>
                             <td>${product.name}</td>
-                            <td>${product.price.toLocaleString('vi-VN')} VND</td>
+                            <td>${product.price.toLocaleString('vi-VN')} ${product.currency || 'VND'}</td>
+                            <td>${product.quantity_in_stock || 0}</td>
                             <td>${product.category || 'Chưa có'}</td>
+                            <td>${product.brand || 'Chưa có'}</td>
+                            <td>${product.dosage_form || 'Chưa có'}</td>
                         `;
                         productList.appendChild(row);
                     });
@@ -112,9 +140,7 @@
                     console.log('User canceled the update');
                     return;
                 }
-        
-                const form = event.target;
-                const formData = new FormData(form);
+
                 const productIds = Array.from(document.querySelectorAll('input[name="product_ids"]:checked')).map(input => input.value);
                 console.log('Product IDs selected:', productIds); // Log để kiểm tra productIds
         
@@ -123,37 +149,42 @@
                     return;
                 }
         
-                const updateData = {};
-                if (formData.get('price')) {
-                    const price = parseFloat(formData.get('price'));
-                    if (isNaN(price) || price <= 0) {
-                        showError('Giá phải là số dương');
-                        return;
+                const updateData = {
+                    price: document.getElementById('price').value ? parseFloat(document.getElementById('price').value) : undefined,
+                    quantity_in_stock: document.getElementById('quantity_in_stock').value ? parseInt(document.getElementById('quantity_in_stock').value) : undefined,
+                    category: document.getElementById('category').value || undefined,
+                    description: document.getElementById('description').value || undefined,
+                    brand: document.getElementById('brand').value || undefined,
+                    dosage_form: document.getElementById('dosage_form').value || undefined,
+                    ingredients: document.getElementById('ingredients').value || undefined,
+                    benefits: document.getElementById('benefits').value || undefined
+                };
+
+                // Xóa các trường không có giá trị
+                Object.keys(updateData).forEach(key => {
+                    if (updateData[key] === undefined || (typeof updateData[key] === 'string' && updateData[key].trim() === '')) {
+                        delete updateData[key];
                     }
-                    updateData.price = price;
-                }
-                if (formData.get('quantity_in_stock')) {
-                    const quantity = parseInt(formData.get('quantity_in_stock'));
-                    if (isNaN(quantity) || quantity < 0) {
-                        showError('Số lượng tồn kho phải là số không âm');
-                        return;
-                    }
-                    updateData.quantity_in_stock = quantity;
-                }
-                if (formData.get('category')) {
-                    updateData.category = formData.get('category');
-                }
-        
+                });
+
+                // Validation phía client
                 if (Object.keys(updateData).length === 0) {
                     showError('Vui lòng cung cấp ít nhất một thông tin để cập nhật');
                     return;
                 }
-        
+                if (updateData.price && (isNaN(updateData.price) || updateData.price <= 0)) {
+                    showError('Giá phải là số dương');
+                    return;
+                }
+                if (updateData.quantity_in_stock && (isNaN(updateData.quantity_in_stock) || updateData.quantity_in_stock < 0)) {
+                    showError('Số lượng tồn kho phải là số không âm');
+                    return;
+                }
+                
                 console.log('Request body:', { productIds, updateData }); // Log để kiểm tra dữ liệu gửi đi
         
                 try {
                     console.log('Sending fetch request to /api/products/bulk');
-                    console.log('Fetch request body:', { productIds, updateData });
                     const response = await fetch('/api/products/bulk', {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
@@ -161,7 +192,6 @@
                     });
         
                     console.log('Response status:', response.status); // Log để kiểm tra status
-        
                     const result = await response.json();
                     console.log('Response body:', result); // Log để kiểm tra body trả về
         
@@ -211,6 +241,6 @@
             // Tải sản phẩm khi trang được load
             loadProducts();
         })();
-        </script>
+    </script>
 </body>
 </html>

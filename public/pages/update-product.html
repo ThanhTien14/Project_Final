@@ -18,11 +18,10 @@
 
     <main>
         <h1>Chỉnh Sửa Sản Phẩm</h1>
-        <!-- Thông báo được đặt ở đây nhưng sẽ dùng position: fixed để cố định vị trí -->
-        <div id="error-message" class="error" style="display: none;"></div>
-        <div id="success-message" class="success" style="display: none;"></div>
+        <div id="error-message" class="message error" style="display: none;"></div>
+        <div id="success-message" class="message success" style="display: none;"></div>
 
-        <form id="update-product-form" enctype="multipart/form-data">
+        <form id="update-product-form">
             <div class="form-group">
                 <label for="id">ID:</label>
                 <input type="text" id="id" name="id" readonly>
@@ -60,8 +59,17 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="image">Tải lên hình ảnh mới (nếu muốn thay đổi):</label>
-                <input type="file" id="image" name="image" accept="image/*">
+                <label>Hình ảnh mới:</label>
+                <div class="image-options">
+                    <input type="radio" id="upload-image" name="image-option" value="upload" checked>
+                    <label for="upload-image">Tải lên từ máy:</label>
+                    <input type="file" id="image" name="image" accept="image/*">
+                </div>
+                <div class="image-options">
+                    <input type="radio" id="paste-url" name="image-option" value="url">
+                    <label for="paste-url">Dán URL:</label>
+                    <input type="text" id="image-url" name="image_url" placeholder="Nhập URL hình ảnh" disabled>
+                </div>
                 <div id="image-preview" class="image-preview">
                     <img src="" alt="Preview hình ảnh mới" style="display: none;" id="image-preview-img">
                 </div>
@@ -168,8 +176,9 @@
     function displayCurrentImage(imageUrl) {
         const currentImage = document.getElementById('current-image-img');
         if (imageUrl) {
-            const fullImageUrl = `http://localhost:3000${imageUrl}?t=${new Date().getTime()}`;
-            console.log('Loading image:', fullImageUrl);
+            const fullImageUrl = imageUrl.startsWith('/images/uploads/') ? `http://localhost:3000${imageUrl}` : imageUrl;
+            // const fullImageUrl = `http://localhost:3000${imageUrl}?t=${new Date().getTime()}`;
+            console.log('Loading current image:', fullImageUrl);
             currentImage.src = fullImageUrl;
             currentImage.style.display = 'block';
             currentImage.onerror = () => {
@@ -182,22 +191,56 @@
         }
     }
 
-    // Preview hình ảnh mới
-    document.getElementById('image').addEventListener('change', function(event) {
-        const file = event.target.files[0];
-        const previewImg = document.getElementById('image-preview-img');
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                previewImg.src = e.target.result;
-                previewImg.style.display = 'block';
-            };
-            reader.readAsDataURL(file);
-        } else {
-            previewImg.src = '';
-            previewImg.style.display = 'none';
-        }
+    // Xử lý toggle giữa upload file và paste URL
+    document.getElementById('upload-image').addEventListener('change', () => {
+        document.getElementById('image').disabled = false;
+        document.getElementById('image-url').disabled = true;
+        document.getElementById('image-url').value = '';
+        previewImage();
     });
+    document.getElementById('paste-url').addEventListener('change', () => {
+        document.getElementById('image').disabled = true;
+        document.getElementById('image-url').disabled = false;
+        document.getElementById('image').value = '';
+        previewImage();
+    });
+
+    // Preview hình ảnh mới (upload hoặc paste URL)
+    function previewImage() {
+        const previewImg = document.getElementById('image-preview-img');
+        const imageOption = document.querySelector('input[name="image-option"]:checked').value;
+        if (imageOption === 'upload') {
+            const file = document.getElementById('image').files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    previewImg.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                previewImg.src = '';
+                previewImg.style.display = 'none';
+            }
+        } else {
+            const imageUrl = document.getElementById('image-url').value;
+            if (imageUrl) {
+                previewImg.src = imageUrl;
+                previewImg.style.display = 'block';
+                previewImg.onerror = () => {
+                    console.error('Failed to load preview image:', imageUrl);
+                    previewImg.style.display = 'none';
+                    showError('Không thể tải hình ảnh từ URL');
+                };
+            } else {
+                previewImg.src = '';
+                previewImg.style.display = 'none';
+            }
+        }
+    }
+
+    document.getElementById('image').addEventListener('change', previewImage);
+    document.getElementById('image-url').addEventListener('input', previewImage);
 
     // Xử lý submit form
     document.getElementById('update-product-form').addEventListener('submit', async event => {
@@ -208,27 +251,87 @@
             return;
         }
 
-        const form = event.target;
-        const formData = new FormData(form);
+        const updateData = {
+            name: document.getElementById('name').value,
+            description: document.getElementById('description').value,
+            category: document.getElementById('category').value,
+            brand: document.getElementById('brand').value,
+            dosage_form: document.getElementById('dosage_form').value,
+            ingredients: document.getElementById('ingredients').value,
+            benefits: document.getElementById('benefits').value,
+            usage_instructions: document.getElementById('usage_instructions').value,
+            warnings: document.getElementById('warnings').value,
+            storage_instructions: document.getElementById('storage_instructions').value,
+            target_audience: document.getElementById('target_audience').value,
+            certifications: document.getElementById('certifications').value,
+            quantity_in_stock: parseInt(document.getElementById('quantity_in_stock').value),
+            price: parseFloat(document.getElementById('price').value),
+            currency: document.getElementById('currency').value,
+        };
+
+        // const form = event.target;
+        // const formData = new FormData(form);
 
         // Validation phía client
-        const name = formData.get('name');
-        const quantity_in_stock = parseInt(formData.get('quantity_in_stock'));
-        const price = parseFloat(formData.get('price'));
-
-        if (!name.trim()) {
+        if (!updateData.name.trim()) {
             showError('Tên sản phẩm là bắt buộc');
             return;
         }
-        if (isNaN(quantity_in_stock) || quantity_in_stock < 0) {
+        if (isNaN(updateData.quantity_in_stock) || updateData.quantity_in_stock < 0) {
             showError('Số lượng tồn kho phải là số không âm');
             return;
         }
-        if (isNaN(price) || price <= 0) {
+        if (isNaN(updateData.price) || updateData.price <= 0) {
             showError('Giá phải là số dương');
             return;
         }
 
+        // const name = formData.get('name');
+        // const quantity_in_stock = parseInt(formData.get('quantity_in_stock'));
+        // const price = parseFloat(formData.get('price'));
+
+        // if (!name.trim()) {
+        //     showError('Tên sản phẩm là bắt buộc');
+        //     return;
+        // }
+        // if (isNaN(quantity_in_stock) || quantity_in_stock < 0) {
+        //     showError('Số lượng tồn kho phải là số không âm');
+        //     return;
+        // }
+        // if (isNaN(price) || price <= 0) {
+        //     showError('Giá phải là số dương');
+        //     return;
+        // }
+        
+        // Xóa các trường không có giá trị để tránh gửi dữ liệu rỗng
+        Object.keys(updateData).forEach(key => {
+            if (!updateData[key] || (typeof updateData[key] === 'string' && updateData[key].trim() === '')) {
+                delete updateData[key];
+            }
+        });
+
+        // 
+        const imageOption = document.querySelector('input[name="image-option"]:checked').value;
+        if (imageOption === 'url') {
+            const imageUrl = document.getElementById('image-url').value;
+            if (imageUrl) {
+                updateData.image_url = imageUrl;
+            }
+        }
+
+        // Gửi dữ liệu dưới dạng FormData
+        const formData = new FormData();
+        formData.append('updateData', JSON.stringify(updateData));
+
+        // Nếu có hình ảnh mới, thêm vào formData
+        if (imageOption === 'upload') {
+            const imageFile = document.getElementById('image').files[0];
+            if (imageFile) {
+                formData.append('image', imageFile);
+            }
+        }
+
+        // Gửi yêu cầu cập nhật sản phẩm
         try {
             const response = await fetch(`/api/products/${productId}`, {
                 method: 'PUT',
