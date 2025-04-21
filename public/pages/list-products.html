@@ -10,8 +10,8 @@
 <body>
     <div class="top-bar">
         <div class="search-container">
-            <input type="text" placeholder="Tìm kiếm sản phẩm...">
-            <button><i class="fas fa-search"></i></button>
+            <input type="text" id="search-input" placeholder="Tìm kiếm sản phẩm...">
+            <button id="search-button"><i class="fas fa-search"></i></button>
         </div>
         <button class="filter-button">
             <i class="fas fa-filter"></i>
@@ -30,7 +30,8 @@
             const productItems = document.querySelectorAll('.product-item');
 
             productItems.forEach(item => {
-                const productName = item.querySelector('h3').textContent.toLowerCase();
+                const productNameElement = item.querySelector('h3');
+                const productName = productNameElement ? productNameElement.textContent.toLowerCase() : '';
                 if (productName.includes(searchInput)) {
                     item.style.display = ''; // Hiển thị sản phẩm
                 } else {
