@@ -166,6 +166,70 @@ app.get('/api/products/:id', async (req, res) => {
     }
 });
 
+// API: Cập nhật nhiều sản phẩm
+app.put('/api/products/bulk', async (req, res) => {
+    try {
+        console.log('PUT /api/products/bulk - Request received');
+        console.log('PUT /api/products/bulk - Request body:', req.body);
+        const { productIds, updateData } = req.body;
+
+        if (!productIds || !Array.isArray(productIds) || productIds.length === 0) {
+            console.log('PUT /api/products/bulk - Error: Missing productIds');
+            return res.status(400).json({ error: 'Vui lòng cung cấp danh sách ID sản phẩm' });
+        }
+
+        if (!updateData || Object.keys(updateData).length === 0) {
+            console.log('PUT /api/products/bulk - Error: Missing updateData');
+            return res.status(400).json({ error: 'Vui lòng cung cấp ít nhất một thông tin để cập nhật' });
+        }
+
+        // Kiểm tra dữ liệu hợp lệ
+        const errors = validateProductData(updateData, true);
+        if (errors.length > 0) {
+            console.log('PUT /api/products/bulk - Validation errors:', errors);
+            return res.status(400).json({ error: 'Invalid data', details: errors });
+        }
+
+        // Chuẩn hóa dữ liệu
+        const normalizedData = normalizeProductData(updateData);
+
+        // Log để kiểm tra productIds trước khi query
+        console.log('Product IDs to update:', productIds);
+
+        // Kiểm tra sản phẩm tồn tại
+        console.log('Querying MongoDB with:', { id: { $in: productIds } });
+        const existingProducts = await mongodbModule.dbCollection.find({ id: { $in: productIds } }).toArray();
+        console.log('Existing products:', existingProducts.map(p => p.id));
+
+        const existingIds = existingProducts.map(p => p.id);
+        const notFoundIds = productIds.filter(id => !existingIds.includes(id));
+
+        if (existingIds.length === 0) {
+            console.log('PUT /api/products/bulk - No products found for IDs:', productIds); 
+            return res.status(404).json({ error: 'Không tìm thấy sản phẩm nào để cập nhật' });
+        }
+
+        // Cập nhật các sản phẩm tồn tại
+        const result = await mongodbModule.dbCollection.updateMany(
+            { id: { $in: existingIds } },
+            { $set: normalizedData }
+        );
+
+        console.log('Update result:', result);
+
+        let message = `Cập nhật ${result.matchedCount} sản phẩm thành công`;
+        if (notFoundIds.length > 0) {
+            message += `. Không tìm thấy sản phẩm: ${notFoundIds.join(', ')}`;
+        }
+
+        console.log('PUT /api/products/bulk - Updated:', result.matchedCount, 'products');
+        res.json({ message: `Cập nhật ${result.matchedCount} sản phẩm thành công` });
+    } catch (error) {
+        console.error('PUT /api/products/bulk - Error:', error);
+        res.status(500).json({ error: 'Lỗi server nội bộ', details: error.message });
+    }
+});
+
 // API: Cập nhật một sản phẩm
 app.put('/api/products/:id', upload.single('image'), async (req, res) => {
     try {
@@ -241,52 +305,6 @@ app.put('/api/products/:id', upload.single('image'), async (req, res) => {
         if (error.message.includes('file')) {
             return res.status(400).json({ error: 'Lỗi khi xử lý file ảnh', details: error.message });
         }
-        res.status(500).json({ error: 'Lỗi server nội bộ', details: error.message });
-    }
-});
-
-// API: Cập nhật nhiều sản phẩm
-app.put('/api/products/bulk', async (req, res) => {
-    try {
-        console.log('PUT /api/products/bulk - Request body:', req.body);
-        const { productIds, updateData } = req.body;
-
-        if (!productIds || !Array.isArray(productIds) || productIds.length === 0) {
-            return res.status(400).json({ error: 'Vui lòng cung cấp danh sách ID sản phẩm' });
-        }
-
-        if (!updateData || Object.keys(updateData).length === 0) {
-            return res.status(400).json({ error: 'Vui lòng cung cấp ít nhất một thông tin để cập nhật' });
-        }
-
-        // Kiểm tra dữ liệu hợp lệ
-        const errors = validateProductData(updateData, true);
-        if (errors.length > 0) {
-            return res.status(400).json({ error: 'Invalid data', details: errors });
-        }
-
-        // Chuẩn hóa dữ liệu
-        const normalizedData = normalizeProductData(updateData);
-
-        // Log để kiểm tra productIds trước khi query
-        console.log('Product IDs to update:', productIds);
-
-        // Cập nhật nhiều sản phẩm
-        const result = await mongodbModule.dbCollection.updateMany(
-            { id: { $in: productIds } },
-            { $set: normalizedData }
-        );
-
-        console.log('Update result:', result); // Log chi tiết kết quả
-
-        if (result.matchedCount === 0) {
-            return res.status(404).json({ error: 'Không tìm thấy sản phẩm nào để cập nhật' });
-        }
-
-        console.log('PUT /api/products/bulk - Updated:', result.matchedCount, 'products');
-        res.json({ message: `Cập nhật ${result.matchedCount} sản phẩm thành công` });
-    } catch (error) {
-        console.error('PUT /api/products/bulk - Error:', error);
         res.status(500).json({ error: 'Lỗi server nội bộ', details: error.message });
     }
 });

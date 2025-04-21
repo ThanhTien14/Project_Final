@@ -152,6 +152,8 @@
                 console.log('Request body:', { productIds, updateData }); // Log để kiểm tra dữ liệu gửi đi
         
                 try {
+                    console.log('Sending fetch request to /api/products/bulk');
+                    console.log('Fetch request body:', { productIds, updateData });
                     const response = await fetch('/api/products/bulk', {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
@@ -165,6 +167,7 @@
         
                     if (!response.ok) {
                         const errorMessage = result.details ? result.details.join(', ') : result.error || 'Lỗi khi cập nhật sản phẩm';
+                        console.log('Fetch failed with error:', errorMessage);
                         showError(errorMessage);
                         return;
                     }
