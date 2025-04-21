@@ -3,21 +3,21 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f8f9fa; /* Placeholder background color */
-    color: #333; /* Placeholder text color */
+    background-color: #f8f9fa;
+    color: #333;
 }
 
 .product-infor-page {
     max-width: 1200px;
     margin: 20px auto;
     padding: 20px;
-    background-color: #fff; /* Placeholder page background color */
+    background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
 }
 
 .product-infor-header {
-    background-color: #ffc107; /* Placeholder header background color */
+    background-color: #ffc107;
     color: #333;
     padding: 15px;
     text-align: center;
@@ -41,7 +41,7 @@ body {
 }
 
 .product-image .image-placeholder {
-    background-color: #f0f0f0; /* Placeholder image background */
+    background-color: #f0f0f0;
     border-radius: 8px;
     aspect-ratio: 1 / 1;
     display: flex;
@@ -87,7 +87,7 @@ body {
 .product-details .rating {
     color: #ffc107;
     font-size: 1.1em;
-    margin-bottom: 20px; /* Tăng khoảng cách bên dưới rating */
+    margin-bottom: 20px;
 }
 
 .product-details .rating i {
@@ -95,7 +95,7 @@ body {
 }
 
 .product-details .edit-product-button {
-    background-color: #00c853; /* Màu xanh lá cây tươi (placeholder - cần thay đổi theo Figma) */
+    background-color: #00c853;
     color: white;
     border: none;
     padding: 12px 20px;
@@ -110,13 +110,13 @@ body {
 }
 
 .product-details .edit-product-button:hover {
-    background-color: #00a53d; /* Màu xanh lá cây đậm hơn khi hover (placeholder - cần thay đổi theo Figma) */
+    background-color: #00a53d;
 }
 
 .product-information-section {
     margin-bottom: 30px;
     padding: 15px;
-    border: 1px solid #dee2e6; /* Placeholder border color */
+    border: 1px solid #dee2e6;
     border-radius: 8px;
 }
 
@@ -125,27 +125,42 @@ body {
     margin-top: 0;
     margin-bottom: 15px;
     color: #343a40;
-    border-bottom: 2px solid #e9ecef; /* Placeholder border color */
+    border-bottom: 2px solid #e9ecef;
     padding-bottom: 10px;
 }
 
 .product-information-section .information-grid {
     display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 10px 20px;
+    grid-template-columns: repeat(2, 1fr); /* Chia thành 2 cột */
+    gap: 15px 20px;
 }
 
 .product-information-section .info-item {
     display: flex;
-    align-items: baseline;
+    flex-direction: column; /* Đặt các mục theo cột để dễ kiểm soát */
+    align-items: flex-start;
 }
 
 .product-information-section .info-label {
     font-weight: bold;
-    margin-right: 10px;
+    margin-bottom: 5px; /* Khoảng cách giữa label và nội dung */
     color: #495057;
 }
 
+/* Định dạng danh sách cho các trường như Ingredients, Benefits, Warnings */
+.product-information-section .info-item ul {
+    list-style-type: disc; /* Dấu đầu dòng */
+    padding-left: 20px; /* Thụt lề danh sách */
+    margin: 0;
+}
+
+.product-information-section .info-item ul li {
+    color: #6c757d; /* Màu chữ cho các mục trong danh sách */
+    margin-bottom: 5px; /* Khoảng cách giữa các mục */
+    line-height: 1.5; /* Đảm bảo dòng dễ đọc */
+}
+
+/* Định dạng cho các trường không phải danh sách */
 .product-information-section .info-item span:last-child {
     color: #6c757d;
 }
@@ -158,7 +173,7 @@ body {
 .reviews-section, .questions-section {
     flex: 1;
     padding: 15px;
-    border: 1px solid #dee2e6; /* Placeholder border color */
+    border: 1px solid #dee2e6;
     border-radius: 8px;
 }
 
@@ -167,7 +182,7 @@ body {
     margin-top: 0;
     margin-bottom: 15px;
     color: #343a40;
-    border-bottom: 2px solid #e9ecef; /* Placeholder border color */
+    border-bottom: 2px solid #e9ecef;
     padding-bottom: 10px;
 }
 
@@ -175,14 +190,14 @@ body {
     width: calc(100% - 22px);
     padding: 10px;
     margin-bottom: 15px;
-    border: 1px solid #ced4da; /* Placeholder border color */
+    border: 1px solid #ced4da;
     border-radius: 4px;
     font-family: inherit;
     font-size: inherit;
 }
 
 .reviews-section .submit-review-button, .questions-section .submit-question-button {
-    background-color: #007bff; /* Placeholder button color */
+    background-color: #007bff;
     color: white;
     border: none;
     padding: 10px 15px;
@@ -194,7 +209,7 @@ body {
 }
 
 .reviews-section .submit-review-button:hover, .questions-section .submit-question-button:hover {
-    background-color: #0056b3; /* Placeholder button hover color */
+    background-color: #0056b3;
 }
 
 .reviews-section h3 {
@@ -207,9 +222,9 @@ body {
 .reviews-section .review-comment {
     padding: 15px;
     margin-bottom: 15px;
-    border: 1px solid #f0f0f0; /* Placeholder border color */
+    border: 1px solid #f0f0f0;
     border-radius: 6px;
-    background-color: #f9f9f9; /* Placeholder background color */
+    background-color: #f9f9f9;
 }
 
 .reviews-section .review-comment .user-info {
@@ -221,7 +236,7 @@ body {
 .reviews-section .review-comment .user-info .avatar-placeholder {
     width: 30px;
     height: 30px;
-    background-color: #ccc; /* Placeholder avatar color */
+    background-color: #ccc;
     border-radius: 50%;
     margin-right: 10px;
 }
@@ -245,12 +260,12 @@ body {
 .reviews-section .review-comment .comment-actions span {
     margin-right: 15px;
     cursor: pointer;
-    color: #007bff; /* Placeholder action color */
+    color: #007bff;
 }
 
 .reviews-section .load-more-comments {
     background-color: transparent;
-    color: #007bff; /* Placeholder link color */
+    color: #007bff;
     border: none;
     padding: 8px 15px;
     border-radius: 4px;
@@ -270,9 +285,9 @@ body {
 .questions-section .question-answer {
     padding: 15px;
     margin-bottom: 15px;
-    border: 1px solid #f0f0f0; /* Placeholder border color */
+    border: 1px solid #f0f0f0;
     border-radius: 6px;
-    background-color: #f9f9f9; /* Placeholder background color */
+    background-color: #f9f9f9;
 }
 
 .questions-section .question {
@@ -289,8 +304,8 @@ body {
 
 .questions-section .reply-to-question-button {
     background-color: transparent;
-    color: #007bff; /* Placeholder button color */
-    border: 1px solid #007bff; /* Placeholder button border color */
+    color: #007bff;
+    border: 1px solid #007bff;
     padding: 5px 10px;
     border-radius: 4px;
     cursor: pointer;
@@ -299,13 +314,13 @@ body {
 }
 
 .questions-section .reply-to-question-button:hover {
-    background-color: #007bff; /* Placeholder button hover color */
+    background-color: #007bff;
     color: white;
 }
 
 .questions-section .load-more-qna {
     background-color: transparent;
-    color: #007bff; /* Placeholder link color */
+    color: #007bff;
     border: none;
     padding: 8px 15px;
     border-radius: 4px;
@@ -315,50 +330,8 @@ body {
     margin-top: 10px;
 }
 
-/* Стиль cho nút "Sửa thông tin sản phẩm" */
-.product-details .edit-product-button {
-    background-color: #00c853; /* Màu xanh lá cây tươi (placeholder - cần thay đổi theo Figma) */
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1.1em;
-    transition: background-color 0.3s ease;
-    width: fit-content;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 15px; /* Thêm khoảng cách phía trên nút */
-}
-
-.product-details .edit-product-button:hover {
-    background-color: #00a53d; /* Màu xanh lá cây đậm hơn khi hover (placeholder - cần thay đổi theo Figma) */
-}
-
-.product-details .edit-product-button i {
-    font-size: 1em; /* Điều chỉnh kích thước icon nếu cần */
-}
-
-/* Style cho phần Q&A */
-.questions-section .question-answer .question-user {
-    font-weight: bold;
-    color: #343a40; /* Màu cho username hỏi (placeholder) */
-}
-
-.questions-section .question-answer .answer {
-    color: #6c757d; /* Màu cho câu trả lời (placeholder) */
-    line-height: 1.5;
-    margin-left: 20px; /* Thụt lề câu trả lời */
-    margin-bottom: 10px;
-}
-
-.questions-section .question-answer .answer-admin {
-    font-weight: bold;
-    color: #198754; /* Màu cho "Admin" trả lời (placeholder) */
-}
 .back-to-home-button {
-    background-color: #f8f9fa; /* Màu nền nhạt */
+    background-color: #f8f9fa;
     color: #333;
     border: 1px solid #ced4da;
     padding: 10px 15px;
@@ -366,68 +339,23 @@ body {
     cursor: pointer;
     font-size: 1em;
     transition: background-color 0.3s ease;
-    margin-top: 15px; /* Thêm khoảng cách phía trên nút */
-    margin-bottom: 20px; /* Thêm khoảng cách phía dưới nút */
+    margin-top: 15px;
+    margin-bottom: 20px;
     display: inline-flex;
     align-items: center;
     gap: 8px;
 }
 
 .back-to-home-button:hover {
-    background-color: #e9ecef; /* Màu nền nhạt hơn khi hover */
+    background-color: #e9ecef;
 }
 
 .back-to-home-button i {
     font-size: 0.9em;
 }
-/* style cho phần Reviews */
-.reviews-section h3 {
-    font-size: 1.2em;
-    margin-top: 20px;
-    margin-bottom: 10px;
-    color: #343a40;
-}
 
-.reviews-section .review-comment {
-    padding: 15px;
-    margin-bottom: 15px;
-    border: 1px solid #f0f0f0; /* Placeholder border color */
-    border-radius: 6px;
-    background-color: #f9f9f9; /* Placeholder background color */
-}
-
-.reviews-section .review-comment .user-info {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.reviews-section .review-comment .user-info .avatar-placeholder {
-    width: 30px;
-    height: 30px;
-    background-color: #ccc; /* Placeholder avatar color */
-    border-radius: 50%;
-    margin-right: 10px;
-}
-
-.reviews-section .review-comment .user-info span {
-    font-weight: bold;
-    margin-right: 10px;
-}
-
-.reviews-section .review-comment .comment-rating {
-    color: #ffc107;
-    font-size: 0.9em;
-}
-
-.reviews-section .review-comment .comment-text {
-    color: #495057;
-    line-height: 1.5;
-    margin-bottom: 10px;
-}
-/* Style form sửa thông tin sản phẩm */
 #edit-product-form {
-    display: none; /* Ẩn form mặc định */
+    display: none;
     margin-top: 20px;
     padding: 20px;
     border: 1px solid #ced4da;
