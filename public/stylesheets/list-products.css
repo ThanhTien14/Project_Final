@@ -74,6 +74,48 @@ body {
     color: #007bff; /* Màu hover icon filter (placeholder - cần thay đổi theo Figma) */
 }
 
+.filter-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 15px;
+    background-color: #0051ff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 20px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.filter-container label {
+    font-weight: bold;
+    margin-right: 10px;
+    color: #333;
+}
+
+.filter-container .filter-select,
+.filter-container .price-input {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 150px;
+}
+
+.filter-container .apply-filter-button {
+    padding: 10px 20px;
+    background-color: #ffffff;
+    color: #101010;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.filter-container .apply-filter-button:hover {
+    background-color: #0056b3;
+}
+
 .container {
     min-height: calc(100vh - 61px);
     padding: 20px;
@@ -151,6 +193,31 @@ body {
     color: #6c757d; /* Màu chữ category (placeholder - cần thay đổi theo Figma) */
     font-size: 0.9em;
     margin-bottom: 0;
+}
+
+.product-details .brand {
+    color: #6c757d; /* Màu chữ brand (placeholder - cần thay đổi theo Figma) */
+    font-size: 0.9em;
+    margin-bottom: 0;
+}
+
+.product-info-row {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between elements */
+    font-size: 0.9em;
+    color: #6c757d; /* Match the color of previous category/brand styles */
+    margin-bottom: 0;
+}
+
+.product-info-row .category,
+.product-info-row .brand,
+.product-info-row .target-audience {
+    font-size: 0.9em;
+}
+
+.product-info-row .separator {
+    color: #6c757d; /* Color of the separator */
 }
 
 .product-actions {

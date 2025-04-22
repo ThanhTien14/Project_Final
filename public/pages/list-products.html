@@ -18,8 +18,29 @@
             <i class="fas fa-filter"></i>
         </button>
       
+      
     </div>
-    
+ 
+    <div>   
+    <div class="filter-container">
+        <label for="product-type">Loại sản phẩm:</label>
+        <select id="product-type" class="filter-select">
+            <option value="">Tất cả</option>
+            <option value="BDN">BDN</option>
+            <option value="HSTK">Hỗ trợ sức khỏe</option>
+            <option value="Khoáng chất">Khoáng chất</option>
+            <option value="LD">Làm đẹp</option>
+        </select>
+
+        <label for="min-price">Giá từ:</label>
+        <input type="number" id="min-price" class="price-input" placeholder="Nhập giá thấp nhất">
+
+        <label for="max-price">Đến:</label>
+        <input type="number" id="max-price" class="price-input" placeholder="Nhập giá cao nhất">
+
+        <button id="filter-button" class="apply-filter-button">Lọc</button>
+    </div>
+    </div>
     <div class="container">
         <main class="main-content">
             <ul class="product-list">
@@ -32,6 +53,7 @@
         <button class="pagination-button" id="next-page">&raquo; Sau</button>
     </div>
 
+
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -39,14 +61,18 @@
             const itemsPerPage = 10;
             let totalPages = 1;
             let allProducts = [];
+            let currentProducts = [];
     
             function renderProducts(products) {
                 const productList = document.querySelector('.product-list');
                 productList.innerHTML = '';
     
+                productList.innerHTML = '';
+    
                 products.forEach(product => {
                     const listItem = document.createElement('li');
                     listItem.classList.add('product-item');
+    
     
                     const imagePlaceholder = document.createElement('div');
                     imagePlaceholder.classList.add('product-image-placeholder');
@@ -57,45 +83,61 @@
                         imagePlaceholder.appendChild(image);
                     } else {
                         imagePlaceholder.innerHTML = '<i class="fas fa-image"></i>';
+                        imagePlaceholder.innerHTML = '<i class="fas fa-image"></i>';
                     }
+    
     
                     const details = document.createElement('div');
                     details.classList.add('product-details');
     
                     const title = document.createElement('h3');
-                    title.textContent = product.name;
-    
+                     title.textContent = product.name;
+
                     const price = document.createElement('p');
                     price.classList.add('price');
                     price.textContent = `${product.price.toLocaleString('vi-VN')} VND`;
-    
-                    const category = document.createElement('p');
-                    category.classList.add('category');
-                    category.textContent = product.category || 'Category';
-    
-                    details.appendChild(title);
-                    details.appendChild(price);
-                    details.appendChild(category);
-    
+
+                // Create a container for category, brand, and target-audience
+                    const infoRow = document.createElement('div');
+                    infoRow.classList.add('product-info-row');
+                    infoRow.innerHTML = `
+                    <span class="category">${product.category || 'Category'}</span>
+                    <span class="separator"> | </span>
+                    <span class="brand">${product.brand || 'Brand'}</span>
+                    <span class="separator"> | </span>
+                    <span class="target-audience">${product.target_audience || 'Target Audience'}</span> `;
+
+                     details.appendChild(title);
+                     details.appendChild(price);
+                     details.appendChild(infoRow);
+
                     const actions = document.createElement('div');
                     actions.classList.add('product-actions');
+    
     
                     const quickViewIcon = document.createElement('a');
                     quickViewIcon.classList.add('action-icon', 'quick-view-button');
                     quickViewIcon.href = `/pages/update-product.html?id=${product.id}`;
                     quickViewIcon.innerHTML = '<i class="fas fa-eye"></i>';
     
+                    quickViewIcon.href = `/pages/update-product.html?id=${product.id}`;
+                    quickViewIcon.innerHTML = '<i class="fas fa-eye"></i>';
+    
                     const deleteIcon = document.createElement('span');
                     deleteIcon.classList.add('action-icon', 'delete-button');
                     deleteIcon.innerHTML = '<i class="fas fa-trash-alt"></i>';
+                    deleteIcon.innerHTML = '<i class="fas fa-trash-alt"></i>';
                     deleteIcon.dataset.productId = product.id;
+    
     
                     actions.appendChild(quickViewIcon);
                     actions.appendChild(deleteIcon);
     
+    
                     listItem.appendChild(imagePlaceholder);
                     listItem.appendChild(details);
                     listItem.appendChild(actions);
+    
     
                     productList.appendChild(listItem);
                 });
@@ -104,7 +146,7 @@
             function renderPagination() {
                 const startIndex = (currentPage - 1) * itemsPerPage;// Tính vị trí bắt đầu lấy sản phẩm cho trang hiện tại (bắt đầu từ 0).
                 const endIndex = startIndex + itemsPerPage;// Tính vị trí kết thúc
-                const productsToShow = allProducts.slice(startIndex, endIndex);//Cắt danh sách allProducts từ startIndex đến endIndex → ra các sản phẩm sẽ hiển thị.
+                const productsToShow = currentProducts.slice(startIndex, endIndex);//Cắt danh sách allProducts từ startIndex đến endIndex → ra các sản phẩm sẽ hiển thị.
                 renderProducts(productsToShow);// Render (vẽ) các sản phẩm vừa cắt ra lên giao diện.
 
                 document.getElementById('prev-page').disabled = currentPage === 1;
@@ -143,6 +185,7 @@
                 .then(response => response.json())
                 .then(products => {
                     allProducts = products;
+                    currentProducts = allProducts;
                     totalPages = Math.ceil(allProducts.length / itemsPerPage);
                     renderPagination();
                 })
@@ -151,33 +194,53 @@
             // Tìm kiếm sản phẩm
             document.getElementById('search-button').addEventListener('click', function() {
             const searchInput = document.getElementById('search-input').value.toLowerCase();
-            const productItems = document.querySelectorAll('.product-item');
-
-            productItems.forEach(item => {
-                const productNameElement = item.querySelector('h3');
-                const productName = productNameElement ? productNameElement.textContent.toLowerCase() : '';
-                if (productName.includes(searchInput)) {
-                    item.style.display = ''; // Hiển thị sản phẩm
-                } else {
-                    item.style.display = 'none'; // Ẩn sản phẩm
-                }
-            });
+            const filtered = currentProducts.filter(product => 
+            product.name.toLowerCase().includes(searchInput)
+             );
+            currentProducts = filtered;
+            currentPage = 1;
+            totalPages = Math.ceil(currentProducts.length / itemsPerPage);
+            renderPagination();
         });
-    
-            // Sắp xếp sản phẩm theo giá
+
+        
+        // Xử lý sự kiện xắp xếp sản phẩm theo giá cao/thấpthấp
             document.getElementById('sort-button').addEventListener('click', function() {
-                const sortButton = this;
-                const currentOrder = sortButton.dataset.sortOrder;
-                const newOrder = currentOrder === 'desc' ? 'asc' : 'desc';
-                sortButton.dataset.sortOrder = newOrder;
-    
-                allProducts.sort((a, b) => {
-                    return newOrder === 'desc' ? b.price - a.price : a.price - b.price;
-                });
-    
-                currentPage = 1;
-                renderPagination();
+            const sortButton = this;
+            const currentOrder = sortButton.dataset.sortOrder;
+            const newOrder = currentOrder === 'desc' ? 'asc' : 'desc';
+            sortButton.dataset.sortOrder = newOrder;
+
+            currentProducts.sort((a, b) => {
+             return newOrder === 'desc' ? b.price - a.price : a.price - b.price;
             });
+
+             currentPage = 1;
+            renderPagination();
+});
+        // Xử lý sự kiện lọc giá sản phẩm
+            document.getElementById('filter-button').addEventListener('click', function() {
+            const minPrice = parseFloat(document.getElementById('min-price').value) || 0;
+            const maxPrice = parseFloat(document.getElementById('max-price').value) || Infinity;
+
+            if (minPrice < 0 || maxPrice < 0) {
+                alert('Giá không được là số âm.');
+                return;
+            }
+            if (minPrice > maxPrice) {
+                alert('Giá thấp nhất không được lớn hơn giá cao nhất.');
+                return;
+            }
+
+            const filtered = allProducts.filter(product => 
+                product.price >= minPrice && product.price <= maxPrice
+            );
+            currentProducts = filtered;
+            currentPage = 1;
+            totalPages = Math.ceil(currentProducts.length / itemsPerPage);
+            renderPagination();
+        });
+           
     
             // Xử lý nút phân trang
             document.getElementById('prev-page').addEventListener('click', function() {
@@ -195,6 +258,8 @@
             });
         });
     </script>
+    
+
     
 
 </body>
