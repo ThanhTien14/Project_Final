@@ -113,9 +113,29 @@ app.post('/api/products', async (req, res) => {
 // API: Lấy danh sách sản phẩm
 app.get('/api/products', async (req, res) => {
     try {
-        const { name, priceFrom, priceTo, category, brand, logic } = req.query;
-        const criteria = { name, priceFrom, priceTo, category, brand, logic };
-        const products = await mongodbModule.findDocuments(criteria);
+        const { id, name, priceFrom, priceTo, category, brand, logic } = req.query;
+        const query = {};
+
+        if (id) {
+            query.id = { $regex: id, $options: 'i' };
+        }
+        if (name) {
+            query.name = { $regex: name, $options: 'i' };
+        }
+        if (priceFrom) {
+            query.price = { ...query.price, $gte: parseFloat(priceFrom) };
+        }
+        if (priceTo) {
+            query.price = { ...query.price, $lte: parseFloat(priceTo) };
+        }
+        if (category) {
+            query.category = { $regex: category, $options: 'i' };
+        }
+        if (brand) {
+            query.brand = { $regex: brand, $options: 'i' };
+        }
+
+        const products = await mongodbModule.dbCollection.find(query).toArray();
         res.json(products);
     } catch (error) {
         throw error;
@@ -155,6 +175,32 @@ app.put('/api/products/:id', async (req, res) => {
     }
 });
 
+// API: Xóa một sản phẩm
+app.delete('/api/products/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!/^TPCN\d{4}$/.test(id)) {
+            return res.status(400).json({ error: 'Invalid product ID format' });
+        }
+        const result = await mongodbModule.dbCollection.deleteOne({ id });
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ error: `Product ${id} not found` });
+        }
+        res.json({ message: `Product ${id} deleted successfully` });
+    } catch (error) {
+        throw error;
+    }
+});
+
+// API: Xóa tất cả sản phẩm
+app.delete('/api/products', async (req, res) => {
+    try {
+        const result = await mongodbModule.dbCollection.deleteMany({});
+        res.json({ message: `${result.deletedCount} products deleted successfully` });
+    } catch (error) {
+        throw error;
+    }
+});
 // Xử lý đóng kết nối MongoDB
 process.on('SIGINT', async () => {
     await mongodbModule.closeMongoDBConnection();

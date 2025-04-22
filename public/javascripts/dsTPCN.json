@@ -1,0 +1,1381 @@
+[
+  {
+    "id": "TPCN0001",
+    "name": "Viên uống hỗ trợ tiêu hóa enzyme",
+    "description": "Hỗ trợ tiêu hóa thức ăn, giảm đầy bụng, khó tiêu, đặc biệt phù hợp với người lớn tuổi.",
+    "category": "HTSK",
+    "brand": "Nhãn hiệu A",
+    "dosage_form": "Viên uống",
+    "image_url": "/images/enzyme_tieu_hoa.jpg",
+    "ingredients": ["Enzyme tiêu hóa", "Men vi sinh"],
+    "benefits": ["Cải thiện tiêu hóa", "Giảm đầy bụng", "Hỗ trợ hệ vi sinh đường ruột"],
+    "usage_instructions": "Uống 1 viên/lần, 2 lần/ngày sau bữa ăn.",
+    "warnings": ["Tham khảo ý kiến bác sĩ nếu bạn đang mang thai hoặc cho con bú", "Không sử dụng cho người mẫn cảm với bất kỳ thành phần nào của sản phẩm."],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát, tránh ánh nắng trực tiếp.",
+    "target_audience": ["Người lớn tuổi"],
+    "certifications": ["GMP", "HACCP"],
+    "quantity_in_stock": 150,
+    "price": 250000,
+    "currency": "VND",
+    "qna": [
+      {
+        "question": "Sản phẩm này có dùng được cho trẻ em không?",
+        "answer": "Sản phẩm này phù hợp cho người lớn tuổi. Trẻ em nên tham khảo ý kiến bác sĩ trước khi sử dụng."
+      },
+      {
+        "question": "Sản phẩm này có dùng được cho người có bệnh nền không?",
+        "answer": ""
+      }
+    ],
+    "ratings": [
+      {
+        "user_id": "USER0001",
+        "rating_value": 4,
+        "comment": "Sản phẩm rất tốt, tôi đã sử dụng được 2 tháng và cảm thấy sức khỏe cải thiện rõ rệt.",
+        "created_at": "2023-10-27T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "TPCN0002",
+    "name": "Vitamin tổng hợp cho người lớn",
+    "description": "Bổ sung các vitamin và khoáng chất thiết yếu cho cơ thể, tăng cường sức khỏe tổng thể.",
+    "category": "BDN",
+    "brand": "Nhãn hiệu B",
+    "dosage_form": "Viên nang",
+    "image_url": "/images/vitamin_tong_hop.jpg",
+    "ingredients": ["Vitamin A", "Vitamin C", "Vitamin D3", "Vitamin nhóm B", "Kẽm", "Sắt"],
+    "benefits": ["Tăng cường sức khỏe", "Bổ sung vitamin và khoáng chất", "Hỗ trợ hệ miễn dịch"],
+    "usage_instructions": "Uống 1 viên/ngày sau bữa ăn sáng.",
+    "warnings": [],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Người lớn"],
+    "certifications": ["GMP"],
+    "quantity_in_stock": 200,
+    "price": 350000,
+    "currency": "VND",
+    "qna": [],
+    "ratings": []
+  },
+  {
+    "id": "TPCN0003",
+    "name": "Omega 3 từ dầu cá tự nhiên",
+    "description": "Hỗ trợ sức khỏe tim mạch, não bộ và thị lực.",
+    "category": "BDN",
+    "brand": "Nhãn hiệu C",
+    "dosage_form": "Viên nang mềm",
+    "image_url": "/images/omega3.jpg",
+    "ingredients": ["Dầu cá tự nhiên", "EPA", "DHA"],
+    "benefits": ["Hỗ trợ tim mạch", "Tốt cho não bộ", "Cải thiện thị lực", "Giảm cholesterol"],
+    "usage_instructions": "Uống 1-2 viên/ngày sau bữa ăn.",
+    "warnings": ["Tham khảo ý kiến bác sĩ nếu bạn đang dùng thuốc làm loãng máu."],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát, tránh ánh nắng trực tiếp.",
+    "target_audience": ["Người lớn"],
+    "certifications": ["Friend of the Sea"],
+    "quantity_in_stock": 180,
+    "price": 450000,
+    "currency": "VND",
+    "qna": [
+      {
+        "question": "Sản phẩm này có mùi tanh không?",
+        "answer": "Sản phẩm của chúng tôi đã được xử lý để giảm thiểu mùi tanh của dầu cá."
+      }
+    ],
+    "ratings": [
+      {
+        "user_id": "USER0003",
+        "rating_value": 5,
+        "comment": "Tôi cảm thấy tinh thần minh mẫn hơn sau khi dùng sản phẩm này.",
+        "created_at": "2023-11-01T16:45:00Z"
+      },
+      {
+        "user_id": "USER0004",
+        "rating_value": 4,
+        "comment": "Giá hơi cao nhưng chất lượng tốt.",
+        "created_at": "2023-11-10T11:20:00Z"
+      }
+    ]
+  },
+  {
+    "id": "TPCN0004",
+    "name": "Canxi và Vitamin D3",
+    "description": "Bổ sung canxi và vitamin D3 giúp xương và răng chắc khỏe.",
+    "category": "KHOANGCHAT",
+    "brand": "Nhãn hiệu D",
+    "dosage_form": "Viên nhai",
+    "image_url": "/images/canxi_d3.jpg",
+    "ingredients": ["Canxi carbonate", "Vitamin D3"],
+    "benefits": ["Xương chắc khỏe", "Răng khỏe mạnh", "Phòng ngừa loãng xương"],
+    "usage_instructions": "Nhai 1-2 viên/ngày sau bữa ăn.",
+    "warnings": [],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Mọi lứa tuổi"],
+    "certifications": [],
+    "quantity_in_stock": 250,
+    "price": 180000,
+    "currency": "VND",
+    "qna": [],
+    "ratings": [
+      {
+        "user_id": "USER0005",
+        "rating_value": 3,
+        "comment": "Vị hơi ngọt.",
+        "created_at": "2023-11-25T14:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "TPCN0005",
+    "name": "Men vi sinh hỗ trợ đường ruột",
+    "description": "Cân bằng hệ vi sinh đường ruột, cải thiện các vấn đề về tiêu hóa.",
+    "category": "HTSK",
+    "brand": "Nhãn hiệu E",
+    "dosage_form": "Gói bột",
+    "image_url": "/images/men_vi_sinh.jpg",
+    "ingredients": ["Lactobacillus", "Bifidobacterium"],
+    "benefits": ["Cân bằng hệ vi sinh", "Cải thiện tiêu hóa", "Tăng cường hấp thu dưỡng chất"],
+    "usage_instructions": "Pha 1 gói với nước ấm và uống sau bữa ăn.",
+    "warnings": [],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Mọi lứa tuổi"],
+    "certifications": ["Organic"],
+    "quantity_in_stock": 120,
+    "price": 300000,
+    "currency": "VND",
+    "qna": [
+      {
+        "question": "Sản phẩm này có cần bảo quản lạnh không?",
+        "answer": "Không cần thiết, chỉ cần bảo quản nơi khô ráo, thoáng mát."
+      }
+    ],
+    "ratings": []
+  },
+  {
+    "id": "TPCN0006",
+    "name": "Collagen peptide",
+    "description": "Hỗ trợ làm đẹp da, tăng độ đàn hồi và giảm nếp nhăn.",
+    "category": "LĐ",
+    "brand": "Nhãn hiệu F",
+    "dosage_form": "Bột pha",
+    "image_url": "/images/collagen.jpg",
+    "ingredients": ["Collagen peptide từ cá"],
+    "benefits": ["Đẹp da", "Tăng đàn hồi", "Giảm nếp nhăn", "Tóc và móng chắc khỏe"],
+    "usage_instructions": "Pha 1 muỗng với nước hoặc đồ uống yêu thích và sử dụng hàng ngày.",
+    "warnings": [],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Nữ giới"],
+    "certifications": ["Halal"],
+    "quantity_in_stock": 90,
+    "price": 550000,
+    "currency": "VND",
+    "qna": [],
+    "ratings": [
+      {
+        "user_id": "USER0006",
+        "rating_value": 5,
+        "comment": "Da tôi cải thiện rõ rệt sau khi dùng sản phẩm này.",
+        "created_at": "2023-11-05T09:30:00Z"
+      }
+    ]
+  },
+  {
+    "id": "TPCN0007",
+    "name": "Glucosamine và Chondroitin",
+    "description": "Hỗ trợ khớp khỏe mạnh, giảm đau nhức do viêm khớp.",
+    "category": "HTSK",
+    "brand": "Nhãn hiệu G",
+    "dosage_form": "Viên nén",
+    "image_url": "/images/glucosamine.jpg",
+    "ingredients": ["Glucosamine sulfate", "Chondroitin sulfate"],
+    "benefits": ["Khớp khỏe mạnh", "Giảm đau nhức", "Tăng khả năng vận động"],
+    "usage_instructions": "Uống 1 viên/lần, 2 lần/ngày sau bữa ăn.",
+    "warnings": ["Tham khảo ý kiến bác sĩ nếu bạn có tiền sử dị ứng với hải sản."],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Người lớn tuổi"],
+    "certifications": [],
+    "quantity_in_stock": 160,
+    "price": 400000,
+    "currency": "VND",
+    "qna": [
+      {
+        "question": "Sản phẩm này có tác dụng phụ không?",
+        "answer": "Hầu hết người dùng không gặp tác dụng phụ. Tuy nhiên, nếu bạn có bất kỳ lo ngại nào, hãy tham khảo ý kiến bác sĩ."
+      }
+    ],
+    "ratings": []
+  },
+  {
+    "id": "TPCN0008",
+    "name": "Sắt và Axit Folic",
+    "description": "Bổ sung sắt và axit folic, hỗ trợ tạo máu và phòng ngừa thiếu máu.",
+    "category": "BDN",
+    "brand": "Nhãn hiệu H",
+    "dosage_form": "Viên nang",
+    "image_url": "/images/sat_axitfolic.jpg",
+    "ingredients": ["Sắt fumarate", "Axit folic"],
+    "benefits": ["Hỗ trợ tạo máu", "Phòng ngừa thiếu máu", "Tốt cho phụ nữ mang thai"],
+    "usage_instructions": "Uống 1 viên/ngày sau bữa ăn.",
+    "warnings": ["Tham khảo ý kiến bác sĩ trước khi sử dụng."],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Phụ nữ mang thai"],
+    "certifications": [],
+    "quantity_in_stock": 110,
+    "price": 220000,
+    "currency": "VND",
+    "qna": [],
+    "ratings": [
+      {
+        "user_id": "USER0007",
+        "rating_value": 4,
+        "comment": "Sản phẩm giúp tôi cảm thấy đỡ mệt mỏi hơn trong thai kỳ.",
+        "created_at": "2023-11-10T17:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "TPCN0009",
+    "name": "Vitamin C tăng cường miễn dịch",
+    "description": "Hàm lượng vitamin C cao giúp tăng cường hệ miễn dịch và sức đề kháng.",
+    "category": "BDN",
+    "brand": "Nhãn hiệu I",
+    "dosage_form": "Viên sủi",
+    "image_url": "/images/vitaminc.jpg",
+    "ingredients": ["Vitamin C (Acid Ascorbic)"],
+    "benefits": ["Tăng cường miễn dịch", "Chống oxy hóa", "Hỗ trợ hấp thu sắt"],
+    "usage_instructions": "Hòa tan 1 viên vào một cốc nước và uống.",
+    "warnings": [],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Mọi lứa tuổi"],
+    "certifications": [],
+    "quantity_in_stock": 280,
+    "price": 150000,
+    "currency": "VND",
+    "qna": [
+      {
+        "question": "Sản phẩm này có vị gì?",
+        "answer": "Sản phẩm có vị cam dễ uống."
+      }
+    ],
+    "ratings": []
+  },
+  {
+    "id": "TPCN0010",
+    "name": "Melatonin hỗ trợ giấc ngủ ngon",
+    "description": "Giúp điều hòa giấc ngủ, cải thiện tình trạng khó ngủ và mất ngủ.",
+    "category": "HTSK",
+    "brand": "Nhãn hiệu J",
+    "dosage_form": "Viên ngậm",
+    "image_url": "/images/melatonin.jpg",
+    "ingredients": ["Melatonin"],
+    "benefits": ["Cải thiện giấc ngủ", "Giảm mất ngủ", "Điều hòa nhịp sinh học"],
+    "usage_instructions": "Ngậm 1 viên dưới lưỡi trước khi đi ngủ 30 phút.",
+    "warnings": ["Không lái xe hoặc vận hành máy móc sau khi sử dụng.", "Tham khảo ý kiến bác sĩ nếu bạn đang dùng thuốc khác."],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Người lớn"],
+    "certifications": [],
+    "quantity_in_stock": 140,
+    "price": 380000,
+    "currency": "VND",
+    "qna": [],
+    "ratings": [
+      {
+        "user_id": "USER0008",
+        "rating_value": 5,
+        "comment": "Tôi đã ngủ ngon hơn rất nhiều từ khi dùng sản phẩm này.",
+        "created_at": "2023-11-15T21:30:00Z"
+      }
+    ]
+  },
+  {
+    "id": "TPCN0011",
+    "name": "Sữa non Colostrum tăng cường đề kháng",
+    "description": "Bổ sung sữa non Colostrum giúp tăng cường hệ miễn dịch cho cả trẻ em và người lớn.",
+    "category": "BDN",
+    "brand": "Nhãn hiệu U",
+    "dosage_form": "Dạng bột",
+    "image_url": "/images/sua_non.jpg",
+    "ingredients": ["Sữa non Colostrum"],
+    "benefits": ["Tăng cường đề kháng", "Hỗ trợ tiêu hóa", "Phát triển khỏe mạnh"],
+    "usage_instructions": "Pha theo hướng dẫn trên bao bì.",
+    "warnings": [],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Trẻ em", "Người lớn"],
+    "certifications": [],
+    "quantity_in_stock": 125,
+    "price": 480000,
+    "currency": "VND",
+    "qna": [
+      {
+        "question": "Sản phẩm này dùng cho trẻ mấy tuổi?",
+        "answer": "Sản phẩm này phù hợp cho trẻ từ 6 tháng tuổi trở lên. Vui lòng tham khảo hướng dẫn sử dụng chi tiết."
+      }
+    ],
+    "ratings": [
+      {
+        "user_id": "USER0009",
+        "rating_value": 5,
+        "comment": "Bé nhà tôi dùng thấy ít ốm vặt hơn.",
+        "created_at": "2023-11-20T10:30:00Z"
+      }
+    ]
+  },
+  {
+    "id": "TPCN0012",
+    "name": "Nước ép trái nhàu hỗ trợ sức khỏe",
+    "description": "Nước ép từ trái nhàu tươi, giúp tăng cường sức khỏe tổng thể và hỗ trợ tiêu hóa.",
+    "category": "HTSK",
+    "brand": "Nhãn hiệu V",
+    "dosage_form": "Dạng lỏng",
+    "image_url": "/images/nuoc_ep_nhau.jpg",
+    "ingredients": ["Nước ép trái nhàu 100%"],
+    "benefits": ["Tăng cường sức khỏe", "Hỗ trợ tiêu hóa", "Giảm mệt mỏi"],
+    "usage_instructions": "Uống 30ml/lần, 2 lần/ngày trước bữa ăn.",
+    "warnings": ["Không dùng cho phụ nữ có thai và cho con bú."],
+    "storage_instructions": "Bảo quản lạnh sau khi mở nắp.",
+    "target_audience": ["Người lớn"],
+    "certifications": ["Organic"],
+    "quantity_in_stock": 95,
+    "price": 280000,
+    "currency": "VND",
+    "qna": [],
+    "ratings": []
+  },
+  {
+    "id": "TPCN0013",
+    "name": "Cao atiso giải độc gan",
+    "description": "Hỗ trợ chức năng gan, giúp thanh nhiệt và giải độc cơ thể.",
+    "category": "HTSK",
+    "brand": "Nhãn hiệu W",
+    "dosage_form": "Dạng cao",
+    "image_url": "/images/cao_atiso.jpg",
+    "ingredients": ["Cao atiso nguyên chất"],
+    "benefits": ["Giải độc gan", "Thanh nhiệt", "Mát gan"],
+    "usage_instructions": "Pha với nước ấm và uống.",
+    "warnings": [],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Người lớn"],
+    "certifications": [],
+    "quantity_in_stock": 165,
+    "price": 150000,
+    "currency": "VND",
+    "qna": [
+      {
+        "question": "Cao atiso có đắng không?",
+        "answer": "Cao atiso có vị đắng đặc trưng, bạn có thể thêm chút đường hoặc mật ong để dễ uống hơn."
+      }
+    ],
+    "ratings": [
+      {
+        "user_id": "USER0010",
+        "rating_value": 4,
+        "comment": "Uống thấy người đỡ nóng hơn.",
+        "created_at": "2023-11-22T09:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "TPCN0014",
+    "name": "Hạt chia organic",
+    "description": "Nguồn cung cấp omega-3, chất xơ và protein dồi dào.",
+    "category": "BDN",
+    "brand": "Nhãn hiệu X",
+    "dosage_form": "Dạng hạt",
+    "image_url": "/images/hat_chia.jpg",
+    "ingredients": ["Hạt chia organic 100%"],
+    "benefits": ["Giàu omega-3", "Nguồn chất xơ tốt", "Cung cấp protein"],
+    "usage_instructions": "Có thể ăn trực tiếp, trộn với sữa chua, salad hoặc pha vào đồ uống.",
+    "warnings": [],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Mọi lứa tuổi"],
+    "certifications": ["USDA Organic"],
+    "quantity_in_stock": 200,
+    "price": 180000,
+    "currency": "VND",
+    "qna": [],
+    "ratings": []
+  },
+  {
+    "id": "TPCN0015",
+    "name": "Nấm linh chi đỏ",
+    "description": "Hỗ trợ tăng cường hệ miễn dịch, bồi bổ sức khỏe và giảm căng thẳng.",
+    "category": "HTSK",
+    "brand": "Nhãn hiệu Y",
+    "dosage_form": "Dạng viên nang",
+    "image_url": "/images/nam_linh_chi.jpg",
+    "ingredients": ["Chiết xuất nấm linh chi đỏ"],
+    "benefits": ["Tăng cường miễn dịch", "Bồi bổ sức khỏe", "Giảm căng thẳng"],
+    "usage_instructions": "Uống theo liều lượng khuyến nghị trên bao bì.",
+    "warnings": ["Tham khảo ý kiến bác sĩ trước khi sử dụng nếu bạn có bệnh tự miễn."],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Người lớn"],
+    "certifications": [],
+    "quantity_in_stock": 110,
+    "price": 550000,
+    "currency": "VND",
+    "qna": [
+      {
+        "question": "Sản phẩm này có gây buồn ngủ không?",
+        "answer": "Nấm linh chi đỏ thường không gây buồn ngủ, nhưng một số người có thể cảm thấy thư giãn hơn."
+      }
+    ],
+    "ratings": [
+      {
+        "user_id": "USER0011",
+        "rating_value": 5,
+        "comment": "Tôi cảm thấy khỏe hơn sau một thời gian sử dụng.",
+        "created_at": "2023-11-25T11:45:00Z"
+      }
+    ]
+  },
+  {
+    "id": "TPCN0016",
+    "name": "Siro ho thảo dược cho bé",
+    "description": "Giúp giảm ho, long đờm và làm dịu cổ họng cho trẻ em.",
+    "category": "HTSK",
+    "brand": "Nhãn hiệu Z",
+    "dosage_form": "Dạng siro",
+    "image_url": "/images/siro_ho.jpg",
+    "ingredients": ["Chiết xuất xạ can", "Mật ong", "Tinh dầu tràm"],
+    "benefits": ["Giảm ho", "Long đờm", "Làm dịu cổ họng"],
+    "usage_instructions": "Uống theo liều lượng khuyến nghị theo độ tuổi của trẻ.",
+    "warnings": ["Không dùng cho trẻ dưới 1 tuổi."],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Trẻ em"],
+    "certifications": [],
+    "quantity_in_stock": 185,
+    "price": 120000,
+    "currency": "VND",
+    "qna": [],
+    "ratings": []
+  },
+  {
+    "id": "TPCN0017",
+    "name": "Viên uống giảm cân từ thảo dược",
+    "description": "Hỗ trợ giảm cân an toàn và hiệu quả từ các thành phần thảo dược tự nhiên.",
+    "category": "LĐ",
+    "brand": "Nhãn hiệu AA",
+    "dosage_form": "Viên nang",
+    "image_url": "/images/giam_can.jpg",
+    "ingredients": ["Chiết xuất trà xanh", "L-Carnitine", "Garcinia Cambogia"],
+    "benefits": ["Hỗ trợ giảm cân", "Tăng cường chuyển hóa", "Giảm cảm giác thèm ăn"],
+    "usage_instructions": "Uống theo liều lượng khuyến nghị trên bao bì.",
+    "warnings": ["Không dùng cho phụ nữ có thai và cho con bú, người có bệnh tim mạch."],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Người trưởng thành muốn giảm cân"],
+    "certifications": [],
+    "quantity_in_stock": 75,
+    "price": 390000,
+    "currency": "VND",
+    "qna": [
+      {
+        "question": "Sản phẩm này có tác dụng phụ không?",
+        "answer": "Sản phẩm được chiết xuất từ thảo dược tự nhiên, tuy nhiên, nếu bạn có bất kỳ lo ngại nào, hãy tham khảo ý kiến bác sĩ."
+      }
+    ],
+    "ratings": []
+  },
+  {
+    "id": "TPCN0018",
+    "name": "Tinh dầu hoa anh thảo",
+    "description": "Hỗ trợ cân bằng nội tiết tố nữ, giảm các triệu chứng tiền kinh nguyệt.",
+    "category": "LĐ",
+    "brand": "Nhãn hiệu BB",
+    "dosage_form": "Viên nang mềm",
+    "image_url": "/images/tinh_dau_hoa_anh_thao.jpg",
+    "ingredients": ["Tinh dầu hoa anh thảo"],
+    "benefits": ["Cân bằng nội tiết tố", "Giảm triệu chứng tiền kinh nguyệt", "Đẹp da"],
+    "usage_instructions": "Uống 1-2 viên/ngày.",
+    "warnings": [],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Nữ giới"],
+    "certifications": [],
+    "quantity_in_stock": 135,
+    "price": 250000,
+    "currency": "VND",
+    "qna": [],
+    "ratings": [
+      {
+        "user_id": "USER0012",
+        "rating_value": 4,
+        "comment": "Tôi thấy đỡ khó chịu hơn trong những ngày đèn đỏ.",
+        "created_at": "2023-11-28T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "TPCN0019",
+    "name": "Nước súc miệng thảo dược",
+    "description": "Giúp làm sạch răng miệng, ngăn ngừa sâu răng và hôi miệng.",
+    "category": "LĐ",
+    "brand": "Nhãn hiệu CC",
+    "dosage_form": "Dạng lỏng",
+    "image_url": "/images/nuoc_suc_mieng.jpg",
+    "ingredients": ["Chiết xuất bạc hà", "Chiết xuất trà xanh", "Fluoride"],
+    "benefits": ["Làm sạch răng miệng", "Ngăn ngừa sâu răng", "Khử mùi hôi miệng"],
+    "usage_instructions": "Súc miệng sau khi đánh răng.",
+    "warnings": ["Không được nuốt."],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Mọi lứa tuổi"],
+    "certifications": [],
+    "quantity_in_stock": 215,
+    "price": 80000,
+    "currency": "VND",
+    "qna": [],
+    "ratings": []
+  },
+  {
+    "id": "TPCN0020",
+    "name": "Kẹo ngậm vitamin tổng hợp cho trẻ em",
+    "description": "Bổ sung vitamin và khoáng chất cần thiết cho sự phát triển của trẻ.",
+    "category": "BDN",
+    "brand": "Nhãn hiệu DD",
+    "dosage_form": "Dạng kẹo ngậm",
+    "image_url": "/images/keo_ngam_vitamin.jpg",
+    "ingredients": ["Vitamin A", "Vitamin C", "Vitamin D", "Vitamin nhóm B"],
+    "benefits": ["Bổ sung vitamin", "Hỗ trợ phát triển", "Tăng cường sức đề kháng"],
+    "usage_instructions": "Ngậm 1-2 viên/ngày.",
+    "warnings": ["Sử dụng dưới sự giám sát của người lớn."],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Trẻ em"],
+    "certifications": [],
+    "quantity_in_stock": 260,
+    "price": 110000,
+    "currency": "VND",
+    "qna": [
+      {
+        "question": "Kẹo này có vị gì?",
+        "answer": "Kẹo có nhiều vị trái cây khác nhau."
+      }
+    ],
+    "ratings": []
+  },
+  {
+    "id": "TPCN0021",
+    "name": "Trà thảo mộc giảm căng thẳng",
+    "description": "Hỗ trợ thư giãn tinh thần, giảm căng thẳng và cải thiện giấc ngủ.",
+    "category": "HTSK",
+    "brand": "Nhãn hiệu EE",
+    "dosage_form": "Trà túi lọc",
+    "image_url": "/images/tra_thao_moc.jpg",
+    "ingredients": ["Hoa cúc", "Lá bạc hà", "Tâm sen"],
+    "benefits": ["Giảm căng thẳng", "Thư giãn tinh thần", "Cải thiện giấc ngủ"],
+    "usage_instructions": "Ngâm 1 túi trà trong nước nóng 5 phút, uống 1-2 lần/ngày.",
+    "warnings": [],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Người lớn"],
+    "certifications": ["Organic"],
+    "quantity_in_stock": 80,
+    "price": 95000,
+    "currency": "VND",
+    "qna": [
+      {
+        "question": "Trà này có chứa caffeine không?",
+        "answer": "Không, trà thảo mộc này không chứa caffeine."
+      }
+    ],
+    "ratings": [
+      {
+        "user_id": "USER0013",
+        "rating_value": 4,
+        "comment": "Hương vị dễ chịu, giúp tôi thư giãn sau ngày làm việc.",
+        "created_at": "2024-01-10T15:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "TPCN0022",
+    "name": "Viên uống bổ mắt từ việt quất",
+    "description": "Hỗ trợ sức khỏe mắt, giảm mỏi mắt và cải thiện thị lực.",
+    "category": "BDN",
+    "brand": "Nhãn hiệu FF",
+    "dosage_form": "Viên nang",
+    "image_url": "/images/vien_bo_mat.jpg",
+    "ingredients": ["Chiết xuất việt quất", "Lutein", "Zeaxanthin"],
+    "benefits": ["Hỗ trợ sức khỏe mắt", "Giảm mỏi mắt", "Cải thiện thị lực"],
+    "usage_instructions": "Uống 1 viên/ngày sau bữa ăn.",
+    "warnings": [],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Người làm việc nhiều với máy tính"],
+    "certifications": ["GMP"],
+    "quantity_in_stock": 130,
+    "price": 320000,
+    "currency": "VND",
+    "qna": [],
+    "ratings": [
+      {
+        "user_id": "USER0014",
+        "rating_value": 5,
+        "comment": "Mắt tôi đỡ khô hơn từ khi dùng sản phẩm này.",
+        "created_at": "2024-02-05T09:30:00Z"
+      }
+    ]
+  },
+  {
+    "id": "TPCN0023",
+    "name": "Siro bổ sung kẽm cho trẻ em",
+    "description": "Bổ sung kẽm giúp trẻ phát triển chiều cao và tăng cường miễn dịch.",
+    "category": "KHOANGCHAT",
+    "brand": "Nhãn hiệu GG",
+    "dosage_form": "Dạng siro",
+    "image_url": "/images/siro_kem.jpg",
+    "ingredients": ["Kẽm gluconate", "Vitamin C"],
+    "benefits": ["Hỗ trợ phát triển chiều cao", "Tăng cường miễn dịch", "Cải thiện vị giác"],
+    "usage_instructions": "Trẻ 1-3 tuổi: 5ml/ngày, trẻ trên 3 tuổi: 10ml/ngày.",
+    "warnings": ["Không vượt quá liều khuyến nghị."],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Trẻ em"],
+    "certifications": [],
+    "quantity_in_stock": 170,
+    "price": 140000,
+    "currency": "VND",
+    "qna": [
+      {
+        "question": "Siro này có ngọt không?",
+        "answer": "Siro có vị ngọt nhẹ từ đường tự nhiên, dễ uống cho trẻ."
+      }
+    ],
+    "ratings": []
+  },
+  {
+    "id": "TPCN0024",
+    "name": "Bột nghệ nano curcumin",
+    "description": "Hỗ trợ kháng viêm, tăng cường sức khỏe dạ dày và làm đẹp da.",
+    "category": "HTSK",
+    "brand": "Nhãn hiệu HH",
+    "dosage_form": "Bột pha",
+    "image_url": "/images/nghe_nano.jpg",
+    "ingredients": ["Nano curcumin", "Mật ong"],
+    "benefits": ["Kháng viêm", "Hỗ trợ dạ dày", "Đẹp da"],
+    "usage_instructions": "Pha 1 thìa bột với nước ấm, uống 1-2 lần/ngày.",
+    "warnings": ["Không dùng cho người dị ứng với nghệ."],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Người lớn"],
+    "certifications": ["Halal"],
+    "quantity_in_stock": 100,
+    "price": 290000,
+    "currency": "VND",
+    "qna": [],
+    "ratings": [
+      {
+        "user_id": "USER0015",
+        "rating_value": 4,
+        "comment": "Sản phẩm giúp tôi giảm đau dạ dày khá tốt.",
+        "created_at": "2024-03-12T14:20:00Z"
+      }
+    ]
+  },
+  {
+    "id": "TPCN0025",
+    "name": "Viên uống bổ gan từ cây kế sữa",
+    "description": "Hỗ trợ chức năng gan, giải độc và bảo vệ gan.",
+    "category": "HTSK",
+    "brand": "Nhãn hiệu II",
+    "dosage_form": "Viên nang",
+    "image_url": "/images/bo_gan.jpg",
+    "ingredients": ["Chiết xuất cây kế sữa", "Vitamin B"],
+    "benefits": ["Hỗ trợ chức năng gan", "Giải độc gan", "Bảo vệ gan"],
+    "usage_instructions": "Uống 1 viên/lần, 2 lần/ngày sau bữa ăn.",
+    "warnings": [],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Người lớn"],
+    "certifications": ["GMP"],
+    "quantity_in_stock": 140,
+    "price": 370000,
+    "currency": "VND",
+    "qna": [
+      {
+        "question": "Sản phẩm này có dùng được cho người uống rượu bia không?",
+        "answer": "Có, sản phẩm phù hợp cho người uống rượu bia để hỗ trợ bảo vệ gan."
+      }
+    ],
+    "ratings": []
+  },
+  {
+    "id": "TPCN0026",
+    "name": "Sữa ong chúa tăng cường sức khỏe",
+    "description": "Bổ sung năng lượng, tăng cường sức khỏe và làm đẹp da.",
+    "category": "LĐ",
+    "brand": "Nhãn hiệu JJ",
+    "dosage_form": "Viên nang mềm",
+    "image_url": "/images/sua_ong_chua.jpg",
+    "ingredients": ["Sữa ong chúa", "Vitamin E"],
+    "benefits": ["Tăng cường sức khỏe", "Đẹp da", "Chống lão hóa"],
+    "usage_instructions": "Uống 1 viên/ngày trước bữa ăn sáng.",
+    "warnings": ["Không dùng cho người dị ứng với sản phẩm từ ong."],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Nữ giới"],
+    "certifications": [],
+    "quantity_in_stock": 85,
+    "price": 420000,
+    "currency": "VND",
+    "qna": [],
+    "ratings": [
+      {
+        "user_id": "USER0016",
+        "rating_value": 5,
+        "comment": "Da tôi sáng hơn sau 1 tháng sử dụng.",
+        "created_at": "2024-04-01T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "TPCN0027",
+    "name": "Viên uống bổ sung magie",
+    "description": "Bổ sung magie giúp giảm chuột rút và hỗ trợ sức khỏe cơ bắp.",
+    "category": "KHOANGCHAT",
+    "brand": "Nhãn hiệu KK",
+    "dosage_form": "Viên nén",
+    "image_url": "/images/magie.jpg",
+    "ingredients": ["Magie citrate", "Vitamin B6"],
+    "benefits": ["Giảm chuột rút", "Hỗ trợ cơ bắp", "Cải thiện giấc ngủ"],
+    "usage_instructions": "Uống 1 viên/ngày trước khi đi ngủ.",
+    "warnings": [],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Người lớn"],
+    "certifications": [],
+    "quantity_in_stock": 150,
+    "price": 200000,
+    "currency": "VND",
+    "qna": [
+      {
+        "question": "Sản phẩm này có gây buồn ngủ không?",
+        "answer": "Sản phẩm có thể gây thư giãn, phù hợp uống trước khi đi ngủ."
+      }
+    ],
+    "ratings": []
+  },
+  {
+    "id": "TPCN0028",
+    "name": "Nước uống detox thanh lọc cơ thể",
+    "description": "Hỗ trợ thải độc cơ thể, cải thiện làn da và giảm cân.",
+    "category": "LĐ",
+    "brand": "Nhãn hiệu LL",
+    "dosage_form": "Dạng lỏng",
+    "image_url": "/images/nuoc_detox.jpg",
+    "ingredients": ["Chiết xuất chanh", "Gừng", "Mật ong"],
+    "benefits": ["Thanh lọc cơ thể", "Cải thiện làn da", "Hỗ trợ giảm cân"],
+    "usage_instructions": "Uống 1 chai/ngày vào buổi sáng.",
+    "warnings": [],
+    "storage_instructions": "Bảo quản lạnh sau khi mở nắp.",
+    "target_audience": ["Người trưởng thành muốn detox"],
+    "certifications": ["Organic"],
+    "quantity_in_stock": 90,
+    "price": 60000,
+    "currency": "VND",
+    "qna": [],
+    "ratings": [
+      {
+        "user_id": "USER0017",
+        "rating_value": 4,
+        "comment": "Vị dễ uống, cảm thấy cơ thể nhẹ nhàng hơn.",
+        "created_at": "2024-04-15T08:45:00Z"
+      }
+    ]
+  },
+  {
+    "id": "TPCN0029",
+    "name": "Viên uống bổ sung Coenzyme Q10",
+    "description": "Hỗ trợ sức khỏe tim mạch và tăng cường năng lượng cho cơ thể.",
+    "category": "BDN",
+    "brand": "Nhãn hiệu MM",
+    "dosage_form": "Viên nang",
+    "image_url": "/images/coenzyme_q10.jpg",
+    "ingredients": ["Coenzyme Q10", "Vitamin E"],
+    "benefits": ["Hỗ trợ tim mạch", "Tăng năng lượng", "Chống oxy hóa"],
+    "usage_instructions": "Uống 1 viên/ngày sau bữa ăn.",
+    "warnings": [],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Người lớn tuổi"],
+    "certifications": ["GMP"],
+    "quantity_in_stock": 120,
+    "price": 480000,
+    "currency": "VND",
+    "qna": [
+      {
+        "question": "Sản phẩm này có phù hợp với người cao huyết áp không?",
+        "answer": "Có, nhưng nên tham khảo ý kiến bác sĩ trước khi sử dụng."
+      }
+    ],
+    "ratings": []
+  },
+  {
+    "id": "TPCN0030",
+    "name": "Trà xanh matcha giảm cân",
+    "description": "Hỗ trợ giảm cân, tăng cường trao đổi chất và chống oxy hóa.",
+    "category": "LĐ",
+    "brand": "Nhãn hiệu NN",
+    "dosage_form": "Bột pha",
+    "image_url": "/images/tra_xanh_matcha.jpg",
+    "ingredients": ["Bột matcha 100%"],
+    "benefits": ["Hỗ trợ giảm cân", "Tăng trao đổi chất", "Chống oxy hóa"],
+    "usage_instructions": "Pha 1 thìa bột với nước nóng, uống 1 lần/ngày.",
+    "warnings": ["Không dùng cho người mẫn cảm với caffeine."],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Người trưởng thành muốn giảm cân"],
+    "certifications": ["Organic"],
+    "quantity_in_stock": 70,
+    "price": 250000,
+    "currency": "VND",
+    "qna": [],
+    "ratings": [
+      {
+        "user_id": "USER0018",
+        "rating_value": 4,
+        "comment": "Vị đậm đà, hỗ trợ giảm cân hiệu quả.",
+        "created_at": "2024-05-01T11:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "TPCN0031",
+    "name": "Viên uống bổ sung DHA cho trẻ",
+    "description": "Hỗ trợ phát triển trí não và thị lực cho trẻ em.",
+    "category": "BDN",
+    "brand": "Nhãn hiệu OO",
+    "dosage_form": "Viên nang mềm",
+    "image_url": "/images/dha_tre_em.jpg",
+    "ingredients": ["DHA từ tảo", "Vitamin D"],
+    "benefits": ["Phát triển trí não", "Cải thiện thị lực", "Hỗ trợ học tập"],
+    "usage_instructions": "Trẻ 2-6 tuổi: 1 viên/ngày, uống sau bữa ăn.",
+    "warnings": ["Không dùng cho trẻ dưới 2 tuổi."],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Trẻ em"],
+    "certifications": [],
+    "quantity_in_stock": 160,
+    "price": 300000,
+    "currency": "VND",
+    "qna": [
+      {
+        "question": "Sản phẩm này có mùi tanh không?",
+        "answer": "Không, DHA được chiết xuất từ tảo nên không có mùi tanh."
+      }
+    ],
+    "ratings": []
+  },
+  {
+    "id": "TPCN0032",
+    "name": "Nước uống collagen hoa quả",
+    "description": "Bổ sung collagen và vitamin từ hoa quả, giúp làm đẹp da.",
+    "category": "LĐ",
+    "brand": "Nhãn hiệu PP",
+    "dosage_form": "Dạng lỏng",
+    "image_url": "/images/collagen_hoa_qua.jpg",
+    "ingredients": ["Collagen thủy phân", "Chiết xuất dâu tây", "Vitamin C"],
+    "benefits": ["Làm đẹp da", "Tăng độ ẩm da", "Chống lão hóa"],
+    "usage_instructions": "Uống 1 chai/ngày trước khi đi ngủ.",
+    "warnings": [],
+    "storage_instructions": "Bảo quản lạnh sau khi mở nắp.",
+    "target_audience": ["Nữ giới"],
+    "certifications": [],
+    "quantity_in_stock": 100,
+    "price": 45000,
+    "currency": "VND",
+    "qna": [],
+    "ratings": [
+      {
+        "user_id": "USER0019",
+        "rating_value": 5,
+        "comment": "Da tôi mịn hơn sau khi dùng 2 tuần.",
+        "created_at": "2024-05-15T09:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "TPCN0033",
+    "name": "Viên uống bổ sung kali",
+    "description": "Bổ sung kali giúp cân bằng điện giải và hỗ trợ huyết áp.",
+    "category": "KHOANGCHAT",
+    "brand": "Nhãn hiệu QQ",
+    "dosage_form": "Viên nén",
+    "image_url": "/images/kali.jpg",
+    "ingredients": ["Kali chloride", "Magie"],
+    "benefits": ["Cân bằng điện giải", "Hỗ trợ huyết áp", "Giảm mệt mỏi"],
+    "usage_instructions": "Uống 1 viên/ngày sau bữa ăn.",
+    "warnings": ["Tham khảo ý kiến bác sĩ nếu bạn có bệnh thận."],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Người lớn"],
+    "certifications": [],
+    "quantity_in_stock": 130,
+    "price": 180000,
+    "currency": "VND",
+    "qna": [
+      {
+        "question": "Sản phẩm này có gây tăng huyết áp không?",
+        "answer": "Không, sản phẩm giúp cân bằng huyết áp, nhưng nên tham khảo ý kiến bác sĩ."
+      }
+    ],
+    "ratings": []
+  },
+  {
+    "id": "TPCN0034",
+    "name": "Siro tăng sức đề kháng từ nghệ",
+    "description": "Hỗ trợ tăng cường sức đề kháng, giảm viêm nhờ nghệ tươi.",
+    "category": "HTSK",
+    "brand": "Nhãn hiệu RR",
+    "dosage_form": "Dạng siro",
+    "image_url": "/images/siro_nghe.jpg",
+    "ingredients": ["Chiết xuất nghệ tươi", "Mật ong"],
+    "benefits": ["Tăng sức đề kháng", "Giảm viêm", "Hỗ trợ tiêu hóa"],
+    "usage_instructions": "Uống 10ml/lần, 2 lần/ngày trước bữa ăn.",
+    "warnings": [],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Mọi lứa tuổi"],
+    "certifications": ["Organic"],
+    "quantity_in_stock": 110,
+    "price": 130000,
+    "currency": "VND",
+    "qna": [],
+    "ratings": [
+      {
+        "user_id": "USER0020",
+        "rating_value": 4,
+        "comment": "Siro dễ uống, cảm thấy khỏe hơn.",
+        "created_at": "2024-06-01T10:30:00Z"
+      }
+    ]
+  },
+  {
+    "id": "TPCN0035",
+    "name": "Viên uống bổ sung axit béo Omega-6",
+    "description": "Hỗ trợ sức khỏe da, tóc và cân bằng nội tiết tố.",
+    "category": "BDN",
+    "brand": "Nhãn hiệu SS",
+    "dosage_form": "Viên nang mềm",
+    "image_url": "/images/omega6.jpg",
+    "ingredients": ["Omega-6", "Vitamin E"],
+    "benefits": ["Hỗ trợ sức khỏe da", "Cân bằng nội tiết", "Tóc chắc khỏe"],
+    "usage_instructions": "Uống 1 viên/ngày sau bữa ăn.",
+    "warnings": [],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Nữ giới"],
+    "certifications": ["GMP"],
+    "quantity_in_stock": 95,
+    "price": 350000,
+    "currency": "VND",
+    "qna": [
+      {
+        "question": "Sản phẩm này có gây tăng cân không?",
+        "answer": "Không, sản phẩm không ảnh hưởng đến cân nặng."
+      }
+    ],
+    "ratings": []
+  },
+  {
+    "id": "TPCN0036",
+    "name": "Bột protein thực vật",
+    "description": "Cung cấp protein từ thực vật, hỗ trợ phát triển cơ bắp và giảm cân.",
+    "category": "BDN",
+    "brand": "Nhãn hiệu TT",
+    "dosage_form": "Bột pha",
+    "image_url": "/images/protein_thuc_vat.jpg",
+    "ingredients": ["Protein đậu Hà Lan", "Protein gạo lứt"],
+    "benefits": ["Phát triển cơ bắp", "Hỗ trợ giảm cân", "Tăng cường sức khỏe"],
+    "usage_instructions": "Pha 1 muỗng bột với nước hoặc sữa, uống sau khi tập luyện.",
+    "warnings": [],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Người tập gym"],
+    "certifications": ["Vegan"],
+    "quantity_in_stock": 80,
+    "price": 500000,
+    "currency": "VND",
+    "qna": [],
+    "ratings": [
+      {
+        "user_id": "USER0021",
+        "rating_value": 5,
+        "comment": "Sản phẩm rất tốt cho người ăn chay như tôi.",
+        "created_at": "2024-06-15T14:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "TPCN0037",
+    "name": "Viên uống hỗ trợ tuần hoàn máu",
+    "description": "Cải thiện tuần hoàn máu, giảm tê bì chân tay.",
+    "category": "HTSK",
+    "brand": "Nhãn hiệu UU",
+    "dosage_form": "Viên nén",
+    "image_url": "/images/tuan_hoan_mau.jpg",
+    "ingredients": ["Chiết xuất bạch quả", "Magie"],
+    "benefits": ["Cải thiện tuần hoàn máu", "Giảm tê bì", "Hỗ trợ trí nhớ"],
+    "usage_instructions": "Uống 1 viên/lần, 2 lần/ngày sau bữa ăn.",
+    "warnings": ["Tham khảo ý kiến bác sĩ nếu bạn đang dùng thuốc chống đông máu."],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Người lớn tuổi"],
+    "certifications": [],
+    "quantity_in_stock": 140,
+    "price": 310000,
+    "currency": "VND",
+    "qna": [
+      {
+        "question": "Sản phẩm này có dùng được cho người huyết áp thấp không?",
+        "answer": "Có, nhưng nên tham khảo ý kiến bác sĩ trước khi sử dụng."
+      }
+    ],
+    "ratings": []
+  },
+  {
+    "id": "TPCN0038",
+    "name": "Kẹo ngậm giảm đau họng",
+    "description": "Giảm đau họng, làm dịu cổ họng và khử mùi hôi miệng.",
+    "category": "HTSK",
+    "brand": "Nhãn hiệu VV",
+    "dosage_form": "Dạng kẹo ngậm",
+    "image_url": "/images/keo_dau_hong.jpg",
+    "ingredients": ["Chiết xuất gừng", "Mật ong", "Bạc hà"],
+    "benefits": ["Giảm đau họng", "Làm dịu cổ họng", "Khử mùi hôi miệng"],
+    "usage_instructions": "Ngậm 1 viên khi cần, tối đa 5 viên/ngày.",
+    "warnings": ["Không dùng cho trẻ dưới 3 tuổi."],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Mọi lứa tuổi"],
+    "certifications": [],
+    "quantity_in_stock": 200,
+    "price": 50000,
+    "currency": "VND",
+    "qna": [],
+    "ratings": [
+      {
+        "user_id": "USER0022",
+        "rating_value": 4,
+        "comment": "Kẹo dễ ngậm, giảm đau họng nhanh.",
+        "created_at": "2024-07-01T16:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "TPCN0039",
+    "name": "Viên uống bổ sung i-ốt",
+    "description": "Bổ sung i-ốt giúp hỗ trợ chức năng tuyến giáp và phát triển trí não.",
+    "category": "KHOANGCHAT",
+    "brand": "Nhãn hiệu WW",
+    "dosage_form": "Viên nén",
+    "image_url": "/images/iot.jpg",
+    "ingredients": ["I-ốt", "Selen"],
+    "benefits": ["Hỗ trợ tuyến giáp", "Phát triển trí não", "Tăng cường trao đổi chất"],
+    "usage_instructions": "Uống 1 viên/ngày sau bữa ăn.",
+    "warnings": ["Không dùng cho người bị cường giáp."],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Người lớn"],
+    "certifications": [],
+    "quantity_in_stock": 110,
+    "price": 190000,
+    "currency": "VND",
+    "qna": [
+      {
+        "question": "Sản phẩm này có dùng được cho trẻ em không?",
+        "answer": "Có, nhưng cần tham khảo ý kiến bác sĩ để điều chỉnh liều lượng."
+      }
+    ],
+    "ratings": []
+  },
+  {
+    "id": "TPCN0040",
+    "name": "Nước uống bổ sung điện giải",
+    "description": "Bổ sung điện giải, giúp cơ thể phục hồi nhanh sau khi vận động.",
+    "category": "BDN",
+    "brand": "Nhãn hiệu XX",
+    "dosage_form": "Dạng lỏng",
+    "image_url": "/images/dien_giai.jpg",
+    "ingredients": ["Natri", "Kali", "Glucose"],
+    "benefits": ["Bổ sung điện giải", "Phục hồi năng lượng", "Giảm mệt mỏi"],
+    "usage_instructions": "Uống 1 chai sau khi vận động hoặc khi cơ thể mệt mỏi.",
+    "warnings": [],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Người chơi thể thao"],
+    "certifications": [],
+    "quantity_in_stock": 150,
+    "price": 35000,
+    "currency": "VND",
+    "qna": [],
+    "ratings": [
+      {
+        "user_id": "USER0023",
+        "rating_value": 5,
+        "comment": "Rất tiện lợi sau khi tập gym.",
+        "created_at": "2024-07-15T11:30:00Z"
+      }
+    ]
+  },
+  {
+    "id": "TPCN0041",
+    "name": "Viên uống bổ sung vitamin B12",
+    "description": "Bổ sung vitamin B12 giúp tăng cường năng lượng và hỗ trợ hệ thần kinh.",
+    "category": "BDN",
+    "brand": "Nhãn hiệu YY",
+    "dosage_form": "Viên nén",
+    "image_url": "/images/vitamin_b12.jpg",
+    "ingredients": ["Vitamin B12", "Axit folic"],
+    "benefits": ["Tăng cường năng lượng", "Hỗ trợ hệ thần kinh", "Cải thiện trí nhớ"],
+    "usage_instructions": "Uống 1 viên/ngày sau bữa ăn sáng.",
+    "warnings": [],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Người lớn"],
+    "certifications": ["GMP"],
+    "quantity_in_stock": 160,
+    "price": 240000,
+    "currency": "VND",
+    "qna": [
+      {
+        "question": "Sản phẩm này có phù hợp cho người ăn chay không?",
+        "answer": "Có, sản phẩm rất phù hợp cho người ăn chay vì vitamin B12 thường thiếu trong chế độ ăn chay."
+      }
+    ],
+    "ratings": []
+  },
+  {
+    "id": "TPCN0042",
+    "name": "Trà detox lá sen giảm mỡ",
+    "description": "Hỗ trợ giảm mỡ thừa, thanh lọc cơ thể nhờ chiết xuất lá sen tự nhiên.",
+    "category": "LĐ",
+    "brand": "Nhãn hiệu ZZ",
+    "dosage_form": "Trà túi lọc",
+    "image_url": "/images/tra_la_sen.jpg",
+    "ingredients": ["Lá sen", "Trà xanh", "Táo đỏ"],
+    "benefits": ["Giảm mỡ thừa", "Thanh lọc cơ thể", "Hỗ trợ tiêu hóa"],
+    "usage_instructions": "Ngâm 1 túi trà trong nước nóng 5 phút, uống 2 lần/ngày trước bữa ăn.",
+    "warnings": ["Không dùng cho người huyết áp thấp."],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Người trưởng thành muốn giảm cân"],
+    "certifications": ["Organic"],
+    "quantity_in_stock": 90,
+    "price": 110000,
+    "currency": "VND",
+    "qna": [],
+    "ratings": [
+      {
+        "user_id": "USER0024",
+        "rating_value": 4,
+        "comment": "Trà thơm, dễ uống, tôi thấy giảm được chút mỡ bụng sau 1 tháng.",
+        "created_at": "2024-08-01T09:15:00Z"
+      }
+    ]
+  },
+  {
+    "id": "TPCN0043",
+    "name": "Siro tăng chiều cao cho trẻ",
+    "description": "Hỗ trợ phát triển chiều cao và xương chắc khỏe cho trẻ em nhờ canxi và vitamin D.",
+    "category": "KHOANGCHAT",
+    "brand": "Nhãn hiệu AAA",
+    "dosage_form": "Dạng siro",
+    "image_url": "/images/siro_tang_chieu_cao.jpg",
+    "ingredients": ["Canxi nano", "Vitamin D3", "Kẽm"],
+    "benefits": ["Phát triển chiều cao", "Xương chắc khỏe", "Tăng cường miễn dịch"],
+    "usage_instructions": "Trẻ 3-6 tuổi: 10ml/ngày, trẻ trên 6 tuổi: 15ml/ngày, uống sau bữa ăn.",
+    "warnings": ["Không dùng cho trẻ dưới 3 tuổi."],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Trẻ em"],
+    "certifications": [],
+    "quantity_in_stock": 140,
+    "price": 180000,
+    "currency": "VND",
+    "qna": [
+      {
+        "question": "Siro này có vị gì?",
+        "answer": "Siro có vị dâu tây, rất dễ uống cho trẻ."
+      }
+    ],
+    "ratings": [
+      {
+        "user_id": "USER0025",
+        "rating_value": 5,
+        "comment": "Bé nhà tôi thích uống, thấy phát triển chiều cao tốt hơn.",
+        "created_at": "2024-08-15T14:30:00Z"
+      }
+    ]
+  },
+  {
+    "id": "TPCN0044",
+    "name": "Viên uống hỗ trợ sinh lý nam",
+    "description": "Hỗ trợ tăng cường sinh lý nam giới, cải thiện sức khỏe tổng thể.",
+    "category": "HTSK",
+    "brand": "Nhãn hiệu BBB",
+    "dosage_form": "Viên nang",
+    "image_url": "/images/sinh_ly_nam.jpg",
+    "ingredients": ["Chiết xuất bá bệnh", "L-Arginine", "Kẽm"],
+    "benefits": ["Tăng cường sinh lý nam", "Cải thiện sức khỏe", "Tăng cường tuần hoàn máu"],
+    "usage_instructions": "Uống 1 viên/lần, 2 lần/ngày sau bữa ăn.",
+    "warnings": ["Tham khảo ý kiến bác sĩ nếu bạn có bệnh tim mạch."],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Nam giới trưởng thành"],
+    "certifications": ["GMP"],
+    "quantity_in_stock": 100,
+    "price": 490000,
+    "currency": "VND",
+    "qna": [
+      {
+        "question": "Sản phẩm này có tác dụng phụ không?",
+        "answer": "Sản phẩm an toàn với hầu hết người dùng, nhưng nên tham khảo ý kiến bác sĩ nếu bạn có bệnh nền."
+      }
+    ],
+    "ratings": []
+  },
+  {
+    "id": "TPCN0045",
+    "name": "Nước uống bổ sung chất xơ",
+    "description": "Bổ sung chất xơ hòa tan, hỗ trợ tiêu hóa và giảm táo bón.",
+    "category": "HTSK",
+    "brand": "Nhãn hiệu CCC",
+    "dosage_form": "Dạng lỏng",
+    "image_url": "/images/nuoc_chat_xo.jpg",
+    "ingredients": ["Chất xơ hòa tan", "Chiết xuất lô hội", "Vitamin C"],
+    "benefits": ["Hỗ trợ tiêu hóa", "Giảm táo bón", "Thanh lọc cơ thể"],
+    "usage_instructions": "Uống 1 chai/ngày vào buổi sáng.",
+    "warnings": [],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Mọi lứa tuổi"],
+    "certifications": [],
+    "quantity_in_stock": 120,
+    "price": 55000,
+    "currency": "VND",
+    "qna": [],
+    "ratings": [
+      {
+        "user_id": "USER0026",
+        "rating_value": 4,
+        "comment": "Vị dễ uống, tiêu hóa của tôi cải thiện rõ rệt.",
+        "created_at": "2024-09-01T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "TPCN0046",
+    "name": "Viên uống bổ sung vitamin E",
+    "description": "Bổ sung vitamin E giúp chống oxy hóa, làm đẹp da và hỗ trợ sức khỏe tim mạch.",
+    "category": "LĐ",
+    "brand": "Nhãn hiệu DDD",
+    "dosage_form": "Viên nang mềm",
+    "image_url": "/images/vitamin_e.jpg",
+    "ingredients": ["Vitamin E tự nhiên", "Dầu hạt nho"],
+    "benefits": ["Chống oxy hóa", "Làm đẹp da", "Hỗ trợ tim mạch"],
+    "usage_instructions": "Uống 1 viên/ngày sau bữa ăn.",
+    "warnings": [],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Nữ giới"],
+    "certifications": ["GMP"],
+    "quantity_in_stock": 110,
+    "price": 280000,
+    "currency": "VND",
+    "qna": [
+      {
+        "question": "Sản phẩm này có làm da sáng hơn không?",
+        "answer": "Có, vitamin E giúp cải thiện độ ẩm và làm sáng da sau thời gian sử dụng đều đặn."
+      }
+    ],
+    "ratings": []
+  },
+  {
+    "id": "TPCN0047",
+    "name": "Bột yến mạch dinh dưỡng",
+    "description": "Cung cấp dinh dưỡng từ yến mạch nguyên cám, hỗ trợ giảm cân và sức khỏe tim mạch.",
+    "category": "BDN",
+    "brand": "Nhãn hiệu EEE",
+    "dosage_form": "Bột pha",
+    "image_url": "/images/yen_mach.jpg",
+    "ingredients": ["Yến mạch nguyên cám", "Hạt chia"],
+    "benefits": ["Giảm cân", "Hỗ trợ tim mạch", "Cung cấp năng lượng"],
+    "usage_instructions": "Pha 2 thìa bột với nước nóng hoặc sữa, dùng làm bữa sáng.",
+    "warnings": [],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Người trưởng thành muốn giảm cân"],
+    "certifications": ["Organic"],
+    "quantity_in_stock": 130,
+    "price": 160000,
+    "currency": "VND",
+    "qna": [],
+    "ratings": [
+      {
+        "user_id": "USER0027",
+        "rating_value": 5,
+        "comment": "Bột yến mạch ngon, giúp tôi no lâu hơn.",
+        "created_at": "2024-09-15T08:45:00Z"
+      }
+    ]
+  },
+  {
+    "id": "TPCN0048",
+    "name": "Viên uống hỗ trợ giấc ngủ từ thảo dược",
+    "description": "Hỗ trợ giấc ngủ ngon, giảm căng thẳng nhờ các thảo dược tự nhiên.",
+    "category": "HTSK",
+    "brand": "Nhãn hiệu FFF",
+    "dosage_form": "Viên nang",
+    "image_url": "/images/giac_ngu_thao_duoc.jpg",
+    "ingredients": ["Chiết xuất lạc tiên", "Tâm sen", "Melatonin"],
+    "benefits": ["Cải thiện giấc ngủ", "Giảm căng thẳng", "Thư giãn tinh thần"],
+    "usage_instructions": "Uống 1 viên trước khi đi ngủ 30 phút.",
+    "warnings": ["Không lái xe sau khi sử dụng."],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Người lớn"],
+    "certifications": [],
+    "quantity_in_stock": 90,
+    "price": 340000,
+    "currency": "VND",
+    "qna": [
+      {
+        "question": "Sản phẩm này có gây nghiện không?",
+        "answer": "Không, sản phẩm chiết xuất từ thảo dược tự nhiên và an toàn khi sử dụng đúng liều lượng."
+      }
+    ],
+    "ratings": []
+  },
+  {
+    "id": "TPCN0049",
+    "name": "Kẹo bổ sung canxi cho trẻ em",
+    "description": "Bổ sung canxi và vitamin D dưới dạng kẹo, giúp trẻ phát triển xương chắc khỏe.",
+    "category": "KHOANGCHAT",
+    "brand": "Nhãn hiệu GGG",
+    "dosage_form": "Dạng kẹo nhai",
+    "image_url": "/images/keo_canxi.jpg",
+    "ingredients": ["Canxi citrate", "Vitamin D3", "Đường tự nhiên"],
+    "benefits": ["Phát triển xương", "Răng chắc khỏe", "Hỗ trợ chiều cao"],
+    "usage_instructions": "Nhai 1-2 viên/ngày sau bữa ăn.",
+    "warnings": ["Sử dụng dưới sự giám sát của người lớn."],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Trẻ em"],
+    "certifications": [],
+    "quantity_in_stock": 200,
+    "price": 90000,
+    "currency": "VND",
+    "qna": [
+      {
+        "question": "Kẹo này có gây sâu răng không?",
+        "answer": "Không, kẹo được làm từ đường tự nhiên và không gây hại cho răng."
+      }
+    ],
+    "ratings": [
+      {
+        "user_id": "USER0028",
+        "rating_value": 4,
+        "comment": "Bé nhà tôi rất thích, dễ nhai.",
+        "created_at": "2024-10-01T11:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "TPCN0050",
+    "name": "Nước uống bổ sung năng lượng",
+    "description": "Cung cấp năng lượng nhanh chóng, giúp phục hồi sức khỏe sau khi làm việc mệt mỏi.",
+    "category": "BDN",
+    "brand": "Nhãn hiệu HHH",
+    "dosage_form": "Dạng lỏng",
+    "image_url": "/images/nuoc_nang_luong.jpg",
+    "ingredients": ["Caffeine", "Taurine", "Vitamin nhóm B"],
+    "benefits": ["Tăng năng lượng", "Phục hồi sức khỏe", "Tăng sự tỉnh táo"],
+    "usage_instructions": "Uống 1 chai khi cảm thấy mệt mỏi, tối đa 2 chai/ngày.",
+    "warnings": ["Không dùng cho trẻ em và phụ nữ mang thai."],
+    "storage_instructions": "Bảo quản nơi khô ráo, thoáng mát.",
+    "target_audience": ["Người trưởng thành"],
+    "certifications": [],
+    "quantity_in_stock": 180,
+    "price": 40000,
+    "currency": "VND",
+    "qna": [],
+    "ratings": [
+      {
+        "user_id": "USER0029",
+        "rating_value": 5,
+        "comment": "Giúp tôi tỉnh táo hơn khi làm việc khuya.",
+        "created_at": "2024-10-15T15:30:00Z"
+      }
+    ]
+  }
+]
