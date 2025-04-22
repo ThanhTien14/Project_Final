@@ -6,13 +6,12 @@ const router = express.Router();
 const app = express();
 const port = 3000;
 
-
-
 // Middleware
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json({ limit: '10kb' }));
 app.set('views', path.join(__dirname, 'public', 'pages'));
 app.set('view engine', 'ejs');
+
 // Hàm validate dữ liệu sản phẩm
 function validateProductData(data, isUpdate = false) {
     const errors = [];
@@ -42,9 +41,6 @@ function validateProductData(data, isUpdate = false) {
     }
     return errors;
 }
-
-
-
 
 // Hàm chuẩn hóa dữ liệu
 function normalizeProductData(data) {
@@ -116,16 +112,30 @@ app.post('/api/products', async (req, res) => {
     }
 });
 
-// API: Lấy danh sách sản phẩm
+// API: Lấy danh sách sản phẩm có phân trang
 app.get('/api/products', async (req, res) => {
     try {
-        const { name, priceFrom, priceTo, category, brand, logic } = req.query;
-        const criteria = { name, priceFrom, priceTo, category, brand, logic };
-        const products = await mongodbModule.findDocuments(criteria);
-        res.json(products);
-    } catch (error) {
-        throw error;
-    }
+        const { name, priceFrom, priceTo, category, brand, page = 1, limit = 10 } = req.query;
+        const query = {};
+        if (name) query.name = { $regex: name, $options: 'i' };
+        if (priceFrom) query.price = { $gte: Number(priceFrom) };
+        if (priceTo) query.price = { ...query.price, $lte: Number(priceTo) };
+        if (category) query.category = category;
+        if (brand) query.brand = brand;
+        const skip = (page - 1) * limit;
+        const [products, totalProducts] = await Promise.all([
+          Product.find(query).skip(skip).limit(limit).toArray(),
+          Product.countDocuments(query)
+        ]);
+        const totalPages = Math.ceil(totalProducts / limit);
+        res.json({
+          products,
+          pagination: { currentPage: Number(page), totalPages, totalProducts }
+        });
+      } catch (error) {
+        console.error('Lỗi API sản phẩm:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
 });
 
 // API: Lấy chi tiết một sản phẩm
@@ -160,54 +170,25 @@ app.put('/api/products/:id', async (req, res) => {
         throw error;
     }
 });
-//API tìm kiếm thông tin sản phẩm
 
+//API tìm kiếm thông tin sản phẩm
 app.get('/api/products/search', async (req, res) => {
     try {
-        const searchInput = req.query.name ? req.query.name.trim().toLowerCase() : '';
-
-        if (!searchInput) {
-            return res.status(400).json({ error: 'Search query is required' });
+        const { name } = req.query;
+        if (!name || name.trim().length < 2) {
+          return res.status(400).json({ error: 'Search query must be at least 2 characters' });
         }
-
-        const products = await mongodbModule.dbCollection.find({
-            name: { $regex: searchInput, $options: 'i' } // i: không phân biệt hoa thường
-        }).toArray();
-
-        res.json(products); // Trả kết quả về client dưới dạng JSON
-    } catch (error) {
-        console.error(error);
+        const products = await Product.find({
+          name: { $regex: name.trim(), $options: 'i' }
+        }).limit(50).toArray();
+        res.json(products.length ? products : []);
+      } catch (error) {
+        console.error('Lỗi API tìm kiếm:', error);
         res.status(500).json({ error: 'Internal server error' });
-    }
+      }
 });
 
-// API: Lấy danh sách sản phẩm có phân trang
-app.get('/api/products', async (req, res) => {
-    try {
-        const page = parseInt(req.query.page) || 1;
-        const limit = 10; // mỗi trang 5 sản phẩm
-        const skip = (page - 1) * limit;
 
-        const [products, totalProducts] = await Promise.all([
-            mongodbModule.dbCollection.find().skip(skip).limit(limit).toArray(),
-            mongodbModule.dbCollection.countDocuments()
-        ]);
-
-        const totalPages = Math.ceil(totalProducts / limit);
-
-        res.json({
-            products,
-            pagination: {
-                currentPage: page,
-                totalPages,
-                totalProducts
-            }
-        });
-    } catch (error) {
-        console.error('Lỗi API phân trang:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
 
 // Xử lý đóng kết nối MongoDB
 process.on('SIGINT', async () => {
