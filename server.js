@@ -501,11 +501,9 @@ app.post('/api/products/check-duplicate', async (req, res) => {
 // Kết nối MongoDB
 mongodbModule.connectToMongoDB()
     .then(() => {
-        console.log('Kết nối MongoDB thành công!');
         app.listen(port, () => console.log(`Server chạy trên port ${port}!`));
     })
     .catch(err => {
-        console.error('Lỗi kết nối MongoDB:', err);
         process.exit(1);
     });
 

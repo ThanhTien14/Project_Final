@@ -103,3 +103,21 @@ tr:hover {
     margin-top: 20px;
     font-weight: bold;
 }
+
+.pagination {
+    margin-top: 20px;
+    text-align: center;
+}
+.pagination-button {
+    padding: 5px 10px;
+    margin: 0 5px;
+    cursor: pointer;
+}
+.pagination-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+#deleteAllBtn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}

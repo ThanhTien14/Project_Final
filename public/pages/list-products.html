@@ -43,9 +43,6 @@
         <label for="max-price">Đến:</label>
         <input type="number" id="max-price" class="price-input" placeholder="Nhập giá cao nhất">
 
-        <label for="search-logic">Tìm OR:</label>
-        <input type="checkbox" id="search-logic" value="OR">
-
         <button id="filter-button" class="apply-filter-button">Lọc</button>
     </div>
 
@@ -74,7 +71,16 @@
 
             function renderProducts(products) {
                 const productList = document.querySelector('.product-list');
-                productList.innerHTML = products.length ? products.map(product => {
+                productList.innerHTML = ''; // Xóa nội dung cũ
+
+                if (!products.length) {
+                    const li = document.createElement('li');
+                    li.textContent = 'Không tìm thấy sản phẩm';
+                    productList.appendChild(li);
+                    return;
+                }
+
+                products.forEach(product => {
                     const listItem = document.createElement('li');
                     listItem.classList.add('product-item');
 
@@ -135,16 +141,20 @@
                     const deleteIcon = document.createElement('span');
                     deleteIcon.classList.add('action-icon', 'delete-button');
                     deleteIcon.innerHTML = '<i class="fas fa-trash-alt"></i>';
-                    deleteIcon.dataset.productId = product.id;
+                    deleteIcon.style.cursor = 'pointer'; // Đảm bảo nút xóa có thể tương tác
                     deleteIcon.addEventListener('click', async () => {
                         if (confirm(`Bạn có chắc muốn xóa sản phẩm ${product.name}?`)) {
                             try {
                                 const response = await fetch(`/api/products/${product.id}`, { method: 'DELETE' });
-                                if (!response.ok) throw new Error('Xóa thất bại');
-                                showError('Xóa sản phẩm thành công');
+                                if (!response.ok) {
+                                    const errorData = await response.json();
+                                    throw new Error(errorData.error || 'Xóa thất bại');
+                                }
+                                const result = await response.json();
+                                showError(result.message || 'Xóa sản phẩm thành công', 'green');
                                 fetchProducts(currentPage);
                             } catch (error) {
-                                showError('Lỗi khi xóa sản phẩm: ' + error.message);
+                                showError('Lỗi khi xóa sản phẩm: ' + error.message, 'red');
                             }
                         }
                     });
@@ -156,9 +166,8 @@
                     listItem.appendChild(details);
                     listItem.appendChild(actions);
 
-                    return listItem.outerHTML;
-                }).join('')
-                : '<li>Không tìm thấy sản phẩm</li>';
+                    productList.appendChild(listItem);
+                });
             }
 
             async function fetchProducts(page = 1, filters = {}) {
@@ -211,11 +220,11 @@
                 const logic = document.getElementById('search-logic').checked ? 'OR' : undefined;
 
                 if (minPrice < 0 || maxPrice < 0) {
-                    showError('Giá không được là số âm.');
+                    showError('Giá không được là số âm.', 'red');
                     return;
                 }
                 if (minPrice && maxPrice && minPrice > maxPrice) {
-                    showError('Giá thấp nhất không được lớn hơn giá cao nhất.');
+                    showError('Giá thấp nhất không được lớn hơn giá cao nhất.', 'red');
                     return;
                 }
 
@@ -245,15 +254,15 @@
                 window.location.href = '/pages/create-product.html';
             });
 
-            function showError(message) {
+            function showError(message, color = 'red') {
                 const errorDiv = document.getElementById('error-message');
                 if (errorDiv) {
                     errorDiv.textContent = message;
+                    errorDiv.style.color = color;
                     errorDiv.style.display = 'block';
                     setTimeout(() => errorDiv.style.display = 'none', 3000);
                 }
             }
         });
     </script>
-</body>
 </html>
