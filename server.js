@@ -345,6 +345,13 @@ app.put('/api/products/:id', upload.single('image'), async (req, res) => {
 
         // Xử lý hình ảnh
         if (req.file) {
+            const urlPattern = /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp))/i;
+            if (!urlPattern.test(parsedUpdateData.image_url)) {
+                console.log('PUT /api/products/:id - Invalid image URL:', parsedUpdateData.image_url);
+                return res.status(400).json({ error: 'URL hình ảnh không hợp lệ (phải là png, jpg, jpeg, gif, webp)' });
+            }
+
+            // Xóa ảnh cũ nếu có
             if (existingProduct.image_url && existingProduct.image_url.startsWith('/images/uploads/')) {
                 const oldImageRelativePath = existingProduct.image_url.replace(/^\/images\/uploads\//, '');
                 const oldImagePath = path.join(__dirname, 'public', 'images', 'uploads', oldImageRelativePath);
@@ -353,7 +360,7 @@ app.put('/api/products/:id', upload.single('image'), async (req, res) => {
                     console.log('Deleted old image:', oldImagePath);
                 }
             }
-            parsedUpdateData.image_url = `/images/uploads/${req.file.filename}`;
+            // parsedUpdateData.image_url = `/images/uploads/${req.file.filename}`;
             console.log('PUT /api/products/:id - New image uploaded:', parsedUpdateData.image_url);
         }
 
