@@ -8,45 +8,54 @@
 </head>
 <body>
     <header>
-        <nav>
-            <ul>
-                <li><a href="/">Trang chủ</a></li>
-                <li>
-                    <a href="#">Thêm sản phẩm</a>
-                    <ul>
-                        <li><a href="/pages/create-product.html">Thêm một sản phẩm</a></li>
-                        <li><a href="/pages/import-products.html">Import JSON</a></li>
-                    </ul>
-                </li>
-                <li><a href="/pages/list-products.html">Danh sách sản phẩm</a></li>
-                <li><a href="/pages/list-products.html">Tìm kiếm sản phẩm</a></li>
-                <li>
-                    <a href="#">Chỉnh sửa sản phẩm</a>
-                    <ul>
-                        <li><a href="/pages/update-product.html">Chỉnh sửa một sản phẩm</a></li>
-                        <li><a href="/pages/update-products-bulk.html">Cập nhật nhiều sản phẩm</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">Xóa sản phẩm</a>
-                    <ul>
-                        <li><a href="/pages/delete-product.html">Xóa sản phẩm</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </nav>
+        <div class="nav-container">
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">Trang chủ</a></li>
+                    <li><a href="/pages/list-products.html">Danh sách sản phẩm</a></li>
+                    <li>
+                        <a href="#">Thêm sản phẩm</a>
+                        <ul>
+                            <li><a href="/pages/create-product.html">Thêm một sản phẩm</a></li>
+                            <li><a href="/pages/import-products.html">Import JSON</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Cập nhật sản phẩm</a>
+                        <ul>
+                            <li><a href="/pages/update-product.html">Cập nhật một sản phẩm</a></li>
+                            <li><a href="/pages/update-products-bulk.html">Cập nhật nhiều sản phẩm</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Xóa sản phẩm</a>
+                        <ul>
+                            <li><a href="/pages/delete-product.html">Xóa một sản phẩm</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </header>
-
     <main class="hero">
+        <div class="hero-overlay"></div>
         <div class="hero-content">
             <h1>Chào mừng đến với Website Bán Thực Phẩm Chức Năng</h1>
             <p>Nơi cung cấp các sản phẩm chăm sóc sức khỏe tốt nhất cho bạn và gia đình.</p>
             <p>Khám phá ngay!</p>
+            <a href="/pages/list-products.html" class="hero-button">Xem sản phẩm</a>
         </div>
     </main>
 
     <script>
-        // JavaScript nếu cần (hiện tại chưa cần)
+        // Xử lý menu responsive
+        document.querySelector('.menu-toggle').addEventListener('click', function() {
+            const nav = document.querySelector('nav ul');
+            nav.classList.toggle('show');
+        });
     </script>
 </body>
 </html>
