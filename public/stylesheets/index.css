@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Poppins', Arial, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f9f9f9;
@@ -14,8 +14,8 @@ header {
     width: 100%;
     z-index: 100;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    height: 60px; /* Chiều cao cố định */
-    box-sizing: border-box; /* Đảm bảo padding không làm tăng chiều cao */
+    height: 60px;
+    box-sizing: border-box;
 }
 
 .nav-container {
@@ -110,9 +110,76 @@ nav ul li ul li a.nav-link:hover {
     background-color: #45a049;
 }
 
-/* Bù khoảng cách cho nội dung chính */
 body {
-    padding-top: 60px; /* Bằng với chiều cao của header */
+    padding-top: 60px;
+}
+
+.hero {
+    position: relative;
+    min-height: calc(100vh - 60px); /* Chiều cao toàn màn hình trừ header */
+    background-image: url('https://giayphepcon.net/wp-content/uploads/2021/06/cong-bo-thuc-pham-chuc-nang.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* Hiệu ứng parallax nhẹ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    color: white;
+    max-width: 80%;
+    padding: 50px;
+}
+
+.hero-content h1 {
+    font-size: 60px;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    font-weight: 600;
+}
+
+.hero-content p {
+    font-size: 24px;
+    margin: 10px 0;
+    font-weight: 300;
+}
+
+.hero-content p.slogan {
+    font-size: 20px;
+    font-style: italic;
+    color: #FF6F61;
+}
+
+.hero-button {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 15px 40px;
+    background-color: #FF6F61;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, background-color 0.3s ease;
+    font-size: 18px;
+}
+
+.hero-button:hover {
+    background-color: #e65b50;
+    transform: scale(1.05);
 }
 
 /* Responsive */
@@ -160,58 +227,44 @@ body {
     nav ul li ul li a.nav-link {
         padding: 10px 30px;
     }
-}
-.hero {
-    position: relative;
-    min-height: 500px;
-    background-image: url('https://images.unsplash.com/photo-1622480937810-2e9962e32a38?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding-top: 60px;
+
+    .hero {
+        min-height: calc(100vh - 60px);
+    }
+
+    .hero-content h1 {
+        font-size: 36px;
+    }
+
+    .hero-content p {
+        font-size: 18px;
+    }
+
+    .hero-content p.slogan {
+        font-size: 16px;
+    }
+
+    .hero-button {
+        padding: 12px 30px;
+        font-size: 16px;
+    }
 }
 
-.hero-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-}
+@media (max-width: 480px) {
+    .hero-content h1 {
+        font-size: 28px;
+    }
 
-.hero-content {
-    position: relative;
-    z-index: 1;
-    color: white;
-    max-width: 80%;
-    padding: 20px;
-}
+    .hero-content p {
+        font-size: 16px;
+    }
 
-.hero-content h1 {
-    font-size: 36px;
-    margin-bottom: 20px;
-}
+    .hero-content p.slogan {
+        font-size: 14px;
+    }
 
-.hero-content p {
-    font-size: 18px;
-    margin: 10px 0;
-}
-
-.hero-button {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    text-decoration: none;
-    border-radius: 4px;
-    font-weight: bold;
-}
-
-.hero-button:hover {
-    background-color: #45a049;
+    .hero-button {
+        padding: 10px 25px;
+        font-size: 14px;
+    }
 }

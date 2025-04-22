@@ -6,6 +6,7 @@
     <title>Trang Chủ - Quản Lý Sản Phẩm</title>
     <link rel="stylesheet" href="/stylesheets/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
@@ -28,7 +29,7 @@
                     <li>
                         <a class="nav-link">Cập nhật sản phẩm <i class="fas fa-chevron-down"></i></a>
                         <ul>
-                            <li><a href="/pages/update-product.html" class="nav-link">Cập nhật một sản phẩm</a></li>
+                            <li><a href="/pages/list-products.html" class="nav-link">Cập nhật một sản phẩm</a></li>
                             <li><a href="/pages/update-products-bulk.html" class="nav-link">Cập nhật nhiều sản phẩm</a></li>
                         </ul>
                     </li>
@@ -41,10 +42,11 @@
     <main class="hero">
         <div class="hero-overlay"></div>
         <div class="hero-content">
-            <h1>Chào mừng đến với Website Bán Thực Phẩm Chức Năng</h1>
+            <h1>Chào Mừng Đến Với Website Bán Thực Phẩm Chức Năng</h1>
             <p>Nơi cung cấp các sản phẩm chăm sóc sức khỏe tốt nhất cho bạn và gia đình.</p>
+            <p class="slogan">Hỗ trợ sức khỏe, nâng cao chất lượng cuộc sống.</p>
             <p>Khám phá ngay!</p>
-            <a href="/pages/list-products.html" class="hero-button">Xem sản phẩm</a>
+            <a href="/pages/list-products.html" class="hero-button">Xem Sản Phẩm</a>
         </div>
     </main>
 
@@ -60,7 +62,6 @@
             const currentPath = window.location.pathname;
             const navLinks = document.querySelectorAll('.nav-link');
             navLinks.forEach(link => {
-                // So sánh href của link với đường dẫn hiện tại
                 let linkPath = link.getAttribute('href');
                 if (linkPath === currentPath || (currentPath === '' && linkPath === '/')) {
                     link.classList.add('active');
@@ -68,6 +69,16 @@
                     link.classList.add('active');
                 }
             });
+
+            // Animation cho hero content
+            const heroContent = document.querySelector('.hero-content');
+            heroContent.style.opacity = '0';
+            heroContent.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                heroContent.style.transition = 'all 0.8s ease-in-out';
+                heroContent.style.opacity = '1';
+                heroContent.style.transform = 'translateY(0)';
+            }, 300);
         });
     </script>
 </body>
