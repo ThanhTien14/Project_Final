@@ -28,7 +28,7 @@
                     <li>
                         <a class="nav-link">Cập nhật sản phẩm <i class="fas fa-chevron-down"></i></a>
                         <ul>
-                            <li><a href="/pages/update-product.html" class="nav-link">Cập nhật một sản phẩm</a></li>
+                            <li><a href="/pages/list-products.html" class="nav-link">Cập nhật một sản phẩm</a></li>
                             <li><a href="/pages/update-products-bulk.html" class="nav-link">Cập nhật nhiều sản phẩm</a></li>
                         </ul>
                     </li>
@@ -156,13 +156,18 @@
 
                     const quickViewIcon = document.createElement('a');
                     quickViewIcon.classList.add('action-icon', 'quick-view-button');
-                    quickViewIcon.href = `/pages/update-product.html?id=${product.id}`;
+                    quickViewIcon.href = `/pages/productinfor.html?id=${product.id}`;
                     quickViewIcon.innerHTML = '<i class="fas fa-eye"></i>';
+
+                    const editIcon = document.createElement('a');
+                    editIcon.classList.add('action-icon', 'edit-button');
+                    editIcon.href = `/pages/update-product.html?id=${product.id}`;
+                    editIcon.innerHTML = '<i class="fas fa-edit"></i>';
 
                     const deleteIcon = document.createElement('span');
                     deleteIcon.classList.add('action-icon', 'delete-button');
                     deleteIcon.innerHTML = '<i class="fas fa-trash-alt"></i>';
-                    deleteIcon.style.cursor = 'pointer'; // Đảm bảo nút xóa có thể tương tác
+                    deleteIcon.style.cursor = 'pointer';
                     deleteIcon.addEventListener('click', async () => {
                         if (confirm(`Bạn có chắc muốn xóa sản phẩm ${product.name}?`)) {
                             try {
@@ -181,6 +186,7 @@
                     });
 
                     actions.appendChild(quickViewIcon);
+                    actions.appendChild(editIcon);
                     actions.appendChild(deleteIcon);
 
                     listItem.appendChild(imagePlaceholder);
@@ -238,7 +244,7 @@
                 const minPrice = parseFloat(document.getElementById('min-price').value);
                 const maxPrice = parseFloat(document.getElementById('max-price').value);
                 const productType = document.getElementById('product-type').value;
-                const logic = document.getElementById('search-logic').checked ? 'OR' : undefined;
+                const logic = document.getElementById('search-logic')?.checked ? 'OR' : undefined;
 
                 if (minPrice < 0 || maxPrice < 0) {
                     showError('Giá không được là số âm.', 'red');
@@ -286,4 +292,5 @@
             }
         });
     </script>
+</body>
 </html>

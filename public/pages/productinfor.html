@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông Tin Sản Phẩm</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/stylesheets/productinfor.css">
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/" class="nav-link">Trang chủ</a></li>
+                    <li><a href="/pages/list-products.html" class="nav-link">Danh sách sản phẩm</a></li>
+                    <li>
+                        <a class="nav-link">Thêm sản phẩm <i class="fas fa-chevron-down"></i></a>
+                        <ul>
+                            <li><a href="/pages/create-product.html" class="nav-link">Thêm một sản phẩm</a></li>
+                            <li><a href="/pages/create-products-bulk.html" class="nav-link">Thêm nhiều sản phẩm</a></li>
+                            <li><a href="/pages/import-products.html" class="nav-link">Import JSON</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="nav-link">Cập nhật sản phẩm <i class="fas fa-chevron-down"></i></a>
+                        <ul>
+                            <li><a href="/pages/list-products.html" class="nav-link">Cập nhật một sản phẩm</a></li>
+                            <li><a href="/pages/update-products-bulk.html" class="nav-link">Cập nhật nhiều sản phẩm</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/pages/delete-product.html" class="nav-link">Xóa sản phẩm</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="product-infor-page">
+        <div class="product-infor-header">
+            <h1>THÔNG TIN SẢN PHẨM</h1>
+        </div>
+        <a href="/pages/list-products.html">
+            <button class="back-to-list-button">
+                <i class="fas fa-arrow-left"></i> Trở về danh sách sản phẩm
+            </button>
+        </a>
+        <div class="product-infor-container">
+            <div class="product-image">
+                <div class="image-placeholder" id="product-image-placeholder">
+                    <img src="" alt="Hình ảnh sản phẩm" style="display: none;" id="product-image-img">
+                </div>
+            </div>
+            <div class="product-details">
+                <h2 id="product-name">TÊN SẢN PHẨM</h2>
+                <p class="price" id="product-price"></p>
+                <p id="product-description"></p>
+                <a id="edit-product-link">
+                    <button class="edit-product-button" id="edit-product-btn">
+                        <i class="fas fa-edit"></i> Sửa thông tin sản phẩm
+                    </button>
+                </a>
+            </div>
+        </div>
+
+        <div class="product-information-section">
+            <h2>Thông tin chi tiết</h2>
+            <div class="information-grid">
+                <div class="info-item">
+                    <span class="info-label">Danh mục:</span>
+                    <span id="product-category"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Dạng bào chế:</span>
+                    <span id="product-dosage-form"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Thành phần:</span>
+                    <span id="product-ingredients"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Lợi ích:</span>
+                    <span id="product-benefits"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Hướng dẫn sử dụng:</span>
+                    <span id="product-usage"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Cảnh báo:</span>
+                    <span id="product-warnings"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Hướng dẫn bảo quản:</span>
+                    <span id="product-storage"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Thông tin khác:</span>
+                    <span id="product-other-info"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Số lượng tồn kho:</span>
+                    <span id="product-quantity-stock"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            const productId = urlParams.get('id');
+
+            function displayProductImage(imageUrl) {
+                const productImage = document.getElementById('product-image-img');
+                const placeholder = document.getElementById('product-image-placeholder');
+                if (imageUrl) {
+                    const fullImageUrl = imageUrl.startsWith('/images/uploads/')
+                        ? `http://localhost:3000${imageUrl}?t=${new Date().getTime()}`
+                        : imageUrl;
+                    productImage.src = fullImageUrl;
+                    productImage.style.display = 'block';
+                    productImage.onerror = () => {
+                        console.error('Failed to load product image:', fullImageUrl);
+                        productImage.style.display = 'none';
+                        placeholder.innerHTML = '<i class="fas fa-image"></i>';
+                    };
+                } else {
+                    productImage.style.display = 'none';
+                    placeholder.innerHTML = '<i class="fas fa-image"></i>';
+                }
+            }
+
+            function populateProductDetails(product) {
+                document.getElementById('product-name').textContent = product.name || 'N/A';
+                document.getElementById('product-price').textContent = product.price
+                    ? product.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
+                    : 'N/A';
+                document.getElementById('product-description').textContent = product.description || 'Không có mô tả.';
+                document.getElementById('product-category').textContent = product.category || 'N/A';
+                document.getElementById('product-dosage-form').textContent = product.dosage_form || 'N/A';
+                document.getElementById('product-ingredients').textContent = product.ingredients
+                    ? product.ingredients.join(', ')
+                    : 'N/A';
+                document.getElementById('product-benefits').textContent = product.benefits
+                    ? product.benefits.join(', ')
+                    : 'N/A';
+                document.getElementById('product-usage').textContent = product.usage_instructions || 'N/A';
+                document.getElementById('product-warnings').textContent = product.warnings || 'N/A';
+                document.getElementById('product-storage').textContent = product.storage_instructions || 'N/A';
+                document.getElementById('product-other-info').textContent = product.other_info || 'N/A';
+                document.getElementById('product-quantity-stock').textContent = product.quantity_in_stock || 'N/A';
+                displayProductImage(product.image_url);
+
+                // Cập nhật href cho nút chỉnh sửa
+                const editLink = document.getElementById('edit-product-link');
+                editLink.href = `/pages/update-product.html?id=${product.id}`;
+            }
+
+            if (productId) {
+                fetch(`/api/products/${productId}`)
+                    .then(response => response.json())
+                    .then(product => {
+                        populateProductDetails(product);
+                    })
+                    .catch(error => console.error('Lỗi khi tải thông tin sản phẩm:', error));
+            } else {
+                console.error('Không tìm thấy ID sản phẩm trong URL.');
+            }
+        });
+    </script>
+</body>
+</html>

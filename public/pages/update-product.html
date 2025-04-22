@@ -28,7 +28,7 @@
                     <li>
                         <a class="nav-link">Cập nhật sản phẩm <i class="fas fa-chevron-down"></i></a>
                         <ul>
-                            <li><a href="/pages/update-product.html" class="nav-link">Cập nhật một sản phẩm</a></li>
+                            <li><a href="/pages/list-products.html" class="nav-link">Cập nhật một sản phẩm</a></li>
                             <li><a href="/pages/update-products-bulk.html" class="nav-link">Cập nhật nhiều sản phẩm</a></li>
                         </ul>
                     </li>
@@ -43,7 +43,16 @@
         <div id="error-message" class="message error" style="display: none;"></div>
         <div id="success-message" class="message success" style="display: none;"></div>
 
-        <form id="update-product-form">
+        <div id="no-product-message" style="display: none; text-align: center;">
+            <p>Vui lòng chọn sản phẩm cần chỉnh sửa từ danh sách sản phẩm.</p>
+            <a href="/pages/list-products.html">
+                <button class="back-to-list-button">
+                    <i class="fas fa-arrow-left"></i> Trở về danh sách sản phẩm
+                </button>
+            </a>
+        </div>
+
+        <form id="update-product-form" style="display: none;">
             <div class="form-group">
                 <label for="id">ID:</label>
                 <input type="text" id="id" name="id" readonly>
@@ -154,8 +163,37 @@
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get('id');
 
+    // Hàm hiển thị lỗi
+    function showError(message) {
+        const errorDiv = document.getElementById('error-message');
+        if (errorDiv) {
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => errorDiv.style.display = 'none', 5000);
+        }
+    }
+
+    // Hàm hiển thị thành công
+    function showSuccess(message) {
+        const successDiv = document.getElementById('success-message');
+        if (successDiv) {
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            setTimeout(() => successDiv.style.display = 'none', 3000);
+        }
+    }
+
+    // Hàm xóa thông báo
+    function clearMessages() {
+        const errorDiv = document.getElementById('error-message');
+        const successDiv = document.getElementById('success-message');
+        if (errorDiv) errorDiv.style.display = 'none';
+        if (successDiv) successDiv.style.display = 'none';
+    }
+
     if (!productId) {
-        showError('Vui lòng cung cấp ID sản phẩm');
+        document.getElementById('no-product-message').style.display = 'block';
+        showError('Không tìm thấy ID sản phẩm. Vui lòng chọn sản phẩm từ danh sách.');
         return;
     }
 
@@ -168,9 +206,11 @@
             originalProduct = product;
             populateForm(product);
             displayCurrentImage(product.image_url);
+            document.getElementById('update-product-form').style.display = 'block';
         } catch (error) {
             console.error('Error fetching product:', error);
-            showError(error.message);
+            showError('Lỗi: ' + error.message);
+            document.getElementById('no-product-message').style.display = 'block';
         }
     }
 
@@ -350,34 +390,6 @@
             showError('Đã xảy ra lỗi: ' + error.message);
         }
     });
-
-    // Hàm hiển thị lỗi
-    function showError(message) {
-        const errorDiv = document.getElementById('error-message');
-        if (errorDiv) {
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-            setTimeout(() => errorDiv.style.display = 'none', 3000);
-        }
-    }
-
-    // Hàm hiển thị thành công
-    function showSuccess(message) {
-        const successDiv = document.getElementById('success-message');
-        if (successDiv) {
-            successDiv.textContent = message;
-            successDiv.style.display = 'block';
-            setTimeout(() => successDiv.style.display = 'none', 3000);
-        }
-    }
-
-    // Xóa thông báo
-    function clearMessages() {
-        const errorDiv = document.getElementById('error-message');
-        const successDiv = document.getElementById('success-message');
-        if (errorDiv) errorDiv.style.display = 'none';
-        if (successDiv) successDiv.style.display = 'none';
-    }
 
     // Tải sản phẩm khi trang được load
     loadProduct();
