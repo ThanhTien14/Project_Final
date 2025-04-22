@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chỉnh Sửa Sản Phẩm</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="/stylesheets/update-product.css">
 </head>
 <body>
@@ -177,8 +178,6 @@
         const currentImage = document.getElementById('current-image-img');
         if (imageUrl) {
             const fullImageUrl = imageUrl.startsWith('/images/uploads/') ? `http://localhost:3000${imageUrl}` : imageUrl;
-            // const fullImageUrl = `http://localhost:3000${imageUrl}?t=${new Date().getTime()}`;
-            console.log('Loading current image:', fullImageUrl);
             currentImage.src = fullImageUrl;
             currentImage.style.display = 'block';
             currentImage.onerror = () => {
@@ -269,9 +268,6 @@
             currency: document.getElementById('currency').value,
         };
 
-        // const form = event.target;
-        // const formData = new FormData(form);
-
         // Validation phía client
         if (!updateData.name.trim()) {
             showError('Tên sản phẩm là bắt buộc');
@@ -286,31 +282,13 @@
             return;
         }
 
-        // const name = formData.get('name');
-        // const quantity_in_stock = parseInt(formData.get('quantity_in_stock'));
-        // const price = parseFloat(formData.get('price'));
-
-        // if (!name.trim()) {
-        //     showError('Tên sản phẩm là bắt buộc');
-        //     return;
-        // }
-        // if (isNaN(quantity_in_stock) || quantity_in_stock < 0) {
-        //     showError('Số lượng tồn kho phải là số không âm');
-        //     return;
-        // }
-        // if (isNaN(price) || price <= 0) {
-        //     showError('Giá phải là số dương');
-        //     return;
-        // }
-        
-        // Xóa các trường không có giá trị để tránh gửi dữ liệu rỗng
+        // Xóa các trường không có giá trị
         Object.keys(updateData).forEach(key => {
             if (!updateData[key] || (typeof updateData[key] === 'string' && updateData[key].trim() === '')) {
                 delete updateData[key];
             }
         });
 
-        // 
         const imageOption = document.querySelector('input[name="image-option"]:checked').value;
         if (imageOption === 'url') {
             const imageUrl = document.getElementById('image-url').value;
@@ -323,7 +301,6 @@
         const formData = new FormData();
         formData.append('updateData', JSON.stringify(updateData));
 
-        // Nếu có hình ảnh mới, thêm vào formData
         if (imageOption === 'upload') {
             const imageFile = document.getElementById('image').files[0];
             if (imageFile) {
@@ -345,7 +322,6 @@
                 return;
             }
 
-            console.log('Update success:', result.message);
             showSuccess(result.message || 'Cập nhật sản phẩm thành công');
             setTimeout(() => window.location.href = '/pages/list-products.html', 3000);
         } catch (error) {
@@ -385,6 +361,6 @@
     // Tải sản phẩm khi trang được load
     loadProduct();
 })();
-</script>
+    </script>
 </body>
 </html>
