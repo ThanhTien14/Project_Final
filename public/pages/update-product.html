@@ -9,12 +9,33 @@
 </head>
 <body>
     <header>
-        <nav>
-            <ul>
-                <li><a href="/">Trang chủ</a></li>
-                <li><a href="/pages/list-products.html">Danh sách sản phẩm</a></li>
-            </ul>
-        </nav>
+        <div class="nav-container">
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/" class="nav-link">Trang chủ</a></li>
+                    <li><a href="/pages/list-products.html" class="nav-link">Danh sách sản phẩm</a></li>
+                    <li>
+                        <a class="nav-link">Thêm sản phẩm <i class="fas fa-chevron-down"></i></a>
+                        <ul>
+                            <li><a href="/pages/create-product.html" class="nav-link">Thêm một sản phẩm</a></li>
+                            <li><a href="/pages/create-products-bulk.html" class="nav-link">Thêm nhiều sản phẩm</a></li>
+                            <li><a href="/pages/import-products.html" class="nav-link">Import JSON</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="nav-link">Cập nhật sản phẩm <i class="fas fa-chevron-down"></i></a>
+                        <ul>
+                            <li><a href="/pages/update-product.html" class="nav-link">Cập nhật một sản phẩm</a></li>
+                            <li><a href="/pages/update-products-bulk.html" class="nav-link">Cập nhật nhiều sản phẩm</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/pages/delete-product.html" class="nav-link">Xóa sản phẩm</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
     <main>

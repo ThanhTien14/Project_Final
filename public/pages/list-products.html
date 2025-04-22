@@ -9,12 +9,33 @@
 </head>
 <body>
     <header>
-        <nav>
-            <ul>
-                <li><a href="/">Trang chủ</a></li>
-                <li><a href="/pages/list-products.html">Danh sách sản phẩm</a></li>
-            </ul>
-        </nav>
+        <div class="nav-container">
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/" class="nav-link">Trang chủ</a></li>
+                    <li><a href="/pages/list-products.html" class="nav-link">Danh sách sản phẩm</a></li>
+                    <li>
+                        <a class="nav-link">Thêm sản phẩm <i class="fas fa-chevron-down"></i></a>
+                        <ul>
+                            <li><a href="/pages/create-product.html" class="nav-link">Thêm một sản phẩm</a></li>
+                            <li><a href="/pages/create-products-bulk.html" class="nav-link">Thêm nhiều sản phẩm</a></li>
+                            <li><a href="/pages/import-products.html" class="nav-link">Import JSON</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="nav-link">Cập nhật sản phẩm <i class="fas fa-chevron-down"></i></a>
+                        <ul>
+                            <li><a href="/pages/update-product.html" class="nav-link">Cập nhật một sản phẩm</a></li>
+                            <li><a href="/pages/update-products-bulk.html" class="nav-link">Cập nhật nhiều sản phẩm</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/pages/delete-product.html" class="nav-link">Xóa sản phẩm</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
     <div class="top-bar">
@@ -31,7 +52,7 @@
         <label for="product-type">Loại sản phẩm:</label>
         <select id="product-type" class="filter-select">
             <option value="">Tất cả</option>
-            <option value="BDN">BDN</option>
+            <option value="BDN">Bổ dưỡng</option>
             <option value="HTSK">Hỗ trợ sức khỏe</option>
             <option value="KHOANGCHAT">Khoáng chất</option>
             <option value="LĐ">Làm đẹp</option>
@@ -54,9 +75,9 @@
     </div>
 
     <div class="pagination">
-        <button class="pagination-button" id="prev-page" disabled>&laquo; Trước</button>
+        <button class="pagination-button" id="prev-page" disabled>« Trước</button>
         <span id="current-page">1</span> / <span id="total-pages">1</span>
-        <button class="pagination-button" id="next-page">&raquo; Sau</button>
+        <button class="pagination-button" id="next-page">» Sau</button>
     </div>
 
     <button class="add-product-button">

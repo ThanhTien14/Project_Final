@@ -13,6 +13,9 @@ header {
     left: 0;
     width: 100%;
     z-index: 100;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    height: 60px; /* Chiều cao cố định */
+    box-sizing: border-box; /* Đảm bảo padding không làm tăng chiều cao */
 }
 
 .nav-container {
@@ -21,6 +24,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0 20px;
 }
 
 .menu-toggle {
@@ -36,6 +40,8 @@ nav ul {
     margin: 0;
     padding: 0;
     display: flex;
+    justify-content: center;
+    transition: max-height 0.3s ease-in-out;
 }
 
 nav ul li {
@@ -43,16 +49,28 @@ nav ul li {
     margin: 0 15px;
 }
 
-nav ul li a {
+nav ul li a.nav-link {
     color: white;
     text-decoration: none;
     font-weight: bold;
     padding: 10px 15px;
     display: block;
+    border-radius: 4px;
+    transition: background-color 0.3s;
 }
 
-nav ul li a:hover {
+nav ul li a.nav-link:hover {
     background-color: #45a049;
+}
+
+nav ul li a.nav-link.active {
+    background-color: #388e3c;
+    font-weight: bold;
+}
+
+nav ul li a.nav-link i.fa-chevron-down {
+    margin-left: 5px;
+    font-size: 12px;
 }
 
 nav ul li ul {
@@ -60,10 +78,12 @@ nav ul li ul {
     position: absolute;
     background-color: #4CAF50;
     list-style-type: none;
-    padding: 10px;
+    padding: 10px 0;
     border-radius: 4px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     min-width: 200px;
+    top: 100%;
+    left: 0;
 }
 
 nav ul li:hover ul {
@@ -79,16 +99,68 @@ nav ul li ul li:last-child {
     border-bottom: none;
 }
 
-nav ul li ul li a {
+nav ul li ul li a.nav-link {
     color: white;
     font-weight: normal;
     padding: 10px 20px;
+    border-radius: 0;
 }
 
-nav ul li ul li a:hover {
+nav ul li ul li a.nav-link:hover {
     background-color: #45a049;
 }
 
+/* Bù khoảng cách cho nội dung chính */
+body {
+    padding-top: 60px; /* Bằng với chiều cao của header */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    nav ul {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        background-color: #4CAF50;
+        max-height: 0;
+        overflow: hidden;
+        justify-content: flex-start;
+    }
+
+    nav ul.show {
+        display: flex;
+        max-height: 500px;
+    }
+
+    nav ul li {
+        margin: 0;
+        width: 100%;
+    }
+
+    nav ul li a.nav-link {
+        padding: 15px;
+        border-bottom: 1px solid #45a049;
+        border-radius: 0;
+    }
+
+    nav ul li ul {
+        position: static;
+        background-color: #3d8b40;
+        box-shadow: none;
+        padding: 0;
+    }
+
+    nav ul li ul li a.nav-link {
+        padding: 10px 30px;
+    }
+}
 .hero {
     position: relative;
     min-height: 500px;
@@ -142,45 +214,4 @@ nav ul li ul li a:hover {
 
 .hero-button:hover {
     background-color: #45a049;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .menu-toggle {
-        display: block;
-    }
-
-    nav ul {
-        display: none;
-        flex-direction: column;
-        position: absolute;
-        top: 60px;
-        left: 0;
-        width: 100%;
-        background-color: #4CAF50;
-    }
-
-    nav ul.show {
-        display: flex;
-    }
-
-    nav ul li {
-        margin: 0;
-        width: 100%;
-    }
-
-    nav ul li a {
-        padding: 15px;
-        border-bottom: 1px solid #45a049;
-    }
-
-    nav ul li ul {
-        position: static;
-        background-color: #3d8b40;
-        box-shadow: none;
-    }
-
-    nav ul li ul li a {
-        padding: 10px 30px;
-    }
 }

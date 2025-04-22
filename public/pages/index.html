@@ -15,26 +15,24 @@
             </div>
             <nav>
                 <ul>
-                    <li><a href="/">Trang chủ</a></li>
-                    <li><a href="/pages/list-products.html">Danh sách sản phẩm</a></li>
+                    <li><a href="/" class="nav-link">Trang chủ</a></li>
+                    <li><a href="/pages/list-products.html" class="nav-link">Danh sách sản phẩm</a></li>
                     <li>
-                        <a>Thêm sản phẩm</a>
+                        <a class="nav-link">Thêm sản phẩm <i class="fas fa-chevron-down"></i></a>
                         <ul>
-                            <li><a href="/pages/create-product.html">Thêm một sản phẩm</a></li>
-                            <li><a href="#">Thêm nhiềunhiều sản phẩm</a></li>
-                            <li><a href="#">Import JSON</a></li>
+                            <li><a href="/pages/create-product.html" class="nav-link">Thêm một sản phẩm</a></li>
+                            <li><a href="/pages/create-products-bulk.html" class="nav-link">Thêm nhiều sản phẩm</a></li>
+                            <li><a href="/pages/import-products.html" class="nav-link">Import JSON</a></li>
                         </ul>
                     </li>
                     <li>
-                        <a>Cập nhật sản phẩm</a>
+                        <a class="nav-link">Cập nhật sản phẩm <i class="fas fa-chevron-down"></i></a>
                         <ul>
-                            <li><a href="/pages/update-product.html">Cập nhật một sản phẩm</a></li>
-                            <li><a href="/pages/update-products-bulk.html">Cập nhật nhiều sản phẩm</a></li>
+                            <li><a href="/pages/update-product.html" class="nav-link">Cập nhật một sản phẩm</a></li>
+                            <li><a href="/pages/update-products-bulk.html" class="nav-link">Cập nhật nhiều sản phẩm</a></li>
                         </ul>
                     </li>
-                    <li>
-                        <a href="/pages/delete-product.html">Xóa sản phẩm</a>
-                    </li>
+                    <li><a href="/pages/delete-product.html" class="nav-link">Xóa sản phẩm</a></li>
                 </ul>
             </nav>
         </div>
@@ -55,6 +53,21 @@
         document.querySelector('.menu-toggle').addEventListener('click', function() {
             const nav = document.querySelector('nav ul');
             nav.classList.toggle('show');
+        });
+
+        // Thêm class active cho menu item hiện tại
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname;
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                // So sánh href của link với đường dẫn hiện tại
+                let linkPath = link.getAttribute('href');
+                if (linkPath === currentPath || (currentPath === '' && linkPath === '/')) {
+                    link.classList.add('active');
+                } else if (currentPath.startsWith(linkPath + '/') && linkPath !== '/') {
+                    link.classList.add('active');
+                }
+            });
         });
     </script>
 </body>

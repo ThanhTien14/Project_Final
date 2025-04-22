@@ -9,18 +9,49 @@
 </head>
 <body>
     <header>
-        <nav>
-            <ul>
-                <li><a href="/">Trang chủ</a></li>
-                <li><a href="/pages/list-products.html">Danh sách sản phẩm</a></li>
-            </ul>
-        </nav>
+        <div class="nav-container">
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/" class="nav-link">Trang chủ</a></li>
+                    <li><a href="/pages/list-products.html" class="nav-link">Danh sách sản phẩm</a></li>
+                    <li>
+                        <a class="nav-link">Thêm sản phẩm <i class="fas fa-chevron-down"></i></a>
+                        <ul>
+                            <li><a href="/pages/create-product.html" class="nav-link">Thêm một sản phẩm</a></li>
+                            <li><a href="/pages/create-products-bulk.html" class="nav-link">Thêm nhiều sản phẩm</a></li>
+                            <li><a href="/pages/import-products.html" class="nav-link">Import JSON</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="nav-link">Cập nhật sản phẩm <i class="fas fa-chevron-down"></i></a>
+                        <ul>
+                            <li><a href="/pages/update-product.html" class="nav-link">Cập nhật một sản phẩm</a></li>
+                            <li><a href="/pages/update-products-bulk.html" class="nav-link">Cập nhật nhiều sản phẩm</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/pages/delete-product.html" class="nav-link">Xóa sản phẩm</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
     <main>
         <h1>Cập Nhật Nhiều Sản Phẩm</h1>
         <div id="error-message" class="message error" style="display: none;"></div>
         <div id="success-message" class="message success" style="display: none;"></div>
+
+        <!-- Search Form -->
+        <div class="search-form">
+            <label for="productId">ID Sản Phẩm:</label>
+            <input type="text" id="productId" name="productId" placeholder="Ví dụ: TPCN1234">
+            <label for="productName">Tên Sản Phẩm:</label>
+            <input type="text" id="productName" name="productName" placeholder="Nhập tên sản phẩm">
+            <button id="search-button">Tìm kiếm</button>
+            <button id="reset-button">Reset</button>
+        </div>
 
         <form id="bulk-update-form">
             <div class="form-group">
@@ -38,9 +69,19 @@
                             <th>Dạng bào chế</th>
                         </tr>
                     </thead>
-                    <tbody id="product-list"></tbody>
+                    <tbody id="product-list">
+                        <tr><td colspan="8">Vui lòng tìm kiếm sản phẩm để hiển thị.</td></tr>
+                    </tbody>
                 </table>
             </div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <button class="pagination-button" id="prev-page" disabled>« Trước</button>
+                <span id="current-page">1</span> / <span id="total-pages">1</span>
+                <button class="pagination-button" id="next-page" disabled>» Sau</button>
+            </div>
+
             <div class="form-group">
                 <h3>Thông tin cập nhật</h3>
                 <div class="update-field">
@@ -55,10 +96,10 @@
                     <label for="category">Danh mục mới (để trống nếu không thay đổi):</label>
                     <select id="category" name="category">
                         <option value="">Không thay đổi</option>
-                        <option value="HTSK">HTSK</option>
-                        <option value="BDN">BDN</option>
-                        <option value="LĐ">LĐ</option>
-                        <option value="KHOANGCHAT">KHOANGCHAT</option>
+                        <option value="BDN">Bổ dưỡng</option>
+                        <option value="HTSK">Hỗ trợ sức khỏe</option>
+                        <option value="KHOANGCHAT">Khoáng chất</option>
+                        <option value="LĐ">Làm đẹp</option>
                     </select>
                 </div>
                 <div class="update-field">
@@ -91,20 +132,34 @@
 
     <script>
         (function() {
+            let currentPage = 1;
+            let totalPages = 1;
+            const limit = 10; // Số sản phẩm mỗi trang
+            let hasSearched = false; // Trạng thái tìm kiếm
+
             // Tải danh sách sản phẩm
-            async function loadProducts() {
+            async function loadProducts(criteria = {}, page = 1) {
                 try {
-                    const response = await fetch('/api/products');
-                    if (!response.ok) throw new Error('Không thể tải danh sách sản phẩm');
-                    const products = await response.json();
-                    console.log('Products loaded:', products.length); // Log để kiểm tra danh sách sản phẩm
-                    console.log('Sample product:', products[0]); // Log mẫu dữ liệu sản phẩm
                     const productList = document.getElementById('product-list');
                     productList.innerHTML = '';
-                    products.forEach(product => {
+
+                    // Nếu có productId, gọi API /api/products/:id
+                    if (criteria.id) {
+                        const response = await fetch(`/api/products/${criteria.id}`);
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                        }
+                        const product = await response.json();
+                        if (!product) {
+                            productList.innerHTML = '<tr><td colspan="8">Không tìm thấy sản phẩm</td></tr>';
+                            updatePagination(1, 1);
+                            return;
+                        }
+
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                             <td><input type="checkbox" name="product_ids" value="${product.id}"></td>
+                            <td><input type="checkbox" name="product_ids" value="${product.id}"></td>
                             <td>${product.id}</td>
                             <td>${product.name}</td>
                             <td>${product.price.toLocaleString('vi-VN')} ${product.currency || 'VND'}</td>
@@ -114,41 +169,124 @@
                             <td>${product.dosage_form || 'Chưa có'}</td>
                         `;
                         productList.appendChild(row);
+                        updatePagination(1, 1); // Không cần phân trang khi tìm theo ID
+                    } else {
+                        // Nếu không có productId, gọi API /api/products với phân trang
+                        const queryParams = { page, limit, sort: 'price', order: 'asc' };
+                        if (criteria.name) queryParams.name = criteria.name;
+                        const query = new URLSearchParams(queryParams).toString();
+                        const response = await fetch(`/api/products?${query}`);
+                        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                        const data = await response.json();
+                        const products = data.products || [];
+
+                        if (products.length === 0) {
+                            productList.innerHTML = '<tr><td colspan="8">Không tìm thấy sản phẩm</td></tr>';
+                            updatePagination(1, 1);
+                            return;
+                        }
+
+                        products.forEach(product => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td><input type="checkbox" name="product_ids" value="${product.id}"></td>
+                                <td>${product.id}</td>
+                                <td>${product.name}</td>
+                                <td>${product.price.toLocaleString('vi-VN')} ${product.currency || 'VND'}</td>
+                                <td>${product.quantity_in_stock || 0}</td>
+                                <td>${product.category || 'Chưa có'}</td>
+                                <td>${product.brand || 'Chưa có'}</td>
+                                <td>${product.dosage_form || 'Chưa có'}</td>
+                            `;
+                            productList.appendChild(row);
+                        });
+
+                        totalPages = data.pagination.totalPages;
+                        currentPage = page;
+                        updatePagination(currentPage, totalPages);
+                    }
+
+                    // Thêm sự kiện cho checkbox "select-all"
+                    document.getElementById('select-all').addEventListener('change', function() {
+                        const checkboxes = document.querySelectorAll('input[name="product_ids"]');
+                        checkboxes.forEach(checkbox => checkbox.checked = this.checked);
                     });
                 } catch (error) {
                     showError(error.message);
                 }
             }
-        
-            // Xử lý chọn tất cả
-            document.getElementById('select-all').addEventListener('change', function() {
-                const checkboxes = document.querySelectorAll('input[name="product_ids"]');
-                checkboxes.forEach(checkbox => checkbox.checked = this.checked);
-            });
-        
+
+            // Cập nhật giao diện phân trang
+            function updatePagination(current, total) {
+                document.getElementById('current-page').textContent = current;
+                document.getElementById('total-pages').textContent = total;
+                document.getElementById('prev-page').disabled = current === 1;
+                document.getElementById('next-page').disabled = current === total;
+            }
+
+            // Lấy tiêu chí tìm kiếm hiện tại
+            function getCurrentCriteria() {
+                const productId = document.getElementById('productId').value.trim();
+                const productName = document.getElementById('productName').value.trim();
+                const criteria = {};
+                if (productId) criteria.id = productId;
+                if (productName) criteria.name = productName;
+                return criteria;
+            }
+
+            // Tìm kiếm sản phẩm
+            function searchProducts() {
+                currentPage = 1; // Reset về trang 1 khi tìm kiếm
+                hasSearched = true;
+                const criteria = getCurrentCriteria();
+                loadProducts(criteria, currentPage);
+            }
+
+            // Reset tìm kiếm
+            function resetSearch() {
+                document.getElementById('productId').value = '';
+                document.getElementById('productName').value = '';
+                document.getElementById('price').value = '';
+                document.getElementById('quantity_in_stock').value = '';
+                document.getElementById('category').value = '';
+                document.getElementById('description').value = '';
+                document.getElementById('brand').value = '';
+                document.getElementById('dosage_form').value = '';
+                document.getElementById('ingredients').value = '';
+                document.getElementById('benefits').value = '';
+                currentPage = 1;
+                hasSearched = false;
+                const productList = document.getElementById('product-list');
+                productList.innerHTML = '<tr><td colspan="8">Vui lòng tìm kiếm sản phẩm để hiển thị.</td></tr>';
+                updatePagination(1, 1);
+                document.getElementById('select-all').checked = false;
+            }
+
+            // Gắn sự kiện cho nút Tìm kiếm và Reset
+            document.getElementById('search-button').addEventListener('click', searchProducts);
+            document.getElementById('reset-button').addEventListener('click', resetSearch);
+
             // Xử lý submit form
             document.getElementById('bulk-update-form').addEventListener('submit', async event => {
                 event.preventDefault();
                 clearMessages();
-        
-                console.log('Form submitted'); // Log để kiểm tra sự kiện submit
-        
-                const confirmed = confirm('Bạn có chắc chắn muốn cập nhật các sản phẩm đã chọn?');
-                console.log('Confirm result:', confirmed); // Log để kiểm tra kết quả confirm
-        
-                if (!confirmed) {
-                    console.log('User canceled the update');
+
+                if (!hasSearched) {
+                    showError('Vui lòng tìm kiếm sản phẩm trước khi cập nhật');
                     return;
                 }
 
                 const productIds = Array.from(document.querySelectorAll('input[name="product_ids"]:checked')).map(input => input.value);
-                console.log('Product IDs selected:', productIds); // Log để kiểm tra productIds
-        
                 if (productIds.length === 0) {
                     showError('Vui lòng chọn ít nhất một sản phẩm');
                     return;
                 }
-        
+
+                const confirmed = confirm('Bạn có chắc chắn muốn cập nhật các sản phẩm đã chọn?');
+                if (!confirmed) {
+                    return;
+                }
+
                 const updateData = {
                     price: document.getElementById('price').value ? parseFloat(document.getElementById('price').value) : undefined,
                     quantity_in_stock: document.getElementById('quantity_in_stock').value ? parseInt(document.getElementById('quantity_in_stock').value) : undefined,
@@ -180,36 +318,45 @@
                     showError('Số lượng tồn kho phải là số không âm');
                     return;
                 }
-                
-                console.log('Request body:', { productIds, updateData }); // Log để kiểm tra dữ liệu gửi đi
-        
+
                 try {
-                    console.log('Sending fetch request to /api/products/bulk');
                     const response = await fetch('/api/products/bulk', {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ productIds, updateData })
                     });
-        
-                    console.log('Response status:', response.status); // Log để kiểm tra status
+
                     const result = await response.json();
-                    console.log('Response body:', result); // Log để kiểm tra body trả về
-        
                     if (!response.ok) {
                         const errorMessage = result.details ? result.details.join(', ') : result.error || 'Lỗi khi cập nhật sản phẩm';
-                        console.log('Fetch failed with error:', errorMessage);
                         showError(errorMessage);
                         return;
                     }
-        
+
                     showSuccess(result.message || 'Cập nhật sản phẩm thành công');
                     setTimeout(() => window.location.reload(), 3000);
                 } catch (error) {
-                    console.error('Fetch error:', error);
                     showError('Đã xảy ra lỗi: ' + error.message);
                 }
             });
-        
+
+            // Sự kiện phân trang
+            document.getElementById('prev-page').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    const criteria = getCurrentCriteria();
+                    loadProducts(criteria, currentPage);
+                }
+            });
+
+            document.getElementById('next-page').addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    const criteria = getCurrentCriteria();
+                    loadProducts(criteria, currentPage);
+                }
+            });
+
             // Hàm hiển thị lỗi
             function showError(message) {
                 const errorDiv = document.getElementById('error-message');
@@ -219,7 +366,7 @@
                     setTimeout(() => errorDiv.style.display = 'none', 3000);
                 }
             }
-        
+
             // Hàm hiển thị thành công
             function showSuccess(message) {
                 const successDiv = document.getElementById('success-message');
@@ -229,7 +376,7 @@
                     setTimeout(() => successDiv.style.display = 'none', 3000);
                 }
             }
-        
+
             // Xóa thông báo
             function clearMessages() {
                 const errorDiv = document.getElementById('error-message');
@@ -237,10 +384,11 @@
                 if (errorDiv) errorDiv.style.display = 'none';
                 if (successDiv) successDiv.style.display = 'none';
             }
-        
-            // Tải sản phẩm khi trang được load
-            loadProducts();
+
+            // Không tải sản phẩm khi trang được load
+            window.onload = () => {
+                updatePagination(1, 1);
+            };
         })();
     </script>
-</body>
 </html>

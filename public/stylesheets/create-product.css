@@ -11,7 +11,7 @@ h1 {
 }
 
 .form-container {
-    max-width: 1200px; /* Tăng chiều rộng container để chứa nhiều trường hơn */
+    max-width: 1200px;
     margin: 0 auto;
     background-color: #fff;
     padding: 30px;
@@ -37,12 +37,12 @@ h1 {
 
 .form-group-row {
     display: flex;
-    flex-wrap: wrap; /* Cho phép các trường xuống hàng khi hết chỗ */
-    gap: 20px; /* Khoảng cách giữa các trường */
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
 .form-group {
-    flex: 1 1 300px; /* Mỗi trường có chiều rộng tối thiểu 300px, tự động co giãn */
+    flex: 1 1 300px;
     margin-bottom: 20px;
 }
 
@@ -94,6 +94,12 @@ small {
     font-size: 12px;
 }
 
+.form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
 button {
     background-color: #007bff;
     color: white;
@@ -102,13 +108,20 @@ button {
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-    display: block;
-    width: 100%;
     transition: background-color 0.3s;
+    width: 200px;
 }
 
 button:hover {
     background-color: #0056b3;
+}
+
+button[type="button"] {
+    background-color: #f44336;
+}
+
+button[type="button"]:hover {
+    background-color: #da190b;
 }
 
 .array-input-container {
@@ -117,4 +130,187 @@ button:hover {
 
 .array-input {
     margin-bottom: 5px;
+}
+
+#image-preview {
+    width: 300px;
+    height: 300px;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+    margin-top: 10px;
+    object-fit: cover;
+    display: none;
+}
+/* CSS cho thanh menu */
+header {
+    background-color: #4CAF50;
+    padding: 10px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    height: 60px; /* Chiều cao cố định */
+    box-sizing: border-box; /* Đảm bảo padding không làm tăng chiều cao */
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.menu-toggle {
+    display: none;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+    padding: 10px;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    transition: max-height 0.3s ease-in-out;
+}
+
+nav ul li {
+    position: relative;
+    margin: 0 15px;
+}
+
+nav ul li a.nav-link {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 15px;
+    display: block;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+nav ul li a.nav-link:hover {
+    background-color: #45a049;
+}
+
+nav ul li a.nav-link.active {
+    background-color: #388e3c;
+    font-weight: bold;
+}
+
+nav ul li a.nav-link i.fa-chevron-down {
+    margin-left: 5px;
+    font-size: 12px;
+}
+
+nav ul li ul {
+    display: none;
+    position: absolute;
+    background-color: #4CAF50;
+    list-style-type: none;
+    padding: 10px 0;
+    border-radius: 4px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    min-width: 200px;
+    top: 100%;
+    left: 0;
+}
+
+nav ul li:hover ul {
+    display: block;
+}
+
+nav ul li ul li {
+    margin: 0;
+    border-bottom: 1px solid #45a049;
+}
+
+nav ul li ul li:last-child {
+    border-bottom: none;
+}
+
+nav ul li ul li a.nav-link {
+    color: white;
+    font-weight: normal;
+    padding: 10px 20px;
+    border-radius: 0;
+}
+
+nav ul li ul li a.nav-link:hover {
+    background-color: #45a049;
+}
+
+/* Bù khoảng cách cho nội dung chính */
+body {
+    padding-top: 60px; /* Bằng với chiều cao của header */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    nav ul {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        background-color: #4CAF50;
+        max-height: 0;
+        overflow: hidden;
+        justify-content: flex-start;
+    }
+
+    nav ul.show {
+        display: flex;
+        max-height: 500px;
+    }
+
+    nav ul li {
+        margin: 0;
+        width: 100%;
+    }
+
+    nav ul li a.nav-link {
+        padding: 15px;
+        border-bottom: 1px solid #45a049;
+        border-radius: 0;
+    }
+
+    nav ul li ul {
+        position: static;
+        background-color: #3d8b40;
+        box-shadow: none;
+        padding: 0;
+    }
+
+    nav ul li ul li a.nav-link {
+        padding: 10px 30px;
+    }
+}
+
+/* CSS cho thông báo */
+.message {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+    text-align: center;
+}
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
 }

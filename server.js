@@ -51,17 +51,19 @@ app.set('view engine', 'ejs');
 function validateProductData(data, isUpdate = false) {
     const errors = [];
     if (!isUpdate) {
+        // Các trường bắt buộc khi tạo sản phẩm
         if (!data.id || !/^TPCN\d{4}$/.test(data.id)) {
             errors.push('ID phải có định dạng TPCNxxxx');
         }
         if (!data.name || typeof data.name !== 'string' || data.name.trim() === '') {
             errors.push('Tên sản phẩm là bắt buộc');
         }
-        if (!Number.isInteger(data.quantity_in_stock) || data.quantity_in_stock < 0) {
-            errors.push('Số lượng tồn kho phải là số nguyên không âm');
-        }
         if (typeof data.price !== 'number' || data.price <= 0) {
             errors.push('Giá phải là số dương');
+        }
+        // Các trường không bắt buộc nhưng cần validate nếu có giá trị
+        if (data.quantity_in_stock !== undefined && (!Number.isInteger(data.quantity_in_stock) || data.quantity_in_stock < 0)) {
+            errors.push('Số lượng tồn kho phải là số nguyên không âm');
         }
     } else {
         if (data.name && (typeof data.name !== 'string' || data.name.trim() === '')) {
@@ -103,6 +105,13 @@ function normalizeProductData(data) {
             normalized[field] = [];
         }
     });
+    // Đặt giá trị mặc định cho các trường không bắt buộc
+    if (normalized.quantity_in_stock === undefined) {
+        normalized.quantity_in_stock = 0;
+    }
+    if (!normalized.currency) {
+        normalized.currency = 'VND'; // Giá trị mặc định nếu không nhập
+    }
     return normalized;
 }
 
@@ -167,8 +176,8 @@ app.post('/api/products', upload.single('image_file'), async (req, res) => {
             storage_instructions: req.body.storage_instructions,
             target_audience: req.body.target_audience,
             certifications: req.body.certifications,
-            quantity_in_stock: parseInt(req.body.quantity_in_stock) || 0,
-            price: parseFloat(req.body.price) || 0,
+            quantity_in_stock: req.body.quantity_in_stock ? parseInt(req.body.quantity_in_stock) : undefined,
+            price: req.body.price ? parseFloat(req.body.price) : undefined,
             currency: req.body.currency,
             created_at: new Date(),
             updated_at: new Date(),
@@ -220,7 +229,7 @@ app.get('/api/products', async (req, res) => {
         if (priceTo && (isNaN(priceTo) || Number(priceTo) < 0)) {
             return res.status(400).json({ error: 'Invalid priceTo' });
         }
-        const validCategories = ['BDN', 'HSTK', 'Khoáng chất', 'LD'];
+        const validCategories = ['BDN', 'HTSK', 'KHOANGCHAT', 'LĐ'];
         if (category && !validCategories.includes(category)) {
             return res.status(400).json({ error: 'Invalid category' });
         }
@@ -279,6 +288,7 @@ app.get('/api/products/:id', async (req, res) => {
 // API: Cập nhật một sản phẩm
 app.put('/api/products/:id', upload.single('image'), async (req, res) => {
     try {
+        console.log('PUT /api/products/:id called with ID:', req.params.id);
         const updateData = req.body;
 
         let parsedUpdateData = updateData;
@@ -359,6 +369,7 @@ app.put('/api/products/:id', upload.single('image'), async (req, res) => {
 // API: Cập nhật nhiều sản phẩm
 app.put('/api/products/bulk', upload.single('image'), async (req, res) => {
     try {
+        console.log('PUT /api/products/bulk called with body:', req.body);
         const { productIds, updateData } = req.body;
 
         let parsedProductIds, parsedUpdateData;
@@ -366,8 +377,12 @@ app.put('/api/products/bulk', upload.single('image'), async (req, res) => {
             parsedProductIds = typeof productIds === 'string' ? JSON.parse(productIds) : productIds;
             parsedUpdateData = typeof updateData === 'string' ? JSON.parse(updateData) : updateData;
         } catch (error) {
+            console.error('Error parsing JSON:', error);
             return res.status(400).json({ error: 'Dữ liệu JSON không hợp lệ' });
         }
+
+        console.log('Parsed productIds:', parsedProductIds);
+        console.log('Parsed updateData:', parsedUpdateData);
 
         if (!parsedProductIds || !Array.isArray(parsedProductIds) || parsedProductIds.length === 0) {
             return res.status(400).json({ error: 'Vui lòng cung cấp danh sách ID sản phẩm' });
@@ -375,6 +390,12 @@ app.put('/api/products/bulk', upload.single('image'), async (req, res) => {
 
         if (!parsedUpdateData || Object.keys(parsedUpdateData).length === 0) {
             return res.status(400).json({ error: 'Vui lòng cung cấp ít nhất một thông tin để cập nhật' });
+        }
+
+        // Validate định dạng ID
+        const invalidIds = parsedProductIds.filter(id => !/^TPCN\d{4}$/.test(id));
+        if (invalidIds.length > 0) {
+            return res.status(400).json({ error: `ID sản phẩm không hợp lệ: ${invalidIds.join(', ')}` });
         }
 
         const errors = validateProductData(parsedUpdateData, true);
@@ -389,11 +410,16 @@ app.put('/api/products/bulk', upload.single('image'), async (req, res) => {
         const normalizedData = normalizeProductData(parsedUpdateData);
 
         const existingProducts = await mongodbModule.dbCollection.find({ id: { $in: parsedProductIds } }).toArray();
+        console.log('Existing products in DB:', existingProducts);
+
         const existingIds = existingProducts.map(p => p.id);
         const notFoundIds = parsedProductIds.filter(id => !existingIds.includes(id));
 
         if (existingIds.length === 0) {
-            return res.status(404).json({ error: 'Không tìm thấy sản phẩm nào để cập nhật' });
+            return res.status(404).json({ 
+                error: 'Không tìm thấy sản phẩm nào để cập nhật', 
+                details: `Danh sách ID không tồn tại: ${parsedProductIds.join(', ')}` 
+            });
         }
 
         const result = await mongodbModule.dbCollection.updateMany(
@@ -416,6 +442,7 @@ app.put('/api/products/bulk', upload.single('image'), async (req, res) => {
 // API: Xóa một sản phẩm
 app.delete('/api/products/:id', async (req, res) => {
     try {
+        console.log('DELETE /api/products/:id called with ID:', req.params.id);
         const { id } = req.params;
         if (!/^TPCN\d{4}$/.test(id)) {
             return res.status(400).json({ error: 'Định dạng ID sản phẩm không hợp lệ' });
@@ -446,6 +473,7 @@ app.delete('/api/products/:id', async (req, res) => {
 // API: Xóa tất cả sản phẩm
 app.delete('/api/products', async (req, res) => {
     try {
+        console.log('DELETE /api/products called');
         // Xóa tất cả ảnh trong thư mục uploads
         const files = fs.readdirSync(uploadDir);
         files.forEach(file => {
@@ -501,9 +529,11 @@ app.post('/api/products/check-duplicate', async (req, res) => {
 // Kết nối MongoDB
 mongodbModule.connectToMongoDB()
     .then(() => {
+        console.log('Kết nối MongoDB thành công!');
         app.listen(port, () => console.log(`Server chạy trên port ${port}!`));
     })
     .catch(err => {
+        console.error('Lỗi kết nối MongoDB:', err);
         process.exit(1);
     });
 
