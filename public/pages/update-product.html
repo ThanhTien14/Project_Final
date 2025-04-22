@@ -99,7 +99,7 @@
                 <div class="image-options">
                     <input type="radio" id="paste-url" name="image-option" value="url">
                     <label for="paste-url">Dán URL:</label>
-                    <input type="text" id="image-url" name="image_url" placeholder="Nhập URL hình ảnh" disabled>
+                    <input type="text" id="image-url" name="image_url" placeholder="Nhập URL hình ảnh (bắt đầu bằng http:// hoặc https://)" disabled>
                 </div>
                 <div id="image-preview" class="image-preview">
                     <img src="" alt="Preview hình ảnh mới" style="display: none;" id="image-preview-img">
@@ -189,6 +189,12 @@
         const successDiv = document.getElementById('success-message');
         if (errorDiv) errorDiv.style.display = 'none';
         if (successDiv) successDiv.style.display = 'none';
+    }
+
+    // Hàm kiểm tra URL hợp lệ
+    function isValidImageUrl(url) {
+        const urlPattern = /^(https?:\/\/[^\s]+)/i;
+        return urlPattern.test(url);
     }
 
     if (!productId) {
@@ -285,6 +291,12 @@
         } else {
             const imageUrl = document.getElementById('image-url').value;
             if (imageUrl) {
+                if (!isValidImageUrl(imageUrl)) {
+                    showError('URL hình ảnh không hợp lệ (phải bắt đầu bằng http:// hoặc https://)');
+                    previewImg.src = '';
+                    previewImg.style.display = 'none';
+                    return;
+                }
                 previewImg.src = imageUrl;
                 previewImg.style.display = 'block';
                 previewImg.onerror = () => {
@@ -343,6 +355,15 @@
             return;
         }
 
+        const imageOption = document.querySelector('input[name="image-option"]:checked').value;
+        if (imageOption === 'url') {
+            const imageUrl = document.getElementById('image-url').value;
+            if (imageUrl && !isValidImageUrl(imageUrl)) {
+                showError('URL hình ảnh không hợp lệ (phải bắt đầu bằng http:// hoặc https://)');
+                return;
+            }
+        }
+
         // Xóa các trường không có giá trị
         Object.keys(updateData).forEach(key => {
             if (!updateData[key] || (typeof updateData[key] === 'string' && updateData[key].trim() === '')) {
@@ -350,19 +371,16 @@
             }
         });
 
-        const imageOption = document.querySelector('input[name="image-option"]:checked').value;
-        if (imageOption === 'url') {
-            const imageUrl = document.getElementById('image-url').value;
-            if (imageUrl) {
-                updateData.image_url = imageUrl;
-            }
-        }
-
         // Gửi dữ liệu dưới dạng FormData
         const formData = new FormData();
         formData.append('updateData', JSON.stringify(updateData));
 
-        if (imageOption === 'upload') {
+        if (imageOption === 'url') {
+            const imageUrl = document.getElementById('image-url').value;
+            if (imageUrl) {
+                formData.append('image_url', imageUrl); // Gửi image_url trực tiếp trong formData
+            }
+        } else if (imageOption === 'upload') {
             const imageFile = document.getElementById('image').files[0];
             if (imageFile) {
                 formData.append('image', imageFile);
