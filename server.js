@@ -2,13 +2,14 @@
 const express = require('express');
 const path = require('path');
 const mongodbModule = require('./public/javascripts/mongodb');
-
 const app = express();
 const port = 3000;
 
 // Middleware
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json({ limit: '10kb' }));
+app.set('views', path.join(__dirname, 'public', 'pages'));
+app.set('view engine', 'ejs');
 
 // Hàm validate dữ liệu sản phẩm
 function validateProductData(data, isUpdate = false) {
@@ -110,16 +111,61 @@ app.post('/api/products', async (req, res) => {
     }
 });
 
-// API: Lấy danh sách sản phẩm
+// API: Lấy danh sách sản phẩm có phân trang, sắp xếp và validate category, brand
 app.get('/api/products', async (req, res) => {
     try {
-        const { name, priceFrom, priceTo, category, brand, logic } = req.query;
-        const criteria = { name, priceFrom, priceTo, category, brand, logic };
-        const products = await mongodbModule.findDocuments(criteria);
-        res.json(products);
-    } catch (error) {
-        throw error;
-    }
+        const { name, priceFrom, priceTo, category, brand, page = 1, limit = 10, sort = 'price', order = 'asc', logic } = req.query;
+
+        // Validate page and limit
+        if (priceFrom && (isNaN(priceFrom) || Number(priceFrom) < 0)) {
+            return res.status(400).json({ error: 'Invalid priceFrom' });
+        }
+        if (priceTo && (isNaN(priceTo) || Number(priceTo) < 0)) {
+        return res.status(400).json({ error: 'Invalid priceTo' });
+        }
+        const validCategories = ['BDN', 'HSTK', 'Khoáng chất', 'LD'];
+        if (category && !validCategories.includes(category)) {
+        return res.status(400).json({ error: 'Invalid category' });
+        }
+
+        // Build query object
+        let query = {};
+        if (logic === 'OR' && (name || category || brand)) {
+            const orQueries = [];
+            if (name) orQueries.push({ name: { $regex: name, $options: 'i' } });
+            if (category) orQueries.push({ category });
+            if (brand) orQueries.push({ brand });
+            query = { $or: orQueries };
+        } else {
+            if (name) query.name = { $regex: name, $options: 'i' };
+            if (category) query.category = category;
+            if (brand) query.brand = brand;
+        }
+        if (priceFrom || priceTo) {
+        query.price = {};
+        if (priceFrom) query.price.$gte = Number(priceFrom);
+        if (priceTo) query.price.$lte = Number(priceTo);
+        }
+
+        // sort
+        const sortOptions = {};
+        if (sort === 'price') sortOptions.price = order === 'asc' ? 1 : -1;
+
+        const skip = (page - 1) * limit;
+        const [products, totalProducts] = await Promise.all([
+            mongodbModule.dbCollection.find(query).skip(skip).limit(Number(limit)).toArray(),
+            mongodbModule.dbCollection.countDocuments(query)
+        ]);
+
+        const totalPages = Math.ceil(totalProducts / limit);
+        res.json({
+          products: products.map(product => normalizeProductData(product)),
+          pagination: { currentPage: Number(page), totalPages, totalProducts }
+        });
+      } catch (error) {
+        console.error('Lỗi API sản phẩm:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
 });
 
 // API: Lấy chi tiết một sản phẩm
@@ -153,6 +199,23 @@ app.put('/api/products/:id', async (req, res) => {
     } catch (error) {
         throw error;
     }
+});
+
+//API tìm kiếm thông tin sản phẩm
+app.get('/api/products/search', async (req, res) => {
+    try {
+        const { name } = req.query;
+        if (!name || name.trim().length < 2) {
+          return res.status(400).json({ error: 'Search query must be at least 2 characters' });
+        }
+        const products = await mongodbModule.dbCollection.find({
+          name: { $regex: name.trim(), $options: 'i' }
+        }).limit(50).toArray();
+        res.json(products.length ? products : []);
+      } catch (error) {
+        console.error('Lỗi API tìm kiếm:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
 });
 
 // Xử lý đóng kết nối MongoDB

@@ -56,8 +56,64 @@ body {
     padding: 8px;
 }
 
+.filter-button[data-sort-order="desc"] i {
+    color: #333; 
+    transform: rotate(0deg); /* Biểu tượng không xoay */
+    }
+
+    .filter-button[data-sort-order="asc"] i {
+    color: #333; 
+    transform: rotate(180deg); /* Biểu tượng xoay 180 độ */
+    }
+
+    .filter-button i {
+    transition: transform 0.3s ease, color 0.3s ease; /* Hiệu ứng chuyển đổi */
+    }
+
 .filter-button:hover {
     color: #007bff; /* Màu hover icon filter (placeholder - cần thay đổi theo Figma) */
+}
+
+.filter-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 15px;
+    background-color: #0051ff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 20px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.filter-container label {
+    font-weight: bold;
+    margin-right: 10px;
+    color: #333;
+}
+
+.filter-container .filter-select,
+.filter-container .price-input {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 150px;
+}
+
+.filter-container .apply-filter-button {
+    padding: 10px 20px;
+    background-color: #ffffff;
+    color: #101010;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.filter-container .apply-filter-button:hover {
+    background-color: #0056b3;
 }
 
 .container {
@@ -139,6 +195,31 @@ body {
     margin-bottom: 0;
 }
 
+.product-details .brand {
+    color: #6c757d; /* Màu chữ brand (placeholder - cần thay đổi theo Figma) */
+    font-size: 0.9em;
+    margin-bottom: 0;
+}
+
+.product-info-row {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between elements */
+    font-size: 0.9em;
+    color: #6c757d; /* Match the color of previous category/brand styles */
+    margin-bottom: 0;
+}
+
+.product-info-row .category,
+.product-info-row .brand,
+.product-info-row .target-audience {
+    font-size: 0.9em;
+}
+
+.product-info-row .separator {
+    color: #6c757d; /* Color of the separator */
+}
+
 .product-actions {
     display: flex;
     gap: 10px;
@@ -193,4 +274,41 @@ body {
 
 .add-product-button i {
     margin-right: 8px;
+}
+/* Phân trang sản phẩm */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.pagination-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 0;
+    cursor: pointer;
+    border-radius: 25px;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.pagination-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.pagination-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+#current-page, #total-pages {
+    font-weight: bold;
+    font-size: 16px;
+    color: #333;
 }
