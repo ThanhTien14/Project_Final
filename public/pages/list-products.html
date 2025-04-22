@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/stylesheets/list-products.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
+
 <body>
     <header>
         <nav>
@@ -22,9 +23,33 @@
             <input type="text" id="search-input" placeholder="Tìm kiếm sản phẩm...">
             <button id="search-button"><i class="fas fa-search"></i></button>
         </div>
-        <button class="filter-button">
+        <button class="filter-button" id="sort-button" data-sort-order="desc">
             <i class="fas fa-filter"></i>
         </button>
+    </div>
+ 
+    <div>   
+    <div class="filter-container">
+        <label for="product-type">Loại sản phẩm:</label>
+        <select id="product-type" class="filter-select">
+            <option value="">Tất cả</option>
+            <option value="BDN">BDN</option>
+            <option value="HSTK">Hỗ trợ sức khỏe</option>
+            <option value="Khoáng chất">Khoáng chất</option>
+            <option value="LĐ">Làm đẹp</option>
+        </select>
+
+        <label for="min-price">Giá từ:</label>
+        <input type="number" id="min-price" class="price-input" placeholder="Nhập giá thấp nhất">
+
+        <label for="max-price">Đến:</label>
+        <input type="number" id="max-price" class="price-input" placeholder="Nhập giá cao nhất">
+
+        <label for="search-logic">Tìm OR:</label>
+        <input type="checkbox" id="search-logic" value="OR">
+
+        <button id="filter-button" class="apply-filter-button">Lọc</button>
+    </div>
     </div>
     <div class="container">
         <div id="error-message" class="message error" style="display: none;"></div>
@@ -32,40 +57,20 @@
             <ul class="product-list"></ul>
         </main>
     </div>
-
+    <div class="pagination">
+        <button class="pagination-button" id="prev-page" disabled>&laquo; Trước</button>
+        <span id="current-page">1</span> / <span id="total-pages">1</span>
+        <button class="pagination-button" id="next-page">&raquo; Sau</button>
+    </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // biến to lưu trữ tất cả sản phẩm
-            let allProducts = [];
-
-            // Tải dữ liệu sản phẩm từ server
-            async function loadProducts() {
-                try {
-                    const response = await fetch('/api/products');
-                    if (!response.ok) {
-                        throw new Error('Không thể tải danh sách sản phẩm');
-                    }
-                    allProducts = await response.json();
-                    console.log('Products loaded: ', allProducts.length);
-                    console.log('Sample product: ', allProducts[0]); // In sản phẩm đầu tiên để kiểm tra
-                    displayProducts(allProducts); // Hiển thị sản phẩm sau khi tải xong
-                } catch (error) {
-                    console.error('Lỗi khi tải sản phẩm:', error);
-                    showError(error.message);
-                }
-            }
-
-            // Hamh hiển thị danh sach sản phẩm
-            function displayProducts(products){
+            let currentPage = 1;
+            let totalPages = 1;
+            let currentFilters = { sortOrder: 'asc'}; // Lưu filter và sort
+    
+            function renderProducts(products) {
                 const productList = document.querySelector('.product-list');
-                productList.innerHTML = ''; // Xóa nội dung cũ (nếu có)
-
-                if (products.length === 0) {
-                    productList.innerHTML = '<li class="no-products">Không có sản phẩm nào.</li>';
-                    return;
-                }
-
-                products.forEach(product => {
+                productList.innerHTML = products.length ? products.map(product => {
                     const listItem = document.createElement('li');
                     listItem.classList.add('product-item');
 
@@ -85,7 +90,7 @@
                         };
                         imagePlaceholder.appendChild(image);
                     } else {
-                        imagePlaceholder.innerHTML = '<i class="fas fa-image"></i>'; // Placeholder icon
+                        imagePlaceholder.innerHTML = '<i class="fas fa-image"></i>';
                     }
 
                     const details = document.createElement('div');
@@ -98,25 +103,35 @@
                     price.classList.add('price');
                     price.textContent = `${product.price.toLocaleString('vi-VN')} ${product.currency || 'VND'}`; // Format giá tiền Việt Nam
 
-                    const category = document.createElement('p');
-                    category.classList.add('category');
-                    category.textContent = product.category || 'Chưa có'; // Hiển thị category hoặc giá trị mặc định
+                    const infoRow = document.createElement('div');
+                    infoRow.classList.add('product-info-row');
+                    infoRow.innerHTML = `
+                    <span class="category">${product.category || 'Không xác định'}</span>
+                    <span class="separator"> | </span>
+                    <span class="brand">${product.brand || 'Không xác định'}</span>
+                    <span class="separator"> | </span>
+                    <span class="target-audience">${
+                        Array.isArray(product.target_audience)
+                        ? product.target_audience.join(', ')
+                        : product.target_audience || 'Không xác định'
+                    }</span>
+                    `;
 
                     details.appendChild(title);
                     details.appendChild(price);
-                    details.appendChild(category);
+                    details.appendChild(infoRow);
 
                     const actions = document.createElement('div');
                     actions.classList.add('product-actions');
 
                     const quickViewIcon = document.createElement('a');
                     quickViewIcon.classList.add('action-icon', 'quick-view-button');
-                    quickViewIcon.href = `/pages/update-product.html?id=${product.id}`; // Đường dẫn đến server với ID sản phẩm
-                    quickViewIcon.innerHTML = '<i class="fas fa-eye"></i>'; // Biểu tượng xem nhanh
+                    quickViewIcon.href = `/pages/update-product.html?id=${product.id}`;
+                    quickViewIcon.innerHTML = '<i class="fas fa-eye"></i>';
 
                     const deleteIcon = document.createElement('span');
                     deleteIcon.classList.add('action-icon', 'delete-button');
-                    deleteIcon.innerHTML = '<i class="fas fa-trash-alt"></i>'; // Biểu tượng xóa
+                    deleteIcon.innerHTML = '<i class="fas fa-trash-alt"></i>';
                     deleteIcon.dataset.productId = product.id;
 
                     actions.appendChild(quickViewIcon);
@@ -126,29 +141,114 @@
                     listItem.appendChild(details);
                     listItem.appendChild(actions);
 
-                    productList.appendChild(listItem);
-                });
-
+                    return listItem.outerHTML;
+                }).join('')
+                : '<li>Không tìm thấy sản phẩm</li>';
             }
 
-            // Xử lý tìm kiếm
+            async function fetchProducts(page = 1, filters = {}) {
+                try {
+                    let url = `/api/products?page=${page}&limit=10&sort=price&order=${currentFilters.sortOrder}`;
+                    if (currentFilters.search) url += `&name=${encodeURIComponent(currentFilters.search)}`;
+                    if (currentFilters.minPrice) url += `&priceFrom=${currentFilters.minPrice}`;
+                    if (currentFilters.maxPrice) url += `&priceTo=${currentFilters.maxPrice}`;
+                    if (currentFilters.productType) url += `&category=${encodeURIComponent(currentFilters.productType)}`;
+                    if (currentFilters.logic) url += `&logic=${currentFilters.logic}`;
+                    console.log('Fetching URL:', url); // Debugging URL
+                    
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const data = await response.json();
+                    
+                    renderProducts(data.products);
+                    totalPages = data.pagination.totalPages;
+                    currentPage = data.pagination.currentPage;
+
+                    // Cập nhật phân trang
+                    document.getElementById('prev-page').disabled = currentPage === 1;
+                    document.getElementById('next-page').disabled = currentPage === totalPages;
+                    document.getElementById('current-page').textContent = currentPage;
+                    document.getElementById('total-pages').textContent = totalPages;
+
+                    // Cập nhật nút số trang
+                    const paginationContainer = document.querySelector('.pagination');
+                    const existingPageButtons = paginationContainer.querySelectorAll('.page-number');
+                    existingPageButtons.forEach(button => button.remove());
+                    for (let i = 1; i <= totalPages; i++) {
+                        const pageButton = document.createElement('button');
+                        pageButton.classList.add('page-number');
+                        pageButton.textContent = i;
+                        if (i === currentPage) pageButton.classList.add('active');
+                        pageButton.addEventListener('click', () => {
+                        currentPage = i;
+                        fetchProducts(currentPage);
+                        });
+                        paginationContainer.insertBefore(pageButton, document.getElementById('next-page'));
+                    }
+                } catch (error) {
+                    console.error('Lỗi khi tải sản phẩm:', error);
+                    document.querySelector('.product-list').innerHTML = '<li>Lỗi khi tải sản phẩm</li>';
+                }
+            }
+    
+            // Tải dữ liệu sản phẩm từ server
+            fetchProducts();
+    
+            // Tìm kiếm sản phẩm
             document.getElementById('search-button').addEventListener('click', function() {
-                const searchTerm = document.getElementById('search-input').value.toLowerCase();
-                const filteredProducts = allProducts.filter(product => 
-                    product.name.toLowerCase().includes(searchTerm) ||
-                    product.id.toLowerCase().includes(searchTerm) ||
-                    (product.category && product.category.toLowerCase().includes(searchTerm))
-                );
-                displayProducts(filteredProducts);
+                const searchInput = document.getElementById('search-input').value;
+                currentFilters.search = searchInput || undefined;
+                currentPage = 1;
+                fetchProducts(currentPage);
             });
 
-            // Xử lý tìm kiếm khi nhấn Enter
-            document.getElementById('search-input').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    document.getElementById('search-button').click();
+            // Xử lý sự kiện xắp xếp sản phẩm theo giá cao/thấpthấp
+            document.getElementById('sort-button').addEventListener('click', function() {
+                currentFilters.sortOrder = currentFilters.sortOrder === 'asc' ? 'desc' : 'asc';
+                this.dataset.sortOrder = currentFilters.sortOrder;
+                currentPage = 1;
+                fetchProducts(currentPage);
+            });
+            
+            // Xử lý sự kiện lọc giá sản phẩm
+            document.getElementById('filter-button').addEventListener('click', function() {
+                const minPrice = parseFloat(document.getElementById('min-price').value);
+                const maxPrice = parseFloat(document.getElementById('max-price').value);
+                const productType = document.getElementById('product-type').value;
+                const logic = document.getElementById('search-logic').checked ? 'OR' : undefined;
+
+                if (minPrice < 0 || maxPrice < 0) {
+                alert('Giá không được là số âm.');
+                return;
+                }
+                if (minPrice && maxPrice && minPrice > maxPrice) {
+                alert('Giá thấp nhất không được lớn hơn giá cao nhất.');
+                return;
+                }
+
+                currentFilters.minPrice = minPrice || undefined;
+                currentFilters.maxPrice = maxPrice || undefined;
+                currentFilters.productType = productType || undefined;
+                currentFilters.logic = logic;
+                currentPage = 1;
+                fetchProducts(currentPage);
+            });
+    
+            // Xử lý nút phân trang
+            document.getElementById('prev-page').addEventListener('click', function() {
+                if (currentPage > 1) {
+                currentPage--;
+                fetchProducts(currentPage);
                 }
             });
 
+            document.getElementById('next-page').addEventListener('click', function() {
+                if (currentPage < totalPages) {
+                currentPage++;
+                fetchProducts(currentPage);
+                }
+            });
+                    
             // Hàm hiển thị thông báo lỗi
             function showError(message) {
                 const errorDiv = document.getElementById('error-message');
@@ -158,9 +258,6 @@
                     setTimeout(() => errorDiv.style.display = 'none', 3000);
                 }
             }
-
-            // Tải sản phẩm khi trang được load
-            loadProducts();
         });
     </script>
 </body>
