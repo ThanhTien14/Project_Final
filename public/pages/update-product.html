@@ -1,291 +1,366 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thông Tin Sản Phẩm</title>
+    <title>Chỉnh Sửa Sản Phẩm</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="/stylesheets/productinfor.css">
+    <link rel="stylesheet" href="/stylesheets/update-product.css">
 </head>
 <body>
-    <div class="product-infor-page">
-        <div class="product-infor-header">
-            <h1>PRODUCT INFORMATION</h1>
-        </div>
-        <a href="/">
-            <button class="back-to-home-button">
-                <i class="fas fa-arrow-left"></i> Trở về trang chính
-            </button>
-        </a>
-        <div class="product-infor-container">
-            <div class="product-image">
-                <div class="image-placeholder">
-                    <i class="fas fa-image"></i>
-                    </div>
-            </div>
-            <div class="product-details">
-                <h2 id="product-name">TÊN SẢN PHẨM</h2>
-                <p class="price" id="product-price"></p>
-                <p id="product-description"></p>
-                <button class="edit-product-button" id="edit-product-btn">
-                    <i class="fas fa-edit"></i> Sửa thông tin sản phẩm
-                </button>
-            </div>
-        </div>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Trang chủ</a></li>
+                <li><a href="/pages/list-products.html">Danh sách sản phẩm</a></li>
+            </ul>
+        </nav>
+    </header>
 
-        <div class="product-information-section">
-            <h2>Information</h2>
-            <div class="information-grid">
-                <div class="info-item">
-                    <span class="info-label">Category:</span>
-                    <span id="product-category"></span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Dosage Form:</span>
-                    <span id="product-dosage-form"></span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Ingredients:</span>
-                    <span id="product-ingredients"></span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Benefits:</span>
-                    <span id="product-benefits"></span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Usage Instructions:</span>
-                    <span id="product-usage"></span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Warnings:</span>
-                    <span id="product-warnings"></span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Storage Instructions:</span>
-                    <span id="product-storage"></span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Other Information:</span>
-                    <span id="product-other-info"></span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Quantity in Stock:</span>
-                    <span id="product-quantity-stock"></span>
+    <main>
+        <h1>Chỉnh Sửa Sản Phẩm</h1>
+        <div id="error-message" class="message error" style="display: none;"></div>
+        <div id="success-message" class="message success" style="display: none;"></div>
+
+        <form id="update-product-form">
+            <div class="form-group">
+                <label for="id">ID:</label>
+                <input type="text" id="id" name="id" readonly>
+            </div>
+            <div class="form-group">
+                <label for="name">Tên sản phẩm:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Mô tả:</label>
+                <textarea id="description" name="description"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="category">Danh mục:</label>
+                <select id="category" name="category">
+                    <option value="">Chọn danh mục</option>
+                    <option value="HTSK">HTSK</option>
+                    <option value="BDN">BDN</option>
+                    <option value="LĐ">LĐ</option>
+                    <option value="KHOANGCHAT">KHOANGCHAT</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="brand">Thương hiệu:</label>
+                <input type="text" id="brand" name="brand">
+            </div>
+            <div class="form-group">
+                <label for="dosage_form">Dạng bào chế:</label>
+                <input type="text" id="dosage_form" name="dosage_form">
+            </div>
+            <div class="form-group">
+                <label>Hình ảnh hiện tại:</label>
+                <div id="current-image" class="image-preview">
+                    <img src="" alt="Hình ảnh hiện tại" style="display: none;" id="current-image-img">
                 </div>
             </div>
-        </div>
-
-        <div id="edit-product-form">
-            <h3>Edit Product Information</h3>
-            <form class="form-grid">
-                <div class="form-group">
-                    <label for="edit_name">Name</label>
-                    <input type="text" id="edit_name" placeholder="...">
+            <div class="form-group">
+                <label>Hình ảnh mới:</label>
+                <div class="image-options">
+                    <input type="radio" id="upload-image" name="image-option" value="upload" checked>
+                    <label for="upload-image">Tải lên từ máy:</label>
+                    <input type="file" id="image" name="image" accept="image/*">
                 </div>
-                <div class="form-group">
-                    <label for="edit_description">Description</label>
-                    <textarea id="edit_description" placeholder="..."></textarea>
+                <div class="image-options">
+                    <input type="radio" id="paste-url" name="image-option" value="url">
+                    <label for="paste-url">Dán URL:</label>
+                    <input type="text" id="image-url" name="image_url" placeholder="Nhập URL hình ảnh" disabled>
                 </div>
-                <div class="form-group">
-                    <label for="edit_price">Price</label>
-                    <input type="text" id="edit_price" placeholder="...">
+                <div id="image-preview" class="image-preview">
+                    <img src="" alt="Preview hình ảnh mới" style="display: none;" id="image-preview-img">
                 </div>
-                <div class="form-group">
-                    <label for="edit_category">Category</label>
-                    <select id="edit_category">
-                        <option value="" disabled selected>.....</option>
-                        <option value="HTSK">HTSK</option>
-                        <option value="BON">BON</option>
-                        <option value="EDN">EDN</option>
-                        <option value="KHOANGCHAT">KHOANGCHAT</option>
-                        </select>
-                </div>
-                <div class="form-group">
-                    <label for="edit_dosage_form">Dosage form</label>
-                    <input type="text" id="edit_dosage_form" placeholder="...">
-                </div>
-                <div class="form-group">
-                    <label for="edit_ingredients">Ingredients</label>
-                    <input type="text" id="edit_ingredients" placeholder="...">
-                </div>
-                <div class="form-group">
-                    <label for="edit_benefits">Benefits</label>
-                    <input type="text" id="edit_benefits" placeholder="...">
-                </div>
-                <div class="form-group">
-                    <label for="edit_quantity_in_stock">Quantity in stock</label>
-                    <input type="number" id="edit_quantity_in_stock" placeholder="...">
-                </div>
-                <div class="form-group">
-                    <label for="edit_usage_instructions">Usage instructions</label>
-                    <input type="text" id="edit_usage_instructions" placeholder="......">
-                </div>
-                <div class="form-group">
-                    <label for="edit_warnings">Warnings</label>
-                    <input type="text" id="edit_warnings" placeholder="...">
-                </div>
-                <div class="form-group">
-                    <label for="edit_storage_instructions">Storage instructions</label>
-                    <input type="text" id="edit_storage_instructions" placeholder="...">
-                </div>
-                <div class="form-group">
-                    <label for="edit_target_audience">Target audience</label>
-                    <input type="text" id="edit_target_audience" placeholder="...">
-                </div>
-            </form>
+            </div>
+            <div class="form-group">
+                <label for="ingredients">Thành phần (phân tách bằng dấu phẩy):</label>
+                <input type="text" id="ingredients" name="ingredients" placeholder="Ví dụ: Vitamin C, Kẽm">
+            </div>
+            <div class="form-group">
+                <label for="benefits">Lợi ích (phân tách bằng dấu phẩy):</label>
+                <input type="text" id="benefits" name="benefits" placeholder="Ví dụ: Tăng đề kháng, Hỗ trợ tiêu hóa">
+            </div>
+            <div class="form-group">
+                <label for="usage_instructions">Hướng dẫn sử dụng:</label>
+                <textarea id="usage_instructions" name="usage_instructions"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="warnings">Cảnh báo:</label>
+                <textarea id="warnings" name="warnings"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="storage_instructions">Hướng dẫn bảo quản:</label>
+                <textarea id="storage_instructions" name="storage_instructions"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="target_audience">Đối tượng sử dụng (phân tách bằng dấu phẩy):</label>
+                <input type="text" id="target_audience" name="target_audience" placeholder="Ví dụ: Người lớn, Trẻ em">
+            </div>
+            <div class="form-group">
+                <label for="certifications">Chứng nhận (phân tách bằng dấu phẩy):</label>
+                <input type="text" id="certifications" name="certifications" placeholder="Ví dụ: GMP, FDA">
+            </div>
+            <div class="form-group">
+                <label for="quantity_in_stock">Số lượng tồn kho:</label>
+                <input type="number" id="quantity_in_stock" name="quantity_in_stock" min="0" required>
+            </div>
+            <div class="form-group">
+                <label for="price">Giá:</label>
+                <input type="number" id="price" name="price" min="0" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label for="currency">Tiền tệ:</label>
+                <select id="currency" name="currency">
+                    <option value="VND">VND</option>
+                    <option value="USD">USD</option>
+                </select>
+            </div>
             <div class="form-actions">
-                <button type="button" class="save" id="save-changes-btn">Lưu thay đổi</button>
-                <button type="button" class="cancel" id="cancel-edit-btn">Hủy</button>
+                <button type="submit">Lưu thay đổi</button>
+                <button type="button" onclick="window.location.href='/pages/list-products.html'">Hủy</button>
             </div>
-        </div>
-
-    </div>
+        </form>
+    </main>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const queryString = window.location.search; // Lấy chuỗi truy vấn từ URL
-            const urlParams = new URLSearchParams(queryString);
-            const productId = urlParams.get('id'); // Lấy giá trị của tham số 'id'
+(function() {
+    let originalProduct = null;
 
-            const editProductButton = document.getElementById('edit-product-btn');
-            const editProductForm = document.getElementById('edit-product-form');
-            const saveChangesButton = document.getElementById('save-changes-btn');
-            const cancelEditButton = document.getElementById('cancel-edit-btn');
+    // Lấy ID từ query string
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id');
 
-            let currentProduct; // Biến để lưu trữ dữ liệu sản phẩm hiện tại
+    if (!productId) {
+        showError('Vui lòng cung cấp ID sản phẩm');
+        return;
+    }
 
-            // Hàm tạo form chỉnh sửa sản phẩm
-            function populateEditForm(product) {
-                document.getElementById('edit_name').value = product.name || '';
-                document.getElementById('edit_description').value = product.description || '';
-                document.getElementById('edit_price').value = product.price || '';
-                document.getElementById('edit_category').value = product.category || '';
-                document.getElementById('edit_dosage_form').value = product.dosage_form || '';
-                document.getElementById('edit_ingredients').value = product.ingredients ? product.ingredients.join(', ') : '';
-                document.getElementById('edit_benefits').value = product.benefits ? product.benefits.join(', ') : '';
-                document.getElementById('edit_quantity_in_stock').value = product.quantity_in_stock || '';
-                document.getElementById('edit_usage_instructions').value = product.usage_instructions || '';
-                document.getElementById('edit_warnings').value = product.warnings || '';
-                document.getElementById('edit_storage_instructions').value = product.storage_instructions || '';
-                document.getElementById('edit_target_audience').value = product.target_audience ? product.target_audience.join(', ') : '';
-                // Sẽ cần xử lý upload hình ảnh
-            }
+    // Hàm tải chi tiết sản phẩm
+    async function loadProduct() {
+        try {
+            const response = await fetch(`/api/products/${productId}`);
+            if (!response.ok) throw new Error('Không tìm thấy sản phẩm');
+            const product = await response.json();
+            originalProduct = product;
+            populateForm(product);
+            displayCurrentImage(product.image_url);
+        } catch (error) {
+            console.error('Error fetching product:', error);
+            showError(error.message);
+        }
+    }
 
-            // Hàm điền dữ liệu vào giao diện
-            function populateProductDetails(product) {
-                document.getElementById('product-name').textContent = product.name || 'N/A';
-                document.getElementById('product-price').textContent = product.price
-                    ? product.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
-                    : 'N/A';
-                document.getElementById('product-description').textContent = product.description || 'No description available.';
-                document.getElementById('product-category').textContent = product.category || 'N/A';
-                document.getElementById('product-dosage-form').textContent = product.dosage_form || 'N/A';
-                document.getElementById('product-ingredients').textContent = product.ingredients
-                    ? product.ingredients.join(', ')
-                    : 'N/A';
-                document.getElementById('product-benefits').textContent = product.benefits
-                    ? product.benefits.join(', ')
-                    : 'N/A';
-                document.getElementById('product-usage').textContent = product.usage_instructions || 'N/A';
-                document.getElementById('product-warnings').textContent = product.warnings || 'N/A';
-                document.getElementById('product-storage').textContent = product.storage_instructions || 'N/A';
-                document.getElementById('product-other-info').textContent = product.other_info || 'N/A';
-                document.getElementById('product-quantity-stock').textContent = product.quantity_in_stock || 'N/A';
+    // Hàm điền dữ liệu vào form
+    function populateForm(product) {
+        document.getElementById('id').value = product.id || '';
+        document.getElementById('name').value = product.name || '';
+        document.getElementById('description').value = product.description || '';
+        document.getElementById('category').value = product.category || '';
+        document.getElementById('brand').value = product.brand || '';
+        document.getElementById('dosage_form').value = product.dosage_form || '';
+        document.getElementById('ingredients').value = product.ingredients?.join(', ') || '';
+        document.getElementById('benefits').value = product.benefits?.join(', ') || '';
+        document.getElementById('usage_instructions').value = product.usage_instructions || '';
+        document.getElementById('warnings').value = product.warnings || '';
+        document.getElementById('storage_instructions').value = product.storage_instructions || '';
+        document.getElementById('target_audience').value = product.target_audience?.join(', ') || '';
+        document.getElementById('certifications').value = product.certifications?.join(', ') || '';
+        document.getElementById('quantity_in_stock').value = product.quantity_in_stock || 0;
+        document.getElementById('price').value = product.price || 0;
+        document.getElementById('currency').value = product.currency || 'VND';
+    }
 
-                const imagePlaceholder = document.querySelector('.product-image .image-placeholder');
-                if (product.image_url) {
-                    imagePlaceholder.innerHTML = `<img src="/${product.image_url}" alt="${product.name}">`;
-                } else {
-                    imagePlaceholder.innerHTML = '<i class="fas fa-image"></i>'; // Placeholder icon
-                }
-            }
+    // Hàm hiển thị hình ảnh hiện tại
+    function displayCurrentImage(imageUrl) {
+        const currentImage = document.getElementById('current-image-img');
+        if (imageUrl) {
+            const fullImageUrl = imageUrl.startsWith('/images/uploads/') ? `http://localhost:3000${imageUrl}` : imageUrl;
+            currentImage.src = fullImageUrl;
+            currentImage.style.display = 'block';
+            currentImage.onerror = () => {
+                console.error('Failed to load image:', fullImageUrl);
+                currentImage.style.display = 'none';
+                showError('Không thể tải hình ảnh hiện tại');
+            };
+        } else {
+            currentImage.style.display = 'none';
+        }
+    }
 
-            // Gọi API để lấy thông tin sản phẩm
-            if (productId) {
-                fetch(`/api/products/${productId}`)
-                    .then(response => response.json())
-                    .then(product => {
-                        currentProduct = product; // Lưu trữ dữ liệu sản phẩm
-                        populateProductDetails(product); // Điền dữ liệu vào giao diện
-                    })
-                    .catch(error => console.error('Lỗi khi tải thông tin sản phẩm:', error));
+    // Xử lý toggle giữa upload file và paste URL
+    document.getElementById('upload-image').addEventListener('change', () => {
+        document.getElementById('image').disabled = false;
+        document.getElementById('image-url').disabled = true;
+        document.getElementById('image-url').value = '';
+        previewImage();
+    });
+    document.getElementById('paste-url').addEventListener('change', () => {
+        document.getElementById('image').disabled = true;
+        document.getElementById('image-url').disabled = false;
+        document.getElementById('image').value = '';
+        previewImage();
+    });
+
+    // Preview hình ảnh mới (upload hoặc paste URL)
+    function previewImage() {
+        const previewImg = document.getElementById('image-preview-img');
+        const imageOption = document.querySelector('input[name="image-option"]:checked').value;
+        if (imageOption === 'upload') {
+            const file = document.getElementById('image').files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    previewImg.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
             } else {
-                console.error('Không tìm thấy ID sản phẩm trong URL.');
+                previewImg.src = '';
+                previewImg.style.display = 'none';
             }
-
-            // Xử lý sự kiện click nút "Sửa thông tin sản phẩm"
-            if (editProductButton) {
-                editProductButton.addEventListener('click', function() {
-                    if (currentProduct) {
-                        populateEditForm(currentProduct); // Điền dữ liệu vào form
-                        editProductForm.style.display = 'block'; // Hiển thị form chỉnh sửa
-                        // Ẩn thông tin sản phẩm hiện tại
-                        document.querySelector('.product-infor-container').style.display = 'none';
-                        document.querySelector('.product-information-section').style.display = 'none';
-                    } else {
-                        console.error('Không có dữ liệu sản phẩm để điền vào form chỉnh sửa.');
-                    }
-                });
+        } else {
+            const imageUrl = document.getElementById('image-url').value;
+            if (imageUrl) {
+                previewImg.src = imageUrl;
+                previewImg.style.display = 'block';
+                previewImg.onerror = () => {
+                    console.error('Failed to load preview image:', imageUrl);
+                    previewImg.style.display = 'none';
+                    showError('Không thể tải hình ảnh từ URL');
+                };
+            } else {
+                previewImg.src = '';
+                previewImg.style.display = 'none';
             }
+        }
+    }
 
-            // Xử lý sự kiện click nút "Hủy"
-            if (cancelEditButton) {
-                cancelEditButton.addEventListener('click', function() {
-                    editProductForm.style.display = 'none'; // Ẩn form chỉnh sửa
-                    // Hiển thị lại thông tin sản phẩm hiện tại
-                    document.querySelector('.product-infor-container').style.display = 'flex';
-                    document.querySelector('.product-information-section').style.display = 'block';
-                });
-            }
+    document.getElementById('image').addEventListener('change', previewImage);
+    document.getElementById('image-url').addEventListener('input', previewImage);
 
-            // Xử lý sự kiện click nút "Lưu thay đổi"
-            if (saveChangesButton) {
-                saveChangesButton.addEventListener('click', function() {
-                    // Thu thập dữ liệu từ form chỉnh sửa
-                    const updatedProductData = {
-                        id: productId,
-                        name: document.getElementById('edit_name').value,
-                        description: document.getElementById('edit_description').value,
-                        price: parseFloat(document.getElementById('edit_price').value),
-                        category: document.getElementById('edit_category').value,
-                        dosage_form: document.getElementById('edit_dosage_form').value,
-                        ingredients: document.getElementById('edit_ingredients').value.split(',').map(item => item.trim()),
-                        benefits: document.getElementById('edit_benefits').value.split(',').map(item => item.trim()),
-                        quantity_in_stock: parseInt(document.getElementById('edit_quantity_in_stock').value),
-                        usage_instructions: document.getElementById('edit_usage_instructions').value,
-                        warnings: document.getElementById('edit_warnings').value,
-                        storage_instructions: document.getElementById('edit_storage_instructions').value,
-                        target_audience: document.getElementById('edit_target_audience').value.split(',').map(item => item.trim()),
-                        // Sẽ cần xử lý upload hình ảnh
-                    };
+    // Xử lý submit form
+    document.getElementById('update-product-form').addEventListener('submit', async event => {
+        event.preventDefault();
+        clearMessages();
 
-                    // Kiểm tra dữ liệu đã được cập nhật chưa
-                    console.log('Sản phẩm đã được cập nhật:', JSON.stringify(updatedProductData));
+        if (!confirm('Bạn có chắc chắn muốn cập nhật sản phẩm này?')) {
+            return;
+        }
 
-                    // Gửi dữ liệu đã cập nhật đến server
-                    fetch(`/api/products/${productId}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(updatedProductData),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        // Ẩn form chỉnh sửa
-                        editProductForm.style.display = 'none';
-                        document.querySelector('.product-infor-container').style.display = 'flex';
-                        document.querySelector('.product-information-section').style.display = 'block';
-                        //  hiển thị thông báo
-                        alert('Cập nhật sản phẩm thành công!');
-                        // Tải lại thông tin sản phẩm để hiển thị dữ liệu mới
-                        window.location.reload();
-                    })
-                    .catch(error => console.error('Lỗi khi cập nhật sản phẩm:', error));
-                });
+        const updateData = {
+            name: document.getElementById('name').value,
+            description: document.getElementById('description').value,
+            category: document.getElementById('category').value,
+            brand: document.getElementById('brand').value,
+            dosage_form: document.getElementById('dosage_form').value,
+            ingredients: document.getElementById('ingredients').value,
+            benefits: document.getElementById('benefits').value,
+            usage_instructions: document.getElementById('usage_instructions').value,
+            warnings: document.getElementById('warnings').value,
+            storage_instructions: document.getElementById('storage_instructions').value,
+            target_audience: document.getElementById('target_audience').value,
+            certifications: document.getElementById('certifications').value,
+            quantity_in_stock: parseInt(document.getElementById('quantity_in_stock').value),
+            price: parseFloat(document.getElementById('price').value),
+            currency: document.getElementById('currency').value,
+        };
+
+        // Validation phía client
+        if (!updateData.name.trim()) {
+            showError('Tên sản phẩm là bắt buộc');
+            return;
+        }
+        if (isNaN(updateData.quantity_in_stock) || updateData.quantity_in_stock < 0) {
+            showError('Số lượng tồn kho phải là số không âm');
+            return;
+        }
+        if (isNaN(updateData.price) || updateData.price <= 0) {
+            showError('Giá phải là số dương');
+            return;
+        }
+
+        // Xóa các trường không có giá trị
+        Object.keys(updateData).forEach(key => {
+            if (!updateData[key] || (typeof updateData[key] === 'string' && updateData[key].trim() === '')) {
+                delete updateData[key];
             }
         });
+
+        const imageOption = document.querySelector('input[name="image-option"]:checked').value;
+        if (imageOption === 'url') {
+            const imageUrl = document.getElementById('image-url').value;
+            if (imageUrl) {
+                updateData.image_url = imageUrl;
+            }
+        }
+
+        // Gửi dữ liệu dưới dạng FormData
+        const formData = new FormData();
+        formData.append('updateData', JSON.stringify(updateData));
+
+        if (imageOption === 'upload') {
+            const imageFile = document.getElementById('image').files[0];
+            if (imageFile) {
+                formData.append('image', imageFile);
+            }
+        }
+
+        // Gửi yêu cầu cập nhật sản phẩm
+        try {
+            const response = await fetch(`/api/products/${productId}`, {
+                method: 'PUT',
+                body: formData
+            });
+
+            const result = await response.json();
+            if (!response.ok) {
+                const errorMessage = result.details ? result.details.join(', ') : result.error || 'Lỗi khi cập nhật sản phẩm';
+                showError(errorMessage);
+                return;
+            }
+
+            showSuccess(result.message || 'Cập nhật sản phẩm thành công');
+            setTimeout(() => window.location.href = '/pages/list-products.html', 3000);
+        } catch (error) {
+            console.error('Update error:', error);
+            showError('Đã xảy ra lỗi: ' + error.message);
+        }
+    });
+
+    // Hàm hiển thị lỗi
+    function showError(message) {
+        const errorDiv = document.getElementById('error-message');
+        if (errorDiv) {
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => errorDiv.style.display = 'none', 3000);
+        }
+    }
+
+    // Hàm hiển thị thành công
+    function showSuccess(message) {
+        const successDiv = document.getElementById('success-message');
+        if (successDiv) {
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            setTimeout(() => successDiv.style.display = 'none', 3000);
+        }
+    }
+
+    // Xóa thông báo
+    function clearMessages() {
+        const errorDiv = document.getElementById('error-message');
+        const successDiv = document.getElementById('success-message');
+        if (errorDiv) errorDiv.style.display = 'none';
+        if (successDiv) successDiv.style.display = 'none';
+    }
+
+    // Tải sản phẩm khi trang được load
+    loadProduct();
+})();
     </script>
 </body>
 </html>

@@ -1,14 +1,13 @@
 body {
+    font-family: Arial, sans-serif;
     margin: 0;
-    font-family: sans-serif;
-    background-color: #f4f4f4;
+    padding: 0;
+    background-color: #f9f9f9;
 }
 
-/* Header và Navigation */
 header {
-    background-color: #333;
-    color: white;
-    padding: 15px 20px;
+    background-color: #4CAF50;
+    padding: 10px 0;
     position: fixed;
     top: 0;
     left: 0;
@@ -16,39 +15,55 @@ header {
     z-index: 100;
 }
 
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.menu-toggle {
+    display: none;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+    padding: 10px;
+}
+
 nav ul {
-    list-style: none;
-    padding: 0;
+    list-style-type: none;
     margin: 0;
+    padding: 0;
     display: flex;
 }
 
 nav ul li {
     position: relative;
+    margin: 0 15px;
 }
 
 nav ul li a {
-    display: block;
     color: white;
     text-decoration: none;
+    font-weight: bold;
     padding: 10px 15px;
+    display: block;
 }
 
 nav ul li a:hover {
-    background-color: #555;
+    background-color: #45a049;
 }
 
-/* Dropdown Menu */
 nav ul li ul {
     display: none;
     position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: #333;
-    padding: 0;
-    margin: 0;
-    border-radius: 5px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    background-color: #4CAF50;
+    list-style-type: none;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    min-width: 200px;
 }
 
 nav ul li:hover ul {
@@ -56,8 +71,8 @@ nav ul li:hover ul {
 }
 
 nav ul li ul li {
-    width: 100%;
-    border-bottom: 1px solid #555;
+    margin: 0;
+    border-bottom: 1px solid #45a049;
 }
 
 nav ul li ul li:last-child {
@@ -65,39 +80,107 @@ nav ul li ul li:last-child {
 }
 
 nav ul li ul li a {
+    color: white;
+    font-weight: normal;
     padding: 10px 20px;
 }
 
 nav ul li ul li a:hover {
-    background-color: #555;
+    background-color: #45a049;
 }
 
-/* Hero Section (Thông tin cơ bản) */
 .hero {
-    background-image: url('your-background-image.jpg'); /* Thay thế bằng đường dẫn ảnh của bạn */
+    position: relative;
+    min-height: 500px;
+    background-image: url('https://images.unsplash.com/photo-1622480937810-2e9962e32a38?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
     background-size: cover;
     background-position: center;
-    height: 100vh; /* Chiều cao toàn màn hình */
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
-    color: white;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    padding-top: 60px; /* Để tránh nội dung bị che bởi header cố định */
+    padding-top: 60px;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
 }
 
 .hero-content {
+    position: relative;
+    z-index: 1;
+    color: white;
     max-width: 80%;
     padding: 20px;
 }
 
 .hero-content h1 {
-    font-size: 3em;
-    margin-bottom: 10px;
+    font-size: 36px;
+    margin-bottom: 20px;
 }
 
 .hero-content p {
-    font-size: 1.5em;
-    margin-bottom: 20px;
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+.hero-button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.hero-button:hover {
+    background-color: #45a049;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    nav ul {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        background-color: #4CAF50;
+    }
+
+    nav ul.show {
+        display: flex;
+    }
+
+    nav ul li {
+        margin: 0;
+        width: 100%;
+    }
+
+    nav ul li a {
+        padding: 15px;
+        border-bottom: 1px solid #45a049;
+    }
+
+    nav ul li ul {
+        position: static;
+        background-color: #3d8b40;
+        box-shadow: none;
+    }
+
+    nav ul li ul li a {
+        padding: 10px 30px;
+    }
 }

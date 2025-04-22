@@ -4,153 +4,255 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trang Sản Phẩm</title>
-    <link rel="stylesheet" href="../stylesheets/list-products.css">
+    <link rel="stylesheet" href="/stylesheets/list-products.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <style>
-        .product-item {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-        .product-image-placeholder {
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 10px;
-        }
-        .product-image-placeholder img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .product-image-placeholder i {
-            font-size: 24px;
-            color: #ccc;
-        }
-        .product-details {
-            flex: 1;
-        }
-        .product-actions {
-            display: flex;
-            gap: 10px;
-        }
-    </style>
 </head>
 <body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Trang chủ</a></li>
+                <li><a href="/pages/list-products.html">Danh sách sản phẩm</a></li>
+            </ul>
+        </nav>
+    </header>
+
     <div class="top-bar">
         <div class="search-container">
-            <input type="text" placeholder="Tìm kiếm sản phẩm...">
-            <button><i class="fas fa-search"></i></button>
+            <input type="text" id="search-input" placeholder="Tìm kiếm sản phẩm...">
+            <button id="search-button"><i class="fas fa-search"></i></button>
         </div>
-        <button class="filter-button">
+        <button class="filter-button" id="sort-button" data-sort-order="desc">
             <i class="fas fa-filter"></i>
         </button>
     </div>
+
+    <div class="filter-container">
+        <label for="product-type">Loại sản phẩm:</label>
+        <select id="product-type" class="filter-select">
+            <option value="">Tất cả</option>
+            <option value="BDN">BDN</option>
+            <option value="HTSK">Hỗ trợ sức khỏe</option>
+            <option value="KHOANGCHAT">Khoáng chất</option>
+            <option value="LĐ">Làm đẹp</option>
+        </select>
+
+        <label for="min-price">Giá từ:</label>
+        <input type="number" id="min-price" class="price-input" placeholder="Nhập giá thấp nhất">
+
+        <label for="max-price">Đến:</label>
+        <input type="number" id="max-price" class="price-input" placeholder="Nhập giá cao nhất">
+
+        <label for="search-logic">Tìm OR:</label>
+        <input type="checkbox" id="search-logic" value="OR">
+
+        <button id="filter-button" class="apply-filter-button">Lọc</button>
+    </div>
+
     <div class="container">
+        <div id="error-message" class="message error" style="display: none;"></div>
         <main class="main-content">
             <ul class="product-list"></ul>
         </main>
     </div>
 
+    <div class="pagination">
+        <button class="pagination-button" id="prev-page" disabled>&laquo; Trước</button>
+        <span id="current-page">1</span> / <span id="total-pages">1</span>
+        <button class="pagination-button" id="next-page">&raquo; Sau</button>
+    </div>
+
+    <button class="add-product-button">
+        <i class="fas fa-plus"></i> Thêm sản phẩm
+    </button>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            fetch('/api/products')
-                .then(response => response.json())
-                .then(products => {
-                    const productList = document.querySelector('.product-list');
-                    productList.innerHTML = '';
+            let currentPage = 1;
+            let totalPages = 1;
+            let currentFilters = { sortOrder: 'desc' };
 
-                    products.forEach(product => {
-                        const listItem = document.createElement('li');
-                        listItem.classList.add('product-item');
+            function renderProducts(products) {
+                const productList = document.querySelector('.product-list');
+                productList.innerHTML = products.length ? products.map(product => {
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('product-item');
 
-                        // const imagePlaceholder = document.createElement('div');
-                        // imagePlaceholder.classList.add('product-image-placeholder');
-                        // if (product.image_url) {
-                        //     const image = document.createElement('img');
-                        //     // Sửa image_url: loại bỏ /images/ và thêm /uploads/
-                        //     let correctedImageUrl = product.image_url;
-                        //     if (correctedImageUrl.startsWith('/images/')) {
-                        //         const filename = correctedImageUrl.split('/').pop();
-                        //         correctedImageUrl = `/uploads/${filename}`;
-                        //     }
-                        //     if (!correctedImageUrl.startsWith('/uploads/')) {
-                        //         correctedImageUrl = `/uploads/${correctedImageUrl}`;
-                        //     }
-                        //     image.src = correctedImageUrl;
-                        //     image.alt = product.name;
-                        //     image.onerror = () => {
-                        //         console.error(`Không thể tải ảnh: ${correctedImageUrl}`);
-                        //         imagePlaceholder.innerHTML = '<i class="fas fa-image"></i>';
-                        //     };
-                        //     imagePlaceholder.appendChild(image);
-                        // } else {
-                        //     imagePlaceholder.innerHTML = '<i class="fas fa-image"></i>';
-                        // }
-                        const imagePlaceholder = document.createElement('div');
-                        imagePlaceholder.classList.add('product-image-placeholder');
-                        if (product.image_url) {
-                            const image = document.createElement('img');
-                          // hỗ trợ cả URL bên ngoại và url upload
-                          const image_url = product.image_url.startsWith('images/uploads/')
-                          ?`http://localhost:3000/${product.image_url}?t=${new Date().getTime()}`
-                          : product.image_url;
-                            image.src = image_url;
-                            image.alt = product.name;
-                            image.onerror = () => {
-                                console.error(`Không thể tải ảnh: ${image_url}`);
-                                imagePlaceholder.innerHTML = '<i class="fas fa-image"></i>';
-                            };
-                            imagePlaceholder.appendChild(image);
-                        } else {
+                    const imagePlaceholder = document.createElement('div');
+                    imagePlaceholder.classList.add('product-image-placeholder');
+                    if (product.image_url) {
+                        const image = document.createElement('img');
+                        const imageUrl = product.image_url.startsWith('/images/uploads/')
+                            ? `http://localhost:3000${product.image_url}?t=${new Date().getTime()}`
+                            : product.image_url;
+                        image.src = imageUrl;
+                        image.alt = product.name;
+                        image.onerror = () => {
+                            console.error('Failed to load image:', imageUrl);
                             imagePlaceholder.innerHTML = '<i class="fas fa-image"></i>';
+                        };
+                        imagePlaceholder.appendChild(image);
+                    } else {
+                        imagePlaceholder.innerHTML = '<i class="fas fa-image"></i>';
+                    }
+
+                    const details = document.createElement('div');
+                    details.classList.add('product-details');
+
+                    const title = document.createElement('h3');
+                    title.textContent = product.name;
+
+                    const price = document.createElement('p');
+                    price.classList.add('price');
+                    price.textContent = `${product.price.toLocaleString('vi-VN')} ${product.currency || 'VND'}`;
+
+                    const infoRow = document.createElement('div');
+                    infoRow.classList.add('product-info-row');
+                    infoRow.innerHTML = `
+                        <span class="category">${product.category || 'Không xác định'}</span>
+                        <span class="separator"> | </span>
+                        <span class="brand">${product.brand || 'Không xác định'}</span>
+                        <span class="separator"> | </span>
+                        <span class="target-audience">${
+                            Array.isArray(product.target_audience)
+                                ? product.target_audience.join(', ')
+                                : product.target_audience || 'Không xác định'
+                        }</span>
+                    `;
+
+                    details.appendChild(title);
+                    details.appendChild(price);
+                    details.appendChild(infoRow);
+
+                    const actions = document.createElement('div');
+                    actions.classList.add('product-actions');
+
+                    const quickViewIcon = document.createElement('a');
+                    quickViewIcon.classList.add('action-icon', 'quick-view-button');
+                    quickViewIcon.href = `/pages/update-product.html?id=${product.id}`;
+                    quickViewIcon.innerHTML = '<i class="fas fa-eye"></i>';
+
+                    const deleteIcon = document.createElement('span');
+                    deleteIcon.classList.add('action-icon', 'delete-button');
+                    deleteIcon.innerHTML = '<i class="fas fa-trash-alt"></i>';
+                    deleteIcon.dataset.productId = product.id;
+                    deleteIcon.addEventListener('click', async () => {
+                        if (confirm(`Bạn có chắc muốn xóa sản phẩm ${product.name}?`)) {
+                            try {
+                                const response = await fetch(`/api/products/${product.id}`, { method: 'DELETE' });
+                                if (!response.ok) throw new Error('Xóa thất bại');
+                                showError('Xóa sản phẩm thành công');
+                                fetchProducts(currentPage);
+                            } catch (error) {
+                                showError('Lỗi khi xóa sản phẩm: ' + error.message);
+                            }
                         }
-
-                        const details = document.createElement('div');
-                        details.classList.add('product-details');
-
-                        const title = document.createElement('h3');
-                        title.textContent = product.name;
-
-                        const price = document.createElement('p');
-                        price.classList.add('price');
-                        price.textContent = `${product.price.toLocaleString('vi-VN')} VND`;
-
-                        const category = document.createElement('p');
-                        category.classList.add('category');
-                        category.textContent = product.category || 'Category';
-
-                        details.appendChild(title);
-                        details.appendChild(price);
-                        details.appendChild(category);
-
-                        const actions = document.createElement('div');
-                        actions.classList.add('product-actions');
-
-                        const quickViewIcon = document.createElement('a');
-                        quickViewIcon.classList.add('action-icon', 'quick-view-button');
-                        quickViewIcon.href = `/pages/update-product.html?id=${product.id}`;
-                        quickViewIcon.innerHTML = '<i class="fas fa-eye"></i>';
-
-                        const deleteIcon = document.createElement('span');
-                        deleteIcon.classList.add('action-icon', 'delete-button');
-                        deleteIcon.innerHTML = '<i class="fas fa-trash-alt"></i>';
-                        deleteIcon.dataset.productId = product.id;
-
-                        actions.appendChild(quickViewIcon);
-                        actions.appendChild(deleteIcon);
-
-                        listItem.appendChild(imagePlaceholder);
-                        listItem.appendChild(details);
-                        listItem.appendChild(actions);
-
-                        productList.appendChild(listItem);
                     });
-                })
-                .catch(error => console.error('Lỗi khi tải sản phẩm:', error));
+
+                    actions.appendChild(quickViewIcon);
+                    actions.appendChild(deleteIcon);
+
+                    listItem.appendChild(imagePlaceholder);
+                    listItem.appendChild(details);
+                    listItem.appendChild(actions);
+
+                    return listItem.outerHTML;
+                }).join('')
+                : '<li>Không tìm thấy sản phẩm</li>';
+            }
+
+            async function fetchProducts(page = 1, filters = {}) {
+                try {
+                    let url = `/api/products?page=${page}&limit=10&sort=price&order=${currentFilters.sortOrder}`;
+                    if (currentFilters.search) url += `&name=${encodeURIComponent(currentFilters.search)}`;
+                    if (currentFilters.minPrice) url += `&priceFrom=${currentFilters.minPrice}`;
+                    if (currentFilters.maxPrice) url += `&priceTo=${currentFilters.maxPrice}`;
+                    if (currentFilters.productType) url += `&category=${encodeURIComponent(currentFilters.productType)}`;
+                    if (currentFilters.logic) url += `&logic=${currentFilters.logic}`;
+
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const data = await response.json();
+
+                    renderProducts(data.products);
+                    totalPages = data.pagination.totalPages;
+                    currentPage = data.pagination.currentPage;
+
+                    document.getElementById('prev-page').disabled = currentPage === 1;
+                    document.getElementById('next-page').disabled = currentPage === totalPages;
+                    document.getElementById('current-page').textContent = currentPage;
+                    document.getElementById('total-pages').textContent = totalPages;
+                } catch (error) {
+                    console.error('Lỗi khi tải sản phẩm:', error);
+                    document.querySelector('.product-list').innerHTML = '<li>Lỗi khi tải sản phẩm</li>';
+                }
+            }
+
+            fetchProducts();
+
+            document.getElementById('search-button').addEventListener('click', function() {
+                const searchInput = document.getElementById('search-input').value;
+                currentFilters.search = searchInput || undefined;
+                currentPage = 1;
+                fetchProducts(currentPage);
+            });
+
+            document.getElementById('sort-button').addEventListener('click', function() {
+                currentFilters.sortOrder = currentFilters.sortOrder === 'asc' ? 'desc' : 'asc';
+                this.dataset.sortOrder = currentFilters.sortOrder;
+                currentPage = 1;
+                fetchProducts(currentPage);
+            });
+
+            document.getElementById('filter-button').addEventListener('click', function() {
+                const minPrice = parseFloat(document.getElementById('min-price').value);
+                const maxPrice = parseFloat(document.getElementById('max-price').value);
+                const productType = document.getElementById('product-type').value;
+                const logic = document.getElementById('search-logic').checked ? 'OR' : undefined;
+
+                if (minPrice < 0 || maxPrice < 0) {
+                    showError('Giá không được là số âm.');
+                    return;
+                }
+                if (minPrice && maxPrice && minPrice > maxPrice) {
+                    showError('Giá thấp nhất không được lớn hơn giá cao nhất.');
+                    return;
+                }
+
+                currentFilters.minPrice = minPrice || undefined;
+                currentFilters.maxPrice = maxPrice || undefined;
+                currentFilters.productType = productType || undefined;
+                currentFilters.logic = logic;
+                currentPage = 1;
+                fetchProducts(currentPage);
+            });
+
+            document.getElementById('prev-page').addEventListener('click', function() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    fetchProducts(currentPage);
+                }
+            });
+
+            document.getElementById('next-page').addEventListener('click', function() {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    fetchProducts(currentPage);
+                }
+            });
+
+            document.querySelector('.add-product-button').addEventListener('click', () => {
+                window.location.href = '/pages/create-product.html';
+            });
+
+            function showError(message) {
+                const errorDiv = document.getElementById('error-message');
+                if (errorDiv) {
+                    errorDiv.textContent = message;
+                    errorDiv.style.display = 'block';
+                    setTimeout(() => errorDiv.style.display = 'none', 3000);
+                }
+            }
         });
     </script>
 </body>
