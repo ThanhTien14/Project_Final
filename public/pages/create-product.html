@@ -7,97 +7,127 @@
     <link rel="stylesheet" href="/stylesheets/create-product.css">
     <style>
         #image-preview {
-            max-width: 200px;
-            max-height: 200px;
+            width: 300px; /* Tăng chiều rộng khung preview */
+            height: 300px; /* Tăng chiều cao khung preview */
+            border-radius: 10px;
+            border: 2px solid #ddd;
             margin-top: 10px;
+            object-fit: cover;
             display: none;
         }
     </style>
 </head>
 <body>
     <h1>Thêm Sản Phẩm Mới</h1>
-    <form id="createForm">
-        <div class="form-group">
-            <label for="id">ID (tự động):</label>
-            <input type="text" id="id" name="id" value="Đang tạo..." readonly>
+    <form id="createForm" class="form-container">
+        <!-- Nhóm 1: Thông tin cơ bản -->
+        <div class="form-section">
+            <h3>Thông tin cơ bản</h3>
+            <div class="form-group-row">
+                <div class="form-group">
+                    <label for="id">ID (tự động):</label>
+                    <input type="text" id="id" name="id" value="Đang tạo..." readonly>
+                </div>
+                <div class="form-group">
+                    <label for="name">Tên sản phẩm:</label>
+                    <input type="text" id="name" name="name" placeholder="Nhập tên sản phẩm">
+                </div>
+                <div class="form-group">
+                    <label for="description">Mô tả:</label>
+                    <input type="text" id="description" name="description" placeholder="Nhập mô tả sản phẩm">
+                </div>
+                <div class="form-group">
+                    <label for="category">Danh Mục:</label>
+                    <select id="category" name="category">
+                        <option value="">Chọn Danh Mục</option>
+                        <option value="HTSK">HTSK</option>
+                        <option value="BDN">BDN</option>
+                        <option value="LĐ">LĐ</option>
+                        <option value="KhoangChat">KhoangChat</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="brand">Thương hiệu:</label>
+                    <input type="text" id="brand" name="brand" placeholder="Nhập thương hiệu">
+                </div>
+                <div class="form-group">
+                    <label for="dosage_form">Dạng bào chế:</label>
+                    <input type="text" id="dosage_form" name="dosage_form" placeholder="Ví dụ: Viên uống, Dạng lỏng">
+                    <small>Ví dụ: Viên uống, Dạng lỏng</small>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="name">Tên sản phẩm:</label>
-            <input type="text" id="name" name="name">
+
+        <!-- Nhóm 2: Hình ảnh -->
+        <div class="form-section">
+            <h3>Hình ảnh sản phẩm</h3>
+            <div class="form-group">
+                <label for="image_file">Hình ảnh sản phẩm:</label>
+                <input type="file" id="image_file" name="image_file" accept="image/*">
+                <img id="image-preview" src="#" alt="Preview hình ảnh">
+                <small>Chọn file hình ảnh (jpg, png, gif)</small>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="description">Mô tả:</label>
-            <input type="text" id="description" name="description">
+
+        <!-- Nhóm 3: Thông tin bổ sung -->
+        <div class="form-section">
+            <h3>Thông tin bổ sung</h3>
+            <div class="form-group-row">
+                <div class="form-group">
+                    <label for="ingredients">Thành phần:</label>
+                    <input type="text" id="ingredients" name="ingredients" placeholder="Nhập thành phần">
+                </div>
+                <div class="form-group">
+                    <label for="benefits">Lợi ích:</label>
+                    <input type="text" id="benefits" name="benefits" placeholder="Nhập lợi ích">
+                </div>
+                <div class="form-group">
+                    <label for="usage_instructions">Hướng dẫn sử dụng:</label>
+                    <input type="text" id="usage_instructions" name="usage_instructions" placeholder="Nhập hướng dẫn sử dụng">
+                </div>
+                <div class="form-group">
+                    <label for="warnings">Cảnh báo:</label>
+                    <input type="text" id="warnings" name="warnings" placeholder="Nhập cảnh báo">
+                </div>
+                <div class="form-group">
+                    <label for="storage_instructions">Hướng dẫn bảo quản:</label>
+                    <input type="text" id="storage_instructions" name="storage_instructions" placeholder="Nhập hướng dẫn bảo quản">
+                </div>
+                <div class="form-group">
+                    <label for="target_audience">Đối tượng sử dụng:</label>
+                    <input type="text" id="target_audience" name="target_audience" placeholder="Ví dụ: Người lớn tuổi, Trẻ em">
+                    <small>Ví dụ: Người lớn tuổi, Trẻ em</small>
+                </div>
+                <div class="form-group">
+                    <label for="certifications">Chứng nhận:</label>
+                    <input type="text" id="certifications" name="certifications" placeholder="Ví dụ: GMP, HACCP">
+                    <small>Ví dụ: GMP, HACCP</small>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="category">Danh Mục:</label>
-            <select id="category" name="category">
-                <option value="">Chọn Danh Mục</option>
-                <option value="HTSK">HTSK</option>
-                <option value="BDN">BDN</option>
-                <option value="LĐ">LĐ</option>
-                <option value="KhoangChat">KhoangChat</option>
-            </select>
+
+        <!-- Nhóm 4: Số lượng và giá -->
+        <div class="form-section">
+            <h3>Số lượng và giá</h3>
+            <div class="form-group-row">
+                <div class="form-group">
+                    <label for="quantity_in_stock">Số lượng trong kho:</label>
+                    <input type="number" id="quantity_in_stock" name="quantity_in_stock" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="price">Giá:</label>
+                    <input type="number" id="price" name="price" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="currency">Đơn vị tiền tệ:</label>
+                    <input type="text" id="currency" name="currency" value="VND">
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="brand">Thương hiệu:</label>
-            <input type="text" id="brand" name="brand">
-        </div>
-        <div class="form-group">
-            <label for="dosage_form">Dạng bào chế:</label>
-            <input type="text" id="dosage_form" name="dosage_form">
-            <small>Ví dụ: Viên uống, Dạng lỏng</small>
-        </div>
-        <div class="form-group">
-            <label for="image_file">Hình ảnh sản phẩm:</label>
-            <input type="file" id="image_file" name="image_file" accept="image/*">
-            <img id="image-preview" src="#" alt="Preview hình ảnh">
-            <small>Chọn file hình ảnh (jpg, png, gif)</small>
-        </div>
-        <div class="form-group">
-            <label for="ingredients">Thành phần:</label>
-            <input type="text" id="ingredients" name="ingredients">
-        </div>
-        <div class="form-group">
-            <label for="benefits">Lợi ích:</label>
-            <input type="text" id="benefits" name="benefits">
-        </div>
-        <div class="form-group">
-            <label for="usage_instructions">Hướng dẫn sử dụng:</label>
-            <input type="text" id="usage_instructions" name="usage_instructions">
-        </div>
-        <div class="form-group">
-            <label for="warnings">Cảnh báo:</label>
-            <input type="text" id="warnings" name="warnings">
-        </div>
-        <div class="form-group">
-            <label for="storage_instructions">Hướng dẫn bảo quản:</label>
-            <input type="text" id="storage_instructions" name="storage_instructions">
-        </div>
-        <div class="form-group">
-            <label for="target_audience">Đối tượng sử dụng:</label>
-            <input type="text" id="target_audience" name="target_audience">
-            <small>Ví dụ: Người lớn tuổi, Trẻ em</small>
-        </div>
-        <div class="form-group">
-            <label for="certifications">Chứng nhận:</label>
-            <input type="text" id="certifications" name="certifications">
-            <small>Ví dụ: GMP, HACCP</small>
-        </div>
-        <div class="form-group">
-            <label for="quantity_in_stock">Số lượng trong kho:</label>
-            <input type="number" id="quantity_in_stock" name="quantity_in_stock" value="0">
-        </div>
-        <div class="form-group">
-            <label for="price">Giá:</label>
-            <input type="number" id="price" name="price" value="0">
-        </div>
-        <div class="form-group">
-            <label for="currency">Đơn vị tiền tệ:</label>
-            <input type="text" id="currency" name="currency" value="VND">
-        </div>
+
         <button type="submit">Lưu Sản Phẩm</button>
     </form>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Tạo ID tự động
@@ -161,6 +191,7 @@
             form.addEventListener('submit', async function(event) {
                 event.preventDefault();
 
+                // Validate form fields
                 const name = document.getElementById('name').value.trim();
                 const description = document.getElementById('description').value.trim();
                 const category = document.getElementById('category').value.trim();
@@ -200,6 +231,20 @@
                     return;
                 }
 
+                // Confirmation alert
+                const confirmSave = confirm('Bạn có muốn lưu thông tin sản phẩm mới không?');
+                if (!confirmSave) {
+                    // Lưu giá trị ID hiện tại trước khi reset
+                    const currentId = document.getElementById('id').value;
+                    // Reset form và ẩn ảnh xem trước
+                    form.reset();
+                    imagePreview.style.display = 'none';
+                    // Khôi phục giá trị ID
+                    document.getElementById('id').value = currentId;
+                    return;
+                }
+
+                // Proceed with saving the product
                 const formData = new FormData();
                 formData.append('id', document.getElementById('id').value);
                 formData.append('name', name);
@@ -229,13 +274,10 @@
 
                     const result = await response.json();
                     if (response.ok) {
-                        alert('Thêm thành công!');
+                        alert('Lưu sản phẩm mới thành công!');
                         form.reset();
                         imagePreview.style.display = 'none';
-                        if (result.image_url) {
-                            imagePreview.src = result.image_url;
-                            imagePreview.style.display = 'block';
-                        }
+                        // Fetch new ID without interrupting the existing ID generation logic
                         fetch('/api/products/latest-id')
                             .then(response => {
                                 if (!response.ok) {

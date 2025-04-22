@@ -234,6 +234,24 @@ app.put('/api/products/:id', async (req, res) => {
         throw error;
     }
 });
+// Route kiểm tra trùng lặp tên sản phẩm và thương hiệu
+app.post('/api/products/check-duplicate', async (req, res) => {
+    try {
+        const { name, brand } = req.body;
+        if (!name ) {
+            return res.status(400).json({ error: 'Tên sản phẩm  là bắt buộc.' });
+        }
+
+        const existingProduct = await db.collection('dsTPCN').findOne({ name: name,  });
+        if (existingProduct) {
+            return res.status(200).json({ exists: true });
+        }
+        return res.status(200).json({ exists: false });
+    } catch (error) {
+        console.error('Lỗi khi kiểm tra trùng lặp:', error);
+        return res.status(500).json({ error: 'Lỗi server khi kiểm tra trùng lặp.' });
+    }
+});
 
 // Xử lý đóng kết nối MongoDB
 process.on('SIGINT', async () => {
