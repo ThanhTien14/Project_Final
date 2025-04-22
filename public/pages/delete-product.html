@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Product</title>
+    <link rel="stylesheet" href="/stylesheets/delete-product.css">
+</head>
+<body>
+    <h1>Delete Products</h1>
+    
+    <!-- Search Form -->
+    <div class="search-form">
+        <label for="productId">Product ID:</label>
+        <input type="text" id="productId" name="productId" placeholder="e.g., TPCN1234">
+        <label for="productName">Product Name:</label>
+        <input type="text" id="productName" name="productName" placeholder="Enter product name">
+        <button type="button" onclick="searchProducts()">Search</button>
+        <button type="button" onclick="resetSearch()">Reset</button>
+    </div>
+
+    <!-- Product Table -->
+    <table>
+        <thead>
+            <tr>
+                <th>Product ID</th>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="productTable">
+            <tr><td colspan="4">Please search for products to display.</td></tr>
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="pagination">
+        <button class="pagination-button" id="prev-page" disabled>« Previous</button>
+        <span id="current-page">1</span> / <span id="total-pages">1</span>
+        <button class="pagination-button" id="next-page" disabled>Next »</button>
+    </div>
+
+    <button id="deleteAllBtn" disabled>Delete All</button>
+    <div id="message"></div>
+
+    <script>
+        let currentPage = 1;
+        let totalPages = 1;
+        const limit = 10; // Số sản phẩm mỗi trang
+        let currentProducts = []; // Lưu danh sách sản phẩm hiện tại
+        let hasSearched = false; // Trạng thái tìm kiếm
+
+        // Function to display message
+        function showMessage(message, color) {
+            const messageElement = document.getElementById('message');
+            messageElement.textContent = message;
+            messageElement.style.color = color;
+            messageElement.style.display = 'block';
+            setTimeout(() => messageElement.style.display = 'none', 3000);
+        }
+
+        // Fetch and display products based on search criteria
+        async function loadProducts(criteria = {}, page = 1) {
+            try {
+                const productTable = document.getElementById('productTable');
+                productTable.innerHTML = '';
+                currentProducts = []; // Reset danh sách sản phẩm
+
+                // Nếu có productId, gọi API /api/products/:id
+                if (criteria.id) {
+                    const response = await fetch(`/api/products/${criteria.id}`);
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                    }
+                    const product = await response.json();
+                    if (!product) {
+                        productTable.innerHTML = '<tr><td colspan="4">No product found</td></tr>';
+                        updatePagination(1, 1);
+                        toggleDeleteAllButton(false);
+                        return;
+                    }
+
+                    currentProducts = [product];
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${product.id}</td>
+                        <td>${product.name}</td>
+                        <td>${product.price.toLocaleString()} ${product.currency || 'VND'}</td>
+                        <td><a href="#" class="delete-link" data-id="${product.id}">Delete</a></td>
+                    `;
+                    productTable.appendChild(row);
+                    updatePagination(1, 1); // Không cần phân trang khi tìm theo ID
+                } else {
+                    // Nếu không có productId, gọi API /api/products với phân trang
+                    const queryParams = { page, limit };
+                    if (criteria.name) queryParams.name = criteria.name;
+                    const query = new URLSearchParams(queryParams).toString();
+                    const response = await fetch(`/api/products?${query}`);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const data = await response.json();
+                    const products = data.products || [];
+
+                    if (products.length === 0) {
+                        productTable.innerHTML = '<tr><td colspan="4">No products found</td></tr>';
+                        updatePagination(1, 1);
+                        toggleDeleteAllButton(false);
+                        return;
+                    }
+
+                    currentProducts = products;
+                    products.forEach(product => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${product.id}</td>
+                            <td>${product.name}</td>
+                            <td>${product.price.toLocaleString()} ${product.currency || 'VND'}</td>
+                            <td><a href="#" class="delete-link" data-id="${product.id}">Delete</a></td>
+                        `;
+                        productTable.appendChild(row);
+                    });
+
+                    totalPages = data.pagination.totalPages;
+                    currentPage = page;
+                    updatePagination(currentPage, totalPages);
+                }
+
+                // Kích hoạt nút Delete All sau khi tìm kiếm
+                hasSearched = true;
+                toggleDeleteAllButton(currentProducts.length > 0);
+
+                // Add event listeners for delete links
+                document.querySelectorAll('.delete-link').forEach(link => {
+                    link.removeEventListener('click', handleDelete); // Xóa listener cũ để tránh trùng lặp
+                    link.addEventListener('click', handleDelete);
+                });
+            } catch (error) {
+                console.error('Error loading products:', error);
+                showMessage('Error loading products: ' + error.message, 'red');
+                toggleDeleteAllButton(false);
+            }
+        }
+
+        // Handle delete action
+        async function handleDelete(e) {
+            e.preventDefault();
+            const productId = e.target.getAttribute('data-id');
+            if (confirm(`Are you sure you want to delete product ${productId}?`)) {
+                try {
+                    const response = await fetch(`/api/products/${productId}`, {
+                        method: 'DELETE'
+                    });
+                    const result = await response.json();
+                    if (response.ok) {
+                        showMessage(result.message || 'Xóa sản phẩm thành công', 'green');
+                        const criteria = getCurrentCriteria();
+                        loadProducts(criteria, currentPage); // Tải lại danh sách với trang hiện tại
+                    } else {
+                        showMessage(result.error || 'Failed to delete product', 'red');
+                    }
+                } catch (error) {
+                    showMessage('Error deleting product: ' + error.message, 'red');
+                }
+            }
+        }
+
+        // Update pagination UI
+        function updatePagination(current, total) {
+            document.getElementById('current-page').textContent = current;
+            document.getElementById('total-pages').textContent = total;
+            document.getElementById('prev-page').disabled = current === 1;
+            document.getElementById('next-page').disabled = current === total;
+        }
+
+        // Toggle Delete All button
+        function toggleDeleteAllButton(enabled) {
+            const deleteAllBtn = document.getElementById('deleteAllBtn');
+            deleteAllBtn.disabled = !enabled;
+        }
+
+        // Get current search criteria
+        function getCurrentCriteria() {
+            const productId = document.getElementById('productId').value.trim();
+            const productName = document.getElementById('productName').value.trim();
+            const criteria = {};
+            if (productId) criteria.id = productId;
+            if (productName) criteria.name = productName;
+            return criteria;
+        }
+
+        // Search products based on form input
+        function searchProducts() {
+            currentPage = 1; // Reset về trang 1 khi tìm kiếm
+            const criteria = getCurrentCriteria();
+            loadProducts(criteria, currentPage);
+        }
+
+        // Reset search form and reload all products
+        function resetSearch() {
+            document.getElementById('productId').value = '';
+            document.getElementById('productName').value = '';
+            currentPage = 1;
+            hasSearched = false;
+            currentProducts = [];
+            const productTable = document.getElementById('productTable');
+            productTable.innerHTML = '<tr><td colspan="4">Please search for products to display.</td></tr>';
+            updatePagination(1, 1);
+            toggleDeleteAllButton(false);
+        }
+
+        // Delete all products in the current search results
+        document.getElementById('deleteAllBtn').addEventListener('click', async () => {
+            if (!hasSearched || currentProducts.length === 0) {
+                showMessage('No products to delete.', 'red');
+                return;
+            }
+
+            if (confirm(`Are you sure you want to delete ${currentProducts.length} product(s) in the current search results?`)) {
+                try {
+                    // Xóa từng sản phẩm trong danh sách kết quả tìm kiếm
+                    const deletePromises = currentProducts.map(product =>
+                        fetch(`/api/products/${product.id}`, {
+                            method: 'DELETE'
+                        }).then(response => {
+                            if (!response.ok) {
+                                throw new Error(`Failed to delete product ${product.id}`);
+                            }
+                            return response.json();
+                        })
+                    );
+
+                    await Promise.all(deletePromises);
+                    showMessage(`Successfully deleted ${currentProducts.length} product(s).`, 'green');
+                    resetSearch(); // Reset sau khi xóa
+                } catch (error) {
+                    showMessage('Error deleting products: ' + error.message, 'red');
+                }
+            }
+        });
+
+        // Pagination event listeners
+        document.getElementById('prev-page').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                const criteria = getCurrentCriteria();
+                loadProducts(criteria, currentPage);
+            }
+        });
+
+        document.getElementById('next-page').addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                const criteria = getCurrentCriteria();
+                loadProducts(criteria, currentPage);
+            }
+        });
+
+        // Không tải danh sách sản phẩm khi vừa vào trang
+        window.onload = () => {
+            toggleDeleteAllButton(false);
+        };
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'934661101d8b2a28',t:'MTc0NTMzODA5OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
