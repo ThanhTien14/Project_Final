@@ -16,12 +16,12 @@ if (!fs.existsSync(uploadDir)) {
 // Cấu hình multer để xử lý file upload
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, uploadDir); // Lưu file vào thư mục public/uploads
+        cb(null, uploadDir);
     },
     filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
         const ext = path.extname(file.originalname);
-        cb(null, file.fieldname + '-' + uniqueSuffix + ext); // Tạo tên file duy nhất
+        cb(null, file.fieldname + '-' + uniqueSuffix + ext);
     }
 });
 const upload = multer({
@@ -46,46 +46,6 @@ app.use(express.json({ limit: '10kb' }));
 // Hàm validate dữ liệu sản phẩm
 function validateProductData(data) {
     const errors = [];
-    // if (!isUpdate) {
-    //     if (!data.id || !/^TPCN\d{4}$/.test(data.id)) {
-    //         errors.push('ID phải có định dạng TPCNxxxx');
-    //     }
-    //     if (!data.name || typeof data.name !== 'string' || data.name.trim() === '') {
-    //         errors.push('Tên sản phẩm là bắt buộc');
-    //     }
-    //     // Kiểm tra các trường dạng chuỗi trước khi chúng được chuẩn hóa thành mảng
-    //     if (!data.ingredients || typeof data.ingredients !== 'string' || data.ingredients.trim() === '') {
-    //         errors.push('Thành phần là bắt buộc');
-    //     }
-    //     if (!data.benefits || typeof data.benefits !== 'string' || data.benefits.trim() === '') {
-    //         errors.push('Lợi ích là bắt buộc');
-    //     }
-    //     if (!data.usage_instructions || typeof data.usage_instructions !== 'string' || data.usage_instructions.trim() === '') {
-    //         errors.push('Hướng dẫn sử dụng là bắt buộc');
-    //     }
-    //     if (!data.warnings || typeof data.warnings !== 'string' || data.warnings.trim() === '') {
-    //         errors.push('Cảnh báo là bắt buộc');
-    //     }
-    //     if (!data.storage_instructions || typeof data.storage_instructions !== 'string' || data.storage_instructions.trim() === '') {
-    //         errors.push('Hướng dẫn bảo quản là bắt buộc');
-    //     }
-    //     if (!data.target_audience || typeof data.target_audience !== 'string' || data.target_audience.trim() === '') {
-    //         errors.push('Đối tượng sử dụng là bắt buộc');
-    //     }
-    //     if (!data.certifications || typeof data.certifications !== 'string' || data.certifications.trim() === '') {
-    //         errors.push('Chứng nhận là bắt buộc');
-    //     }
-    //     if (isNaN(data.quantity_in_stock) || data.quantity_in_stock < 0) {
-    //         errors.push('Số lượng tồn kho phải là số nguyên không âm');
-    //     }
-    //     if (isNaN(data.price) || data.price <= 0) {
-    //         errors.push('Giá phải là số dương');
-    //     }
-    // } else {
-    //     if (data.id) {
-    //         errors.push('Không được thay đổi ID sản phẩm');
-    //     }
-    // }
     if (data.image_url && !data.image_url.startsWith('/uploads/')) {
         errors.push('image_url phải là đường dẫn file hợp lệ');
     }
@@ -113,6 +73,9 @@ function normalizeProductData(data) {
 app.use((err, req, res, next) => {
     console.error('Server error:', err);
     if (err instanceof multer.MulterError) {
+        if (err.code === 'LIMIT_FILE_SIZE') {
+            return res.status(400).json({ error: 'File quá lớn, tối đa 5MB' });
+        }
         return res.status(400).json({ error: 'Lỗi khi upload file', details: err.message });
     }
     const errorMessage = process.env.NODE_ENV === 'development' ? err.message : 'Internal server error';
@@ -165,7 +128,6 @@ app.get('/api/products/latest-id', async (req, res) => {
 // API: Tạo một sản phẩm mới
 app.post('/api/products', upload.single('image_file'), async (req, res) => {
     try {
-        // Lấy dữ liệu từ FormData và parse đúng kiểu dữ liệu
         const productData = {
             id: req.body.id,
             name: req.body.name,
@@ -189,7 +151,6 @@ app.post('/api/products', upload.single('image_file'), async (req, res) => {
             is_active: true
         };
 
-        // Kiểm tra dữ liệu đầu vào
         const errors = validateProductData(productData);
         if (errors.length > 0) {
             if (req.file) {
@@ -198,7 +159,6 @@ app.post('/api/products', upload.single('image_file'), async (req, res) => {
             return res.status(400).json({ error: 'Invalid data', details: errors });
         }
 
-        // Kiểm tra xem ID đã tồn tại chưa
         const existingProduct = await mongodbModule.dbCollection.findOne({ id: productData.id });
         if (existingProduct) {
             if (req.file) {
@@ -207,7 +167,6 @@ app.post('/api/products', upload.single('image_file'), async (req, res) => {
             return res.status(400).json({ error: 'ID đã tồn tại' });
         }
 
-        // Chuẩn hóa dữ liệu trước khi lưu
         const normalizedData = normalizeProductData({
             ...productData,
             created_at: new Date(),
@@ -217,9 +176,12 @@ app.post('/api/products', upload.single('image_file'), async (req, res) => {
             ratings: []
         });
 
-        // Lưu dữ liệu vào MongoDB
         await mongodbModule.dbCollection.insertOne(normalizedData);
-        res.status(201).json({ message: `Product ${normalizedData.id} created successfully`, id: normalizedData.id });
+        res.status(201).json({
+            message: `Product ${normalizedData.id} created successfully`,
+            id: normalizedData.id,
+            image_url: normalizedData.image_url
+        });
     } catch (error) {
         if (req.file) {
             fs.unlinkSync(path.join(uploadDir, req.file.filename));

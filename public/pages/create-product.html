@@ -135,10 +135,20 @@
             imageFileInput.addEventListener('change', function(event) {
                 const file = event.target.files[0];
                 if (file) {
+                    if (!file.type.startsWith('image/')) {
+                        alert('Vui lòng chọn file ảnh (jpg, png, gif)!');
+                        imageFileInput.value = '';
+                        imagePreview.style.display = 'none';
+                        return;
+                    }
                     const reader = new FileReader();
                     reader.onload = function(e) {
                         imagePreview.src = e.target.result;
                         imagePreview.style.display = 'block';
+                    };
+                    reader.onerror = function(e) {
+                        console.error('Lỗi khi đọc file ảnh:', e);
+                        alert('Không thể đọc file ảnh. Vui lòng thử file khác.');
                     };
                     reader.readAsDataURL(file);
                 } else {
@@ -151,7 +161,6 @@
             form.addEventListener('submit', async function(event) {
                 event.preventDefault();
 
-                // Lấy giá trị từ các trường
                 const name = document.getElementById('name').value.trim();
                 const description = document.getElementById('description').value.trim();
                 const category = document.getElementById('category').value.trim();
@@ -169,14 +178,12 @@
                 const price = document.getElementById('price').value;
                 const currency = document.getElementById('currency').value.trim();
 
-                // Kiểm tra tất cả các trường
                 const isFormValid =
                     name &&
                     description &&
                     category &&
                     brand &&
                     dosageForm &&
-                    // imageFile && // Có thể bỏ qua nếu không bắt buộc
                     ingredients &&
                     benefits &&
                     usageInstructions &&
@@ -193,7 +200,6 @@
                     return;
                 }
 
-                // Gửi dữ liệu bằng FormData
                 const formData = new FormData();
                 formData.append('id', document.getElementById('id').value);
                 formData.append('name', name);
@@ -226,8 +232,10 @@
                         alert('Thêm thành công!');
                         form.reset();
                         imagePreview.style.display = 'none';
-                        document.getElementById('id').value = 'Đang tạo...';
-                        // Gọi lại API để lấy ID mới
+                        if (result.image_url) {
+                            imagePreview.src = result.image_url;
+                            imagePreview.style.display = 'block';
+                        }
                         fetch('/api/products/latest-id')
                             .then(response => {
                                 if (!response.ok) {
@@ -256,7 +264,7 @@
                                 document.getElementById('id').value = 'Lỗi tạo ID';
                             });
                     } else {
-                        const errorMessage = result.message || 'Lỗi khi thêm sản phẩm';
+                        const errorMessage = result.error || 'Lỗi không xác định';
                         const errorDetails = result.details ? result.details.join('\n') : '';
                         alert(`${errorMessage}${errorDetails ? '\nChi tiết:\n' + errorDetails : ''}`);
                     }
