@@ -9,6 +9,15 @@
 </head>
 
 <body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Trang chủ</a></li>
+                <li><a href="/pages/list-products.html">Danh sách sản phẩm</a></li>
+            </ul>
+        </nav>
+    </header>
+
     <div class="top-bar">
         <div class="search-container">
             <input type="text" id="search-input" placeholder="Tìm kiếm sản phẩm...">
@@ -43,9 +52,9 @@
     </div>
     </div>
     <div class="container">
+        <div id="error-message" class="message error" style="display: none;"></div>
         <main class="main-content">
-            <ul class="product-list">
-                </ul>
+            <ul class="product-list"></ul>
         </main>
     </div>
     <div class="pagination">
@@ -69,8 +78,16 @@
                     imagePlaceholder.classList.add('product-image-placeholder');
                     if (product.image_url) {
                         const image = document.createElement('img');
-                        image.src = `/${product.image_url}`;
+                        // Hỗ trợ cả URL bên ngoài và URL upload
+                        const imageUrl = product.image_url.startsWith('/images/uploads/') 
+                            ? `http://localhost:3000${product.image_url}?t=${new Date().getTime()}` 
+                            : product.image_url;
+                        image.src = imageUrl;
                         image.alt = product.name;
+                        image.onerror = () => {
+                            console.error('Failed to load image:', imageUrl);
+                            imagePlaceholder.innerHTML = '<i class="fas fa-image"></i>';
+                        };
                         imagePlaceholder.appendChild(image);
                     } else {
                         imagePlaceholder.innerHTML = '<i class="fas fa-image"></i>';
@@ -84,7 +101,7 @@
 
                     const price = document.createElement('p');
                     price.classList.add('price');
-                    price.textContent = `${product.price.toLocaleString('vi-VN')} VND`;
+                    price.textContent = `${product.price.toLocaleString('vi-VN')} ${product.currency || 'VND'}`; // Format giá tiền Việt Nam
 
                     const infoRow = document.createElement('div');
                     infoRow.classList.add('product-info-row');
@@ -231,6 +248,16 @@
                 fetchProducts(currentPage);
                 }
             });
+                    
+            // Hàm hiển thị thông báo lỗi
+            function showError(message) {
+                const errorDiv = document.getElementById('error-message');
+                if (errorDiv) {
+                    errorDiv.textContent = message;
+                    errorDiv.style.display = 'block';
+                    setTimeout(() => errorDiv.style.display = 'none', 3000);
+                }
+            }
         });
     </script>
 </body>
