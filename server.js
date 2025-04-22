@@ -413,12 +413,61 @@ app.put('/api/products/bulk', upload.single('image'), async (req, res) => {
     }
 });
 
+// API: Xóa một sản phẩm
+app.delete('/api/products/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!/^TPCN\d{4}$/.test(id)) {
+            return res.status(400).json({ error: 'Định dạng ID sản phẩm không hợp lệ' });
+        }
+        const product = await mongodbModule.dbCollection.findOne({ id });
+        if (!product) {
+            return res.status(404).json({ error: `Không tìm thấy sản phẩm ${id}` });
+        }
+        // Xóa ảnh nếu có
+        if (product.image_url && product.image_url.startsWith('/images/uploads/')) {
+            const imageRelativePath = product.image_url.replace(/^\/images\/uploads\//, '');
+            const imagePath = path.join(uploadDir, imageRelativePath);
+            if (fs.existsSync(imagePath)) {
+                fs.unlinkSync(imagePath);
+            }
+        }
+        const result = await mongodbModule.dbCollection.deleteOne({ id });
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ error: `Không tìm thấy sản phẩm ${id}` });
+        }
+        res.json({ message: `Xóa sản phẩm ${id} thành công` });
+    } catch (error) {
+        console.error('DELETE /api/products/:id - Error:', error);
+        res.status(500).json({ error: 'Lỗi server nội bộ' });
+    }
+});
+
+// API: Xóa tất cả sản phẩm
+app.delete('/api/products', async (req, res) => {
+    try {
+        // Xóa tất cả ảnh trong thư mục uploads
+        const files = fs.readdirSync(uploadDir);
+        files.forEach(file => {
+            const filePath = path.join(uploadDir, file);
+            if (fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath);
+            }
+        });
+        const result = await mongodbModule.dbCollection.deleteMany({});
+        res.json({ message: `Xóa ${result.deletedCount} sản phẩm thành công` });
+    } catch (error) {
+        console.error('DELETE /api/products - Error:', error);
+        res.status(500).json({ error: 'Lỗi server nội bộ' });
+    }
+});
+
 // API: Tìm kiếm sản phẩm
 app.get('/api/products/search', async (req, res) => {
     try {
         const { name } = req.query;
         if (!name || name.trim().length < 2) {
-            return res.status(400).json({ error: 'Search query must be at least 2 characters' });
+            return res.status(400).json({ error: 'Tìm kiếm phải có ít nhất 2 ký tự' });
         }
         const products = await mongodbModule.dbCollection.find({
             name: { $regex: name.trim(), $options: 'i' }
@@ -426,7 +475,7 @@ app.get('/api/products/search', async (req, res) => {
         res.json(products.length ? products : []);
     } catch (error) {
         console.error('GET /api/products/search - Error:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ error: 'Lỗi server nội bộ' });
     }
 });
 
