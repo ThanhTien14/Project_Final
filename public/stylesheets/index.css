@@ -147,20 +147,29 @@ body {
 .hero-content h1 {
     font-size: 60px;
     margin-bottom: 20px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    font-weight: 600;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7); /* Tăng độ mạnh của bóng đổ */
+    font-weight: 700; /* Đậm hơn */
 }
 
 .hero-content p {
     font-size: 24px;
     margin: 10px 0;
-    font-weight: 300;
+    font-weight: 400; /* Tăng độ đậm */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Thêm bóng đổ */
 }
 
 .hero-content p.slogan {
-    font-size: 20px;
+    font-size: 22px; /* Tăng kích thước */
     font-style: italic;
     color: #FF6F61;
+    font-weight: 400;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.hero-content p.highlight {
+    font-size: 26px; /* Tăng kích thước */
+    font-weight: 500; /* Nhấn mạnh hơn */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .hero-button {
@@ -171,15 +180,16 @@ body {
     color: white;
     text-decoration: none;
     border-radius: 4px;
-    font-weight: bold;
+    font-weight: 700; /* Đậm hơn */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease, background-color 0.3s ease;
-    font-size: 18px;
+    transition: transform 0.2s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    font-size: 20px; /* Tăng kích thước */
 }
 
 .hero-button:hover {
     background-color: #e65b50;
     transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Thêm bóng đổ khi hover */
 }
 
 /* Responsive */
@@ -244,6 +254,10 @@ body {
         font-size: 16px;
     }
 
+    .hero-content p.highlight {
+        font-size: 20px;
+    }
+
     .hero-button {
         padding: 12px 30px;
         font-size: 16px;
@@ -261,6 +275,10 @@ body {
 
     .hero-content p.slogan {
         font-size: 14px;
+    }
+
+    .hero-content p.highlight {
+        font-size: 18px;
     }
 
     .hero-button {

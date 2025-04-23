@@ -82,7 +82,6 @@ function validateProductData(data, isUpdate = false) {
                 errors.push('image_url phải là đường dẫn hợp lệ bắt đầu bằng /images/uploads/');
             }
         } else {
-            // Nới lỏng regex để chấp nhận URL không có đuôi file rõ ràng
             const urlPattern = /^(https?:\/\/[^\s]+)/i;
             if (!urlPattern.test(data.image_url)) {
                 errors.push('URL hình ảnh không hợp lệ (phải bắt đầu bằng http:// hoặc https://)');
@@ -106,19 +105,18 @@ function normalizeProductData(data) {
             normalized[field] = [];
         }
     });
-    // Đặt giá trị mặc định cho các trường không bắt buộc
     if (normalized.quantity_in_stock === undefined) {
         normalized.quantity_in_stock = 0;
     }
     if (!normalized.currency) {
-        normalized.currency = 'VND'; // Giá trị mặc định nếu không nhập
+        normalized.currency = 'VND';
     }
     return normalized;
 }
 
 // Middleware xử lý lỗi
 app.use((err, req, res, next) => {
-    console.error('Server error:', err);
+    console.error(`[${new Date().toISOString()}] Server error: ${err.message}`, err.stack);
     if (err instanceof multer.MulterError) {
         if (err.code === 'LIMIT_FILE_SIZE') {
             return res.status(400).json({ error: 'File quá lớn, tối đa 50MB' });
@@ -235,32 +233,14 @@ app.get('/api/products', async (req, res) => {
             return res.status(400).json({ error: 'Invalid category' });
         }
 
-        let query = {};
-        if (logic === 'OR' && (name || category || brand)) {
-            const orQueries = [];
-            if (name) orQueries.push({ name: { $regex: name, $options: 'i' } });
-            if (category) orQueries.push({ category });
-            if (brand) orQueries.push({ brand });
-            query = { $or: orQueries };
-        } else {
-            if (name) query.name = { $regex: name, $options: 'i' };
-            if (category) query.category = category;
-            if (brand) query.brand = brand;
-        }
-        if (priceFrom || priceTo) {
-            query.price = {};
-            if (priceFrom) query.price.$gte = Number(priceFrom);
-            if (priceTo) query.price.$lte = Number(priceTo);
-        }
+        const criteria = { name, priceFrom, priceTo, category, brand, logic };
+        const options = {
+            skip: (page - 1) * limit,
+            limit: Number(limit),
+            sort: sort === 'price' ? { price: order === 'asc' ? 1 : -1 } : null
+        };
 
-        const sortOptions = {};
-        if (sort === 'price') sortOptions.price = order === 'asc' ? 1 : -1;
-
-        const skip = (page - 1) * limit;
-        const [products, totalProducts] = await Promise.all([
-            mongodbModule.dbCollection.find(query).sort(sortOptions).skip(skip).limit(Number(limit)).toArray(),
-            mongodbModule.dbCollection.countDocuments(query)
-        ]);
+        const { products, totalProducts } = await mongodbModule.findDocuments(criteria, options);
 
         res.json({
             products: products.map(product => normalizeProductData(product)),
@@ -301,9 +281,6 @@ app.put('/api/products/bulk', upload.single('image'), async (req, res) => {
             return res.status(400).json({ error: 'Dữ liệu JSON không hợp lệ' });
         }
 
-        console.log('Parsed productIds:', parsedProductIds);
-        console.log('Parsed updateData:', parsedUpdateData);
-
         if (!parsedProductIds || !Array.isArray(parsedProductIds) || parsedProductIds.length === 0) {
             return res.status(400).json({ error: 'Vui lòng cung cấp danh sách ID sản phẩm' });
         }
@@ -312,7 +289,6 @@ app.put('/api/products/bulk', upload.single('image'), async (req, res) => {
             return res.status(400).json({ error: 'Vui lòng cung cấp ít nhất một thông tin để cập nhật' });
         }
 
-        // Validate định dạng ID
         const invalidIds = parsedProductIds.filter(id => !/^TPCN\d{4}$/.test(id));
         if (invalidIds.length > 0) {
             return res.status(400).json({ error: `ID sản phẩm không hợp lệ: ${invalidIds.join(', ')}` });
@@ -330,8 +306,6 @@ app.put('/api/products/bulk', upload.single('image'), async (req, res) => {
         const normalizedData = normalizeProductData(parsedUpdateData);
 
         const existingProducts = await mongodbModule.dbCollection.find({ id: { $in: parsedProductIds } }).toArray();
-        console.log('Existing products in DB:', existingProducts);
-
         const existingIds = existingProducts.map(p => p.id);
         const notFoundIds = parsedProductIds.filter(id => !existingIds.includes(id));
 
@@ -366,7 +340,6 @@ app.put('/api/products/:id', upload.single('image'), async (req, res) => {
         console.log('Request body:', req.body);
         console.log('Uploaded file:', req.file);
 
-        // Parse updateData từ formData
         let parsedUpdateData = {};
         if (req.body.updateData) {
             try {
@@ -376,7 +349,6 @@ app.put('/api/products/:id', upload.single('image'), async (req, res) => {
             }
         }
 
-        // Xử lý số lượng và giá
         if (parsedUpdateData.quantity_in_stock) {
             parsedUpdateData.quantity_in_stock = parseInt(parsedUpdateData.quantity_in_stock);
         }
@@ -384,18 +356,14 @@ app.put('/api/products/:id', upload.single('image'), async (req, res) => {
             parsedUpdateData.price = parseFloat(parsedUpdateData.price);
         }
 
-        // Kiểm tra sản phẩm tồn tại
         const existingProduct = await mongodbModule.dbCollection.findOne({ id: req.params.id });
         if (!existingProduct) {
             return res.status(404).json({ error: 'Không tìm thấy sản phẩm' });
         }
 
-        // Xử lý hình ảnh: Ưu tiên file upload, nếu không có thì lấy từ image_url
         let imageUrl = req.body.image_url || parsedUpdateData.image_url;
         if (req.file) {
-            // Nếu có file upload
             parsedUpdateData.image_url = `/images/uploads/${req.file.filename}`;
-            // Xóa ảnh cũ nếu có
             if (existingProduct.image_url && existingProduct.image_url.startsWith('/images/uploads/')) {
                 const oldImageRelativePath = existingProduct.image_url.replace(/^\/images\/uploads\//, '');
                 const oldImagePath = path.join(uploadDir, oldImageRelativePath);
@@ -404,7 +372,6 @@ app.put('/api/products/:id', upload.single('image'), async (req, res) => {
                 }
             }
         } else if (imageUrl) {
-            // Nếu không có file upload nhưng có image_url
             const urlPattern = /^(https?:\/\/[^\s]+)/i;
             if (!urlPattern.test(imageUrl)) {
                 return res.status(400).json({ error: 'URL hình ảnh không hợp lệ (phải bắt đầu bằng http:// hoặc https://)' });
@@ -412,7 +379,6 @@ app.put('/api/products/:id', upload.single('image'), async (req, res) => {
             parsedUpdateData.image_url = imageUrl;
         }
 
-        // Validate dữ liệu
         const errors = validateProductData(parsedUpdateData, true);
         if (errors.length > 0) {
             if (req.file) {
@@ -421,7 +387,6 @@ app.put('/api/products/:id', upload.single('image'), async (req, res) => {
             return res.status(400).json({ error: 'Dữ liệu không hợp lệ', details: errors });
         }
 
-        // So sánh dữ liệu mới với dữ liệu cũ để kiểm tra thay đổi
         const normalizedData = normalizeProductData(parsedUpdateData);
         const isUnchanged = Object.keys(normalizedData).every(key => {
             if (Array.isArray(normalizedData[key]) && Array.isArray(existingProduct[key])) {
@@ -435,13 +400,8 @@ app.put('/api/products/:id', upload.single('image'), async (req, res) => {
             return res.status(400).json({ error: 'Không có thông tin nào được thay đổi' });
         }
 
-        // Cập nhật sản phẩm
-        const result = await mongodbModule.dbCollection.updateOne(
-            { id: req.params.id },
-            { $set: normalizedData }
-        );
-
-        if (result.matchedCount === 0) {
+        const modifiedCount = await mongodbModule.updateDocumentById(req.params.id, normalizedData);
+        if (modifiedCount === 0) {
             if (req.file) {
                 fs.unlinkSync(path.join(uploadDir, req.file.filename));
             }
@@ -473,7 +433,6 @@ app.delete('/api/products/:id', async (req, res) => {
         if (!product) {
             return res.status(404).json({ error: `Không tìm thấy sản phẩm ${id}` });
         }
-        // Xóa ảnh nếu có
         if (product.image_url && product.image_url.startsWith('/images/uploads/')) {
             const imageRelativePath = product.image_url.replace(/^\/images\/uploads\//, '');
             const imagePath = path.join(uploadDir, imageRelativePath);
@@ -481,8 +440,8 @@ app.delete('/api/products/:id', async (req, res) => {
                 fs.unlinkSync(imagePath);
             }
         }
-        const result = await mongodbModule.dbCollection.deleteOne({ id });
-        if (result.deletedCount === 0) {
+        const deletedCount = await mongodbModule.deleteDocumentById(id);
+        if (deletedCount === 0) {
             return res.status(404).json({ error: `Không tìm thấy sản phẩm ${id}` });
         }
         res.json({ message: `Xóa sản phẩm ${id} thành công` });
@@ -496,7 +455,6 @@ app.delete('/api/products/:id', async (req, res) => {
 app.delete('/api/products', async (req, res) => {
     try {
         console.log('DELETE /api/products called');
-        // Xóa tất cả ảnh trong thư mục uploads
         const files = fs.readdirSync(uploadDir);
         files.forEach(file => {
             const filePath = path.join(uploadDir, file);
@@ -519,9 +477,7 @@ app.get('/api/products/search', async (req, res) => {
         if (!name || name.trim().length < 2) {
             return res.status(400).json({ error: 'Tìm kiếm phải có ít nhất 2 ký tự' });
         }
-        const products = await mongodbModule.dbCollection.find({
-            name: { $regex: name.trim(), $options: 'i' }
-        }).limit(50).toArray();
+        const products = await mongodbModule.findDocuments({ name });
         res.json(products.length ? products : []);
     } catch (error) {
         console.error('GET /api/products/search - Error:', error);
@@ -548,14 +504,17 @@ app.post('/api/products/check-duplicate', async (req, res) => {
     }
 });
 
+// API: Thông báo lỗi 404
+app.get('*', (req, res) => {
+    res.status(404).send('Xin lỗi! Không tìm thấy trang yêu cầu.');
+});
+
 // Kết nối MongoDB
 mongodbModule.connectToMongoDB()
     .then(() => {
-        console.log('Kết nối MongoDB thành công!');
         app.listen(port, () => console.log(`Server chạy trên port ${port}!`));
     })
     .catch(err => {
-        console.error('Lỗi kết nối MongoDB:', err);
         process.exit(1);
     });
 
