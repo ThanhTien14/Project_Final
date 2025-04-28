@@ -41,12 +41,50 @@
     
     <!-- Search Form -->
     <div class="search-form">
-        <label for="productId">Product ID:</label>
-        <input type="text" id="productId" name="productId" placeholder="e.g., TPCN1234">
-        <label for="productName">Product Name:</label>
-        <input type="text" id="productName" name="productName" placeholder="Enter product name">
-        <button type="button" onclick="searchProducts()">Search</button>
-        <button type="button" onclick="resetSearch()">Reset</button>
+        <div class="form-group">
+            <label for="productId">Product ID:</label>
+            <input type="text" id="productId" name="productId" placeholder="e.g., TPCN1234">
+        </div>
+        <div class="form-group">
+            <label for="productName">Product Name:</label>
+            <input type="text" id="productName" name="productName" placeholder="Enter product name">
+        </div>
+        <div class="form-group price-group">
+            <label>Price Range:</label>
+            <div class="range-inputs">
+                <input type="number" id="priceFrom" name="priceFrom" placeholder="From" min="0" step="0.01">
+                <input type="number" id="priceTo" name="priceTo" placeholder="To" min="0" step="0.01">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="category">Category:</label>
+            <select id="category" name="category">
+                <option value="">Select category</option>
+                <option value="HTSK">HTSK</option>
+                <option value="BDN">BDN</option>
+                <option value="LĐ">LĐ</option>
+                <option value="KHOANGCHAT">KHOANGCHAT</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="brand">Brand:</label>
+            <input type="text" id="brand" name="brand" placeholder="Enter brand name">
+        </div>
+        <div class="form-group quantity-group">
+            <label>Quantity in Stock:</label>
+            <div class="range-inputs">
+                <input type="number" id="quantityFrom" name="quantityFrom" placeholder="From" min="0">
+                <input type="number" id="quantityTo" name="quantityTo" placeholder="To" min="0">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="ingredients">Ingredients (comma-separated):</label>
+            <input type="text" id="ingredients" name="ingredients" placeholder="e.g., Vitamin C, Zinc">
+        </div>
+        <div class="form-actions">
+            <button type="button" onclick="searchProducts()">Search</button>
+            <button type="button" onclick="resetSearch()">Reset</button>
+        </div>
     </div>
 
     <!-- Product Table -->
@@ -80,7 +118,7 @@
         const limit = 10; // Số sản phẩm mỗi trang
         let currentProducts = []; // Lưu danh sách sản phẩm hiện tại
         let hasSearched = false; // Trạng thái tìm kiếm
-
+    
         // Function to display message
         function showMessage(message, color) {
             const messageElement = document.getElementById('message');
@@ -89,14 +127,14 @@
             messageElement.style.display = 'block';
             setTimeout(() => messageElement.style.display = 'none', 3000);
         }
-
+    
         // Fetch and display products based on search criteria
         async function loadProducts(criteria = {}, page = 1) {
             try {
                 const productTable = document.getElementById('productTable');
                 productTable.innerHTML = '';
                 currentProducts = []; // Reset danh sách sản phẩm
-
+    
                 // Nếu có productId, gọi API /api/products/:id
                 if (criteria.id) {
                     const response = await fetch(`/api/products/${criteria.id}`);
@@ -111,7 +149,7 @@
                         toggleDeleteAllButton(false);
                         return;
                     }
-
+    
                     currentProducts = [product];
                     const row = document.createElement('tr');
                     row.innerHTML = `
@@ -126,19 +164,26 @@
                     // Nếu không có productId, gọi API /api/products với phân trang
                     const queryParams = { page, limit };
                     if (criteria.name) queryParams.name = criteria.name;
+                    if (criteria.priceFrom) queryParams.priceFrom = criteria.priceFrom;
+                    if (criteria.priceTo) queryParams.priceTo = criteria.priceTo;
+                    if (criteria.category) queryParams.category = criteria.category;
+                    if (criteria.brand) queryParams.brand = criteria.brand;
+                    if (criteria.quantityFrom) queryParams.quantityFrom = criteria.quantityFrom;
+                    if (criteria.quantityTo) queryParams.quantityTo = criteria.quantityTo;
+                    if (criteria.ingredients) queryParams.ingredients = criteria.ingredients;
                     const query = new URLSearchParams(queryParams).toString();
                     const response = await fetch(`/api/products?${query}`);
                     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                     const data = await response.json();
                     const products = data.products || [];
-
+    
                     if (products.length === 0) {
                         productTable.innerHTML = '<tr><td colspan="4">No products found</td></tr>';
                         updatePagination(1, 1);
                         toggleDeleteAllButton(false);
                         return;
                     }
-
+    
                     currentProducts = products;
                     products.forEach(product => {
                         const row = document.createElement('tr');
@@ -150,16 +195,16 @@
                         `;
                         productTable.appendChild(row);
                     });
-
+    
                     totalPages = data.pagination.totalPages;
                     currentPage = page;
                     updatePagination(currentPage, totalPages);
                 }
-
+    
                 // Kích hoạt nút Delete All sau khi tìm kiếm
                 hasSearched = true;
                 toggleDeleteAllButton(currentProducts.length > 0);
-
+    
                 // Add event listeners for delete links
                 document.querySelectorAll('.delete-link').forEach(link => {
                     link.removeEventListener('click', handleDelete); // Xóa listener cũ để tránh trùng lặp
@@ -171,7 +216,7 @@
                 toggleDeleteAllButton(false);
             }
         }
-
+    
         // Handle delete action
         async function handleDelete(e) {
             e.preventDefault();
@@ -194,7 +239,7 @@
                 }
             }
         }
-
+    
         // Update pagination UI
         function updatePagination(current, total) {
             document.getElementById('current-page').textContent = current;
@@ -202,34 +247,57 @@
             document.getElementById('prev-page').disabled = current === 1;
             document.getElementById('next-page').disabled = current === total;
         }
-
+    
         // Toggle Delete All button
         function toggleDeleteAllButton(enabled) {
             const deleteAllBtn = document.getElementById('deleteAllBtn');
             deleteAllBtn.disabled = !enabled;
         }
-
+    
         // Get current search criteria
         function getCurrentCriteria() {
             const productId = document.getElementById('productId').value.trim();
             const productName = document.getElementById('productName').value.trim();
+            const priceFrom = document.getElementById('priceFrom').value.trim();
+            const priceTo = document.getElementById('priceTo').value.trim();
+            const category = document.getElementById('category').value.trim();
+            const brand = document.getElementById('brand').value.trim();
+            const quantityFrom = document.getElementById('quantityFrom').value.trim();
+            const quantityTo = document.getElementById('quantityTo').value.trim();
+            const ingredients = document.getElementById('ingredients').value.trim();
+    
             const criteria = {};
             if (productId) criteria.id = productId;
             if (productName) criteria.name = productName;
+            if (priceFrom) criteria.priceFrom = parseFloat(priceFrom);
+            if (priceTo) criteria.priceTo = parseFloat(priceTo);
+            if (category) criteria.category = category;
+            if (brand) criteria.brand = brand;
+            if (quantityFrom) criteria.quantityFrom = parseInt(quantityFrom);
+            if (quantityTo) criteria.quantityTo = parseInt(quantityTo);
+            if (ingredients) criteria.ingredients = ingredients;
+    
             return criteria;
         }
-
+    
         // Search products based on form input
         function searchProducts() {
             currentPage = 1; // Reset về trang 1 khi tìm kiếm
             const criteria = getCurrentCriteria();
             loadProducts(criteria, currentPage);
         }
-
+    
         // Reset search form and reload all products
         function resetSearch() {
             document.getElementById('productId').value = '';
             document.getElementById('productName').value = '';
+            document.getElementById('priceFrom').value = '';
+            document.getElementById('priceTo').value = '';
+            document.getElementById('category').value = '';
+            document.getElementById('brand').value = '';
+            document.getElementById('quantityFrom').value = '';
+            document.getElementById('quantityTo').value = '';
+            document.getElementById('ingredients').value = '';
             currentPage = 1;
             hasSearched = false;
             currentProducts = [];
@@ -238,14 +306,14 @@
             updatePagination(1, 1);
             toggleDeleteAllButton(false);
         }
-
+    
         // Delete all products in the current search results
         document.getElementById('deleteAllBtn').addEventListener('click', async () => {
             if (!hasSearched || currentProducts.length === 0) {
                 showMessage('No products to delete.', 'red');
                 return;
             }
-
+    
             if (confirm(`Are you sure you want to delete ${currentProducts.length} product(s) in the current search results?`)) {
                 try {
                     // Xóa từng sản phẩm trong danh sách kết quả tìm kiếm
@@ -259,7 +327,7 @@
                             return response.json();
                         })
                     );
-
+    
                     await Promise.all(deletePromises);
                     showMessage(`Successfully deleted ${currentProducts.length} product(s).`, 'green');
                     resetSearch(); // Reset sau khi xóa
@@ -268,7 +336,7 @@
                 }
             }
         });
-
+    
         // Pagination event listeners
         document.getElementById('prev-page').addEventListener('click', () => {
             if (currentPage > 1) {
@@ -277,7 +345,7 @@
                 loadProducts(criteria, currentPage);
             }
         });
-
+    
         document.getElementById('next-page').addEventListener('click', () => {
             if (currentPage < totalPages) {
                 currentPage++;
@@ -285,11 +353,10 @@
                 loadProducts(criteria, currentPage);
             }
         });
-
+    
         // Không tải danh sách sản phẩm khi vừa vào trang
         window.onload = () => {
             toggleDeleteAllButton(false);
         };
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'934661101d8b2a28',t:'MTc0NTMzODA5OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
-</html>
+S</html>

@@ -204,7 +204,6 @@
                     if (currentFilters.minPrice) url += `&priceFrom=${currentFilters.minPrice}`;
                     if (currentFilters.maxPrice) url += `&priceTo=${currentFilters.maxPrice}`;
                     if (currentFilters.productType) url += `&category=${encodeURIComponent(currentFilters.productType)}`;
-                    if (currentFilters.logic) url += `&logic=${currentFilters.logic}`;
 
                     const response = await fetch(url);
                     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
